@@ -112,14 +112,25 @@ export const retrieveListOfUsersFromDatabase = async (): Promise<Users> => {
     },
   })
   const users: Users = {}
-  users_raw.map((user) => {
-    users[user.uuid] = {
-      sockets: [],
-      publicUuid: user.publicUuid,
-      globalUsername: user.userName,
-      online: false,
+  users_raw.map(
+    (user: {
+      id: number
+      uuid: string
+      publicUuid: string
+      createdAt: Date
+      updatedAt: Date
+      environment: string
+      userName: string
+      language: string
+    }) => {
+      users[user.uuid] = {
+        sockets: [],
+        publicUuid: user.publicUuid,
+        globalUsername: user.userName,
+        online: false,
+      }
     }
-  })
+  )
 
   return users
 }
@@ -158,5 +169,16 @@ export const retrieveListOfHighscoresFromDatabase = async (
       highscoreValue: "asc",
     },
   })
-  return highscores.map((h) => JSON.parse(h.highscoreData))
+  return highscores.map(
+    (h: {
+      id: number
+      createdAt: Date
+      environment: string
+      highscoreType: string
+      highscoreValue: number
+      highscoreData: string
+      publicUuid: string
+      lobbyId: string
+    }) => JSON.parse(h.highscoreData)
+  )
 }
