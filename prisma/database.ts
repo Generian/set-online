@@ -46,9 +46,18 @@ export const retrieveListOfGamesFromDatabase = async (): Promise<Games> => {
     },
   })
   const games: Games = {}
-  games_raw.map((game) => {
-    games[game.lobbyId] = JSON.parse(game.gameData)
-  })
+  games_raw.map(
+    (game: {
+      id: number
+      lobbyId: string
+      createdAt: Date
+      updatedAt: Date
+      environment: string
+      gameData: string
+    }) => {
+      games[game.lobbyId] = JSON.parse(game.gameData)
+    }
+  )
 
   return games
 }
