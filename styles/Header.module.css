@@ -1,0 +1,57 @@
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--white);
+  padding: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-shadow: var(--cardShadow);
+}
+
+.logo {
+  width: 2.8rem;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background-color: var(--purple);
+}
+
+.user {
+}
+
+/* User */
+
+.userContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  padding-left: 1rem;
+  box-shadow: var(--cardShadow);
+  border-radius: var(--cardBorderRadius) 1.4rem 1.4rem var(--cardBorderRadius);
+  cursor: pointer;
+}
+
+.userContainer:hover {
+  background-color: var(--lightgray);
+}
+
+.username {
+  font-family: var(--font);
+}
+
+.avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.8rem;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background-color: var(--purple);
+  box-shadow: var(--cardShadow);
+  font-family: var(--font);
+  font-weight: bold;
+  color: var(--white);
+}

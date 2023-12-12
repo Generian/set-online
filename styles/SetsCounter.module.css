@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: var(--lightgray);
+  margin: 1rem;
+  gap: 1rem;
+  padding-left: 1rem;
+  font-family: var(--font);
+  box-shadow: var(--cardShadow);
+  border-radius: var(--cardBorderRadius);
+}
+
+.setsContainer {
+  height: 3.8rem;
+  width: 3.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gray);
+  box-shadow: var(--cardShadow);
+  font-size: 3rem;
+  font-weight: bold;
+  font-family: var(--font);
+  color: black;
+  border-radius: 0.3rem;
+}

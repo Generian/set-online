@@ -1,0 +1,46 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Game {
+  id                  Int       @id @default(autoincrement())
+  lobbyId             String    @unique
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  environment         String
+  gameData            String
+  highscore           Highscore?
+}
+
+model User {
+  id                  Int       @id @default(autoincrement())
+  uuid                String    @unique
+  publicUuid          String    @unique
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  environment         String
+  userName            String
+  language            String
+  highscores          Highscore[]
+}
+
+model Highscore {
+  id                  Int       @id @default(autoincrement())
+  createdAt           DateTime
+  environment         String
+  highscoreType       String
+  highscoreValue      Int
+  highscoreData       String
+  author              User     @relation(fields: [publicUuid], references: [publicUuid])
+  publicUuid          String
+  game                Game     @relation(fields: [lobbyId], references: [lobbyId])
+  lobbyId             String      @unique
+}

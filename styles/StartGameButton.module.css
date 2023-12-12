@@ -1,0 +1,21 @@
+.container {
+  width: 15vw;
+  height: 20vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: var(--cardShadow);
+  border-radius: var(--cardBorderRadius);
+  cursor: pointer;
+  transition: all var(--regularTransition) ease-in-out;
+}
+
+.container:hover {
+  box-shadow: var(--cardShadowElevated);
+  background-color: var(--lightgray);
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}

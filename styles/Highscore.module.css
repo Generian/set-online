@@ -1,0 +1,73 @@
+.container {
+  padding: 1rem;
+}
+
+.highscoreContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: var(--lightgray);
+  /* box-sizing: border-box; */
+  /* border-bottom: 1px solid var(--gray); */
+}
+
+.innerContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.highlight {
+  position: absolute;
+  right: -1.3rem;
+  top: -0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  /* border: 2px solid red; */
+}
+
+.highlightBorder {
+  border-top: 3px solid var(--yellow);
+}
+
+.rank {
+  font-family: var(--font);
+  width: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.time {
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: var(--font);
+  padding-right: 0.5rem;
+}
+
+.penalties {
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: var(--font);
+  color: var(--red);
+  background-color: var(--redBackground);
+}
+
+.noPenalties {
+  color: var(--green);
+  background-color: var(--greenBackground);
+}
+
+.title {
+  font-family: var(--font);
+  line-height: 2rem;
+  border-bottom: 2px solid var(--gray);
+}
+
+.extraInfo {
+  font-size: 0.5rem;
+}

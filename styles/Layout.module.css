@@ -1,0 +1,30 @@
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.field {
+  width: 100%;
+  height: 100%;
+}
+
+.infoContainer {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.setsContainer {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
