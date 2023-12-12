@@ -1,6 +1,13 @@
-import { CardPropList, cardProps, CardProps } from "@/components/game/Card"
+import {
+  type CardPropList,
+  cardProps,
+  type CardProps,
+} from "@/components/game/Card"
 
-const validateProperty = (cards: CardProps[], property: CardPropList) => {
+const validateProperty = (
+  cards: CardProps[],
+  property: CardPropList
+): boolean => {
   const propertyList: any[] = []
 
   cards
@@ -11,10 +18,12 @@ const validateProperty = (cards: CardProps[], property: CardPropList) => {
       }
     })
 
-  return propertyList.length == 1 || propertyList.length == 3
+  return propertyList.length === 1 || propertyList.length === 3
 }
 
-export const validateCards = (cards: CardProps[]) => {
+export const validateCards = (
+  cards: CardProps[]
+): { valid: boolean; error: string } => {
   // Check if three cards were provided
   if (cards.length !== 3) {
     return {
@@ -41,14 +50,14 @@ export const validateCards = (cards: CardProps[]) => {
   }
 }
 
-export const findSetInCards = (rawCards: CardProps[]) => {
+export const findSetInCards = (rawCards: CardProps[]): CardProps[] | null => {
   console.log("start validating cards for set")
 
   let set: CardProps[] = []
   const cards = rawCards.filter((c) => !c.hidden)
 
   // Helper function
-  const getAllSetsOfThree = (arr: CardProps[]) => {
+  const getAllSetsOfThree = (arr: CardProps[]): CardProps[][] => {
     const result = []
 
     for (let i = 0; i < arr.length - 2; i++) {
@@ -65,7 +74,7 @@ export const findSetInCards = (rawCards: CardProps[]) => {
   const allPotentialSets = getAllSetsOfThree(cards)
   let index = 0
 
-  while (index < allPotentialSets.length && !set.length) {
+  while (index < allPotentialSets.length && set.length === 0) {
     const potentialSet = allPotentialSets[index]
 
     if (validateCards(potentialSet).valid) {
@@ -76,6 +85,6 @@ export const findSetInCards = (rawCards: CardProps[]) => {
     index++
   }
 
-  console.log("completed validation. Has set:", !!set.length)
-  return set.length ? set : null
+  console.log("completed validation. Has set:", !(set.length === 0))
+  return set.length > 0 ? set : null
 }
