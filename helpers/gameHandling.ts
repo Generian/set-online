@@ -229,7 +229,7 @@ const handleSubmitSet = (
       console.log("Set validation success.")
 
       // Hide cards from field
-      const newCards = game.cards.map((card) => {
+      let newCards = game.cards.map((card) => {
         if (action.selectedCards.map((c) => c.id).includes(card.id)) {
           return {
             ...card,
@@ -241,17 +241,15 @@ const handleSubmitSet = (
         }
       })
 
-      let reorderedCards: CardProps[] = []
-
       // Add additional cards if valid
       if (newCards.filter((c) => !c.hidden).length < 12) {
         console.log("adding cards", newCards.filter((c) => !c.hidden).length)
 
-        reorderedCards = addCards(newCards, 3).newCards
+        newCards = addCards(newCards, 3).newCards
       }
 
       // Reorder cards
-      reorderedCards = reorderCards(reorderedCards)
+      const reorderedCards: CardProps[] = reorderCards(newCards)
 
       // Create new game data
       const newGameData: Game = {

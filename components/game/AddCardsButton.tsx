@@ -8,7 +8,10 @@ const AddCardsButton = () => {
   let { submitAction } = useContext(SocketContext)
   let { game } = useContext(GameContext)
 
-  if (game?.gameOver) {
+  const cardsLeft =
+    game && game.cards.filter((c) => c.hidden && !c.column && !c.row).length > 0
+
+  if (game?.gameOver || !cardsLeft) {
     return <></>
   }
 
