@@ -258,7 +258,7 @@ const handleSubmitSet = (
         ...game,
         cards: reorderedCards,
         maxColumns: getMaxColumn(reorderedCards),
-        hasSet: !findSetInCards(reorderedCards),
+        hasSet: !!findSetInCards(reorderedCards),
         setsWon: [
           ...game.setsWon,
           {
@@ -352,7 +352,7 @@ const handleRequestCards = (
         ...game,
         cards: newCards,
         maxColumns: getMaxColumn(newCards),
-        hasSet: !findSetInCards(newCards),
+        hasSet: !!findSetInCards(newCards),
       }
 
       // Check win condition

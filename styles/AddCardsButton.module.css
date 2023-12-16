@@ -27,6 +27,9 @@
   font-size: 2rem;
   transition: all var(--fastTransition) ease-in-out;
   background-color: var(--lightGray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .container:hover .button {

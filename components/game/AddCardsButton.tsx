@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import { SocketContext } from "../general/SocketConnection"
 import styles from "@/styles/AddCardsButton.module.css"
+import AddIcon from "@mui/icons-material/Add"
 
 const AddCardsButton = () => {
   let { submitAction } = useContext(SocketContext)
@@ -14,7 +15,9 @@ const AddCardsButton = () => {
         })
       }
     >
-      <button className={styles.button}>+</button>
+      <div className={styles.button}>
+        <AddIcon fontSize="large" />
+      </div>
     </div>
   )
 }
