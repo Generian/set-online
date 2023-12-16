@@ -24,9 +24,7 @@ export const saveGameToDatabase = async (game: Game) => {
   // })
 }
 
-export const retrieveSpecificGameFromDatabase = async (
-  lobbyId: string
-): Promise<Game | null> => {
+export const retrieveSpecificGameFromDatabase = async (lobbyId: string) => {
   // const game = await prisma.game.findUnique({
   //   where: {
   //     lobbyId: lobbyId,
@@ -35,7 +33,7 @@ export const retrieveSpecificGameFromDatabase = async (
   // return game ? JSON.parse(game.gameData) : null
 }
 
-export const retrieveListOfGamesFromDatabase = async (): Promise<Games> => {
+export const retrieveListOfGamesFromDatabase = async () => {
   // const games_raw = await prisma.game.findMany({
   //   where: {
   //     environment: process.env.NODE_ENV,
@@ -84,9 +82,7 @@ export const saveUserToDatabase = async (user: User, uuid: string) => {
   // })
 }
 
-export const retrieveSpecificUserFromDatabase = async (
-  publicUuid: string
-): Promise<User | null> => {
+export const retrieveSpecificUserFromDatabase = async (publicUuid: string) => {
   // const user = await prisma.user.findUnique({
   //   where: {
   //     publicUuid: publicUuid,
@@ -102,7 +98,7 @@ export const retrieveSpecificUserFromDatabase = async (
   //   : null
 }
 
-export const retrieveListOfUsersFromDatabase = async (): Promise<Users> => {
+export const retrieveListOfUsersFromDatabase = async () => {
   // const users_raw = await prisma.user.findMany({
   //   where: {
   //     environment: process.env.NODE_ENV,
@@ -152,9 +148,7 @@ export const saveHighscoreToDatabase = async (highscore: Highscore) => {
   // })
 }
 
-export const retrieveListOfHighscoresFromDatabase = async (
-  limit?: number
-): Promise<Highscore[]> => {
+export const retrieveListOfHighscoresFromDatabase = async (limit?: number) => {
   // const highscores = await prisma.highscore.findMany({
   //   where: {
   //     environment: process.env.NODE_ENV,
