@@ -16,5 +16,5 @@ export default async function handler(
 
   const highscores = await retrieveListOfHighscoresFromDatabase()
 
-  res.status(200).json({ highscores: [] })
+  res.status(200).json({ highscores })
 }
