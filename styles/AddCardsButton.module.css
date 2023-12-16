@@ -12,6 +12,7 @@
   border-radius: 0.5rem;
   transition: all var(--fastTransition) ease-in-out;
   box-shadow: var(--cardShadow);
+  z-index: 110;
 }
 
 .container:hover {

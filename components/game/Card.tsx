@@ -115,7 +115,7 @@ export const Card = ({
         left,
         top,
         height,
-        zIndex: set ? rank + 100 : row ? rank : -rank,
+        zIndex: set ? rank + 100 : row ? rank : -rank + 100,
       }}
       onClick={hidden || game?.gameOver ? () => {} : () => onClick()}
     >

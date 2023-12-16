@@ -46,11 +46,12 @@
 }
 
 .card__front {
-  background-color: rgb(251, 251, 251);
+  background-color: var(--white);
 }
 
 .card__back {
   transform: rotateY(180deg);
+  background-color: var(--white);
   box-shadow: none;
 }
 

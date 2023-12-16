@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: var(--lightgray);
+  background-color: var(--white);
   margin: 1rem;
   gap: 1rem;
   padding-left: 1rem;

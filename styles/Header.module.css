@@ -4,11 +4,10 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--white);
+  background-color: var(--lightgray);
   padding: 0.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  box-shadow: var(--cardShadow);
 }
 
 .logo {
@@ -29,6 +28,7 @@
   align-items: center;
   gap: 1rem;
   padding-left: 1rem;
+  background-color: var(--white);
   box-shadow: var(--cardShadow);
   border-radius: var(--cardBorderRadius) 1.4rem 1.4rem var(--cardBorderRadius);
   cursor: pointer;
