@@ -60,9 +60,9 @@ export const Game = () => {
         setGame(game)
         setCards(game.cards)
         setMaxColumns(game.maxColumns)
-        findSetInCards(game.cards)?.forEach((c, i) => {
-          console.log("Set card", i, ":", c.count, c.shading, c.color, c.type)
-        })
+        // findSetInCards(game.cards)?.forEach((c, i) => {
+        //   console.log("Set card", i, ":", c.count, c.shading, c.color, c.type)
+        // })
       }
     }
   }, [gameData, lobbyId])
