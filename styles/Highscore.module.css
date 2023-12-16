@@ -6,7 +6,7 @@
   position: relative;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   background-color: var(--lightgray);
   /* box-sizing: border-box; */
@@ -54,7 +54,10 @@
 }
 
 .penalties {
-  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  min-width: 2rem;
+  padding: 0.5rem 0 0.5rem 0;
   font-size: 1rem;
   font-weight: bold;
   font-family: var(--font);
