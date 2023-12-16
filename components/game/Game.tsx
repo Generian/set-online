@@ -96,7 +96,7 @@ export const Game = () => {
             ))}
             <AddCardsButton />
             {game && <SetAnnouncer game={game} />}
-            {game?.gameOver && <GameOverInfo game={game} />}
+            {!!game?.gameOver && <GameOverInfo game={game} />}
           </Field>
         }
         infoContainer={
