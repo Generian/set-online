@@ -13,7 +13,8 @@
 
 .setsContainer {
   height: 3.8rem;
-  width: 3.8rem;
+  min-width: 3.8rem;
+  padding: 0 0.5rem 0 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,4 +26,5 @@
   font-family: var(--font);
   color: black;
   border-radius: 0.3rem;
+  transition: all var(--slowTransition) ease-in-out;
 }

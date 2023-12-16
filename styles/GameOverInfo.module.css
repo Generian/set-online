@@ -1,0 +1,13 @@
+.container {
+  width: 100%;
+  padding-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  font-size: 4rem;
+  font-weight: bold;
+  color: var(--yellow);
+  -webkit-text-stroke: 0.25rem;
+  -webkit-text-stroke-color: var(--purple);
+}

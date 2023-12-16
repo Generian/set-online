@@ -19,6 +19,7 @@ import AddCardsButton from "./AddCardsButton"
 import SetAnnouncer from "./SetAnnouncer"
 import HighscoreList from "./Highscores"
 import SetsCounter from "./SetsCounter"
+import GameOverInfo from "./GameOverInfo"
 
 interface GameContextProps {
   game: GameProps | undefined
@@ -60,7 +61,7 @@ export const Game = () => {
         setCards(game.cards)
         setMaxColumns(game.maxColumns)
         findSetInCards(game.cards)?.forEach((c, i) => {
-          console.log("Set card", i, ":", c.color, c.type, c.count, c.shading)
+          console.log("Set card", i, ":", c.count, c.shading, c.color, c.type)
         })
       }
     }
@@ -95,6 +96,7 @@ export const Game = () => {
             ))}
             <AddCardsButton />
             {game && <SetAnnouncer game={game} />}
+            {game?.gameOver && <GameOverInfo game={game} />}
           </Field>
         }
         infoContainer={

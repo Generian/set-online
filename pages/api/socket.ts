@@ -53,8 +53,8 @@ const SocketHandler = async (
     let games: Games = {}
 
     // On server start, fetch data from database
-    // games = await retrieveListOfGamesFromDatabase()
-    // users = await retrieveListOfUsersFromDatabase()
+    games = await retrieveListOfGamesFromDatabase()
+    users = await retrieveListOfUsersFromDatabase()
 
     // Logic starts here
     io.on("connection", (socket) => {

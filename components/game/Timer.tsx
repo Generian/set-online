@@ -3,6 +3,7 @@ import { getPublicUuid } from "@/helpers/uuidHandler"
 import styles from "@/styles/Timer.module.css"
 import { useEffect, useRef, useState } from "react"
 import Progressbar from "./Progressbar"
+import { GameContext } from "./Game"
 
 // Types
 interface TimerProps {
@@ -46,11 +47,16 @@ const TimeAttackTimer = ({ game }: TimerProps) => {
       })
     }, 30)
 
+    if (game?.gameOver) {
+      clearInterval(clock)
+      clearInterval(penaltyClock)
+    }
+
     return () => {
       clearInterval(clock)
       clearInterval(penaltyClock)
     }
-  }, [])
+  }, [game?.gameOver])
 
   useEffect(() => {
     if (!isFirstRender.current) {
@@ -60,7 +66,7 @@ const TimeAttackTimer = ({ game }: TimerProps) => {
     }
   }, [penalties])
 
-  let totalTime = time // TODO use getTotalTime function from below
+  let totalTime = game?.gameOver ? game?.gameOver - startTime : time // TODO use getTotalTime function from below
 
   if (!!penalties) {
     totalTime = totalTime + penalties * 1000 * 60

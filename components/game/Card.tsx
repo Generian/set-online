@@ -31,16 +31,20 @@ export const Card = ({
   const [selected, setSelected] = useState(false)
   const [error, setError] = useState(false)
 
-  const { selectedCards, setSelectedCards, errorCards, maxColumns } =
+  const { game, selectedCards, setSelectedCards, errorCards, maxColumns } =
     useContext(GameContext)
 
   useEffect(() => {
-    if (selectedCards.map((c) => c.id).includes(id)) {
-      setSelected(true)
-    } else {
+    if (game?.gameOver) {
       setSelected(false)
+    } else {
+      if (selectedCards.map((c) => c.id).includes(id)) {
+        setSelected(true)
+      } else {
+        setSelected(false)
+      }
     }
-  }, [selectedCards])
+  }, [selectedCards, game?.gameOver])
 
   useEffect(() => {
     if (errorCards.map((c) => c.id).includes(id)) {
@@ -113,7 +117,7 @@ export const Card = ({
         height,
         zIndex: set ? rank + 100 : row ? rank : -rank,
       }}
-      onClick={hidden ? () => {} : () => onClick()}
+      onClick={hidden || game?.gameOver ? () => {} : () => onClick()}
     >
       <div
         className={`${styles.card} ${selected ? styles.selected : ""} ${

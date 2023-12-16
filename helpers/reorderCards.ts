@@ -1,6 +1,7 @@
 import { CardProps } from "@/components/game/Card"
 
 export const reorderCards = (unorderedCards: CardProps[]) => {
+  console.log("Reordering cards.", unorderedCards)
   let reorderedCards: CardProps[] = [...unorderedCards]
 
   const shiftCardsOneByLeft = () => {
@@ -60,6 +61,7 @@ export const reorderCards = (unorderedCards: CardProps[]) => {
     // Up to three times as multiple cards might be misplaced
     shiftCardsOneByLeft()
     fixLastColumn()
+    console.log("Reordering. Result after:", index, reorderedCards)
   }
 
   return reorderedCards

@@ -24,15 +24,32 @@ export default function HighscoreList() {
 
   const { game } = useContext(GameContext)
 
-  useEffect(() => {
+  const fetchHighscores = () => {
     fetch("/api/highscores")
       .then((res) => res.json())
       .then((data) => {
         const { highscores } = data
         setHighscores(highscores)
       })
+  }
+
+  // Fetch highscore triggers
+  useEffect(() => {
+    fetchHighscores()
+  }, [game?.gameOver])
+
+  useEffect(() => {
+    let fetchTimer: NodeJS.Timer | undefined = undefined
+    fetchTimer = setInterval(() => {
+      fetchHighscores()
+    }, 30000)
+
+    return () => {
+      clearInterval(fetchTimer)
+    }
   }, [])
 
+  // Set indicator
   useEffect(() => {
     let clock: NodeJS.Timer | undefined = undefined
     clock = setInterval(() => {
@@ -78,8 +95,17 @@ export default function HighscoreList() {
           rank={i + 1}
           highscore={h}
           highlight={i == highscoreIndexToHighlight}
+          thisGame={h.lobbyId == game?.lobbyId}
         />
       ))}
+      {!highscores.length && (
+        <div className={styles.retryText}>
+          <p>
+            Unable to load highscores. <br />{" "}
+            <a onClick={fetchHighscores}>Retry</a>
+          </p>
+        </div>
+      )}
     </div>
   )
 }
@@ -88,10 +114,12 @@ const Highscore = ({
   rank,
   highscore,
   highlight,
+  thisGame,
 }: {
   rank: number
   highscore: Highscore
   highlight: boolean
+  thisGame: boolean
 }) => {
   const { userData } = useContext(SocketContext)
   const { totalTime, penalties, publicUuid } = highscore
@@ -104,7 +132,7 @@ const Highscore = ({
     <div
       className={`${styles.highscoreContainer} ${
         highlight ? styles.highlightBorder : ""
-      }`}
+      } ${thisGame ? styles.thisGame : ""}`}
     >
       <div className={styles.rank}>{`${rank}.`}</div>
       <div className={styles.innerContainer}>

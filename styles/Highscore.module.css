@@ -34,6 +34,11 @@
   border-top: 3px solid var(--yellow);
 }
 
+.thisGame {
+  z-index: 100;
+  box-shadow: var(--cardShadow);
+}
+
 .rank {
   font-family: var(--font);
   width: 2rem;
@@ -70,4 +75,14 @@
 
 .extraInfo {
   font-size: 0.5rem;
+}
+
+.retryText {
+  font-size: x-small;
+}
+
+.retryText a {
+  text-decoration: underline;
+  color: var(--purple);
+  cursor: pointer;
 }
