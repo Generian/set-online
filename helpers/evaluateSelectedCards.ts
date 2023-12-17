@@ -36,10 +36,9 @@ export const evaluateSelectedCardsForSet = (
             })
           }, 2000)
         }
+        // Reset state
+        setSelectedCards([])
       }
     )
-
-    // Reset state
-    setSelectedCards([])
   }
 }

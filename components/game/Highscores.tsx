@@ -146,7 +146,7 @@ const Highscore = ({
       >
         {penalties}
       </div>
-      {highlight && (
+      {highlight && !thisGame && (
         <div className={styles.highlight}>
           <KeyboardArrowLeftIcon />
         </div>
