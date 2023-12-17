@@ -19,3 +19,11 @@
   pointer-events: none;
   opacity: 0.5;
 }
+
+@media only screen and (max-width: 600px) {
+  .container {
+    width: 80vw;
+    height: unset;
+    padding: 1rem;
+  }
+}
