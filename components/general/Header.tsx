@@ -3,11 +3,21 @@ import { SocketContext } from "./SocketConnection"
 import { useContext } from "react"
 import { getPublicUuid } from "@/helpers/uuidHandler"
 import { useRouter } from "next/router"
+import Image from "next/image"
+import logo from "public/set-logo.jpg"
 
 const Header = () => {
+  const router = useRouter()
+
+  const handleLogoClick = () => {
+    router.push("/")
+  }
+
   return (
     <div className={styles.container}>
-      <div className={styles.logo}></div>
+      <div className={styles.logoContainer} onClick={handleLogoClick}>
+        <Image src={logo} alt="logo" className={styles.logo} />
+      </div>
       <div className={styles.user}>
         <User />
       </div>

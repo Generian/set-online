@@ -13,7 +13,6 @@
 
 .penaltiesCountContainer {
   height: 3.8rem;
-  width: 3.8rem;
   background-color: var(--redBackground);
   color: var(--red);
   display: flex;
@@ -91,4 +90,48 @@
   font-weight: bold;
   font-family: var(--font);
   color: var(--red);
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    margin: 0.5rem;
+  }
+
+  .penaltiesCountContainer {
+    height: 2.8rem;
+    font-size: 2rem;
+  }
+
+  .timeContainer {
+    padding: 0.5rem;
+    height: 2.8rem;
+  }
+
+  .time {
+    top: 0.2rem;
+    right: unset;
+    font-size: 2rem;
+  }
+
+  .pulsate {
+    font-size: 2rem;
+  }
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+      font-size: 2rem;
+    }
+    50% {
+      opacity: 0.75;
+      font-size: 2.02rem;
+    }
+    100% {
+      opacity: 1;
+      font-size: 2rem;
+    }
+  }
+
+  .penalty {
+    font-size: 2rem;
+  }
 }

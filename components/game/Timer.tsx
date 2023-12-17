@@ -4,6 +4,7 @@ import styles from "@/styles/Timer.module.css"
 import { useEffect, useRef, useState } from "react"
 import Progressbar from "./Progressbar"
 import { GameContext } from "./Game"
+import useViewportDimensions from "@/helpers/useViewportDimensions"
 
 // Types
 interface TimerProps {
@@ -14,6 +15,10 @@ interface TimerProps {
 const TimeAttackTimer = ({ game }: TimerProps) => {
   const [time, setTime] = useState(0)
   const [penaltyTimers, setPenaltyTimers] = useState<number[]>([])
+
+  const { isMobile } = useViewportDimensions()
+
+  console.log("ismobile:", isMobile)
 
   const isFirstRender = useRef(true)
 
@@ -84,7 +89,15 @@ const TimeAttackTimer = ({ game }: TimerProps) => {
         <div
           className={styles.timeContainer}
           style={{
-            width: `${totalTime / (1000.0 * 3600) > 1 ? "13.6rem" : "10.7rem"}`,
+            width: `${
+              totalTime / (1000.0 * 3600) > 1
+                ? isMobile
+                  ? "9rem"
+                  : "13.6rem"
+                : isMobile
+                ? "7rem"
+                : "10.7rem"
+            }`,
           }}
         >
           <span
@@ -118,7 +131,15 @@ const TimeAttackTimer = ({ game }: TimerProps) => {
             !penalties ? styles.noPenalties : ""
           }`}
           style={{
-            width: `${penalties > 9 ? "4.8rem" : "3.8rem"}`,
+            width: `${
+              penalties > 9
+                ? isMobile
+                  ? "3rem"
+                  : "4.8rem"
+                : isMobile
+                ? "2.8rem"
+                : "3.8rem"
+            }`,
           }}
         >
           <span className={styles.penaltiesCount}>

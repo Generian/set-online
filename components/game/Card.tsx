@@ -4,6 +4,7 @@ import { GameContext } from "./Game"
 import { Shape } from "./Shape"
 import { BaseCard } from "@/helpers/cardsInitialiser"
 import { getCoordinatesAndSize } from "@/helpers/positions"
+import useViewportDimensions from "@/helpers/useViewportDimensions"
 
 export interface CardProps extends BaseCard {
   column: number | null
@@ -30,6 +31,8 @@ export const Card = ({
 }: CardProps) => {
   const [selected, setSelected] = useState(false)
   const [error, setError] = useState(false)
+
+  const viewportDimensions = useViewportDimensions()
 
   const { game, selectedCards, setSelectedCards, errorCards, maxColumns } =
     useContext(GameContext)
@@ -92,6 +95,7 @@ export const Card = ({
 
   // Get Coordinates
   const { left, top, height } = getCoordinatesAndSize(
+    viewportDimensions,
     column,
     row,
     maxColumns,

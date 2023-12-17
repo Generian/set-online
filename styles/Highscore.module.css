@@ -90,3 +90,9 @@
   color: var(--purple);
   cursor: pointer;
 }
+
+@media only screen and (max-width: 600px) {
+  .container {
+    display: none;
+  }
+}

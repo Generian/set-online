@@ -97,3 +97,16 @@
   background-color: transparent;
   fill: none;
 }
+
+@media only screen and (max-width: 600px) {
+  .shape {
+    border-width: calc(var(--borderWidth) * 0.86);
+    stroke-width: var(--strokeWidth);
+  }
+
+  .striped_red,
+  .striped_blue,
+  .striped_green {
+    background-size: 0.27em 0.27em;
+  }
+}

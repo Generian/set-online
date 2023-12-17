@@ -9,6 +9,7 @@
   font-family: var(--font);
   box-shadow: var(--cardShadow);
   border-radius: var(--cardBorderRadius);
+  z-index: 300;
 }
 
 .setsContainer {
@@ -27,4 +28,30 @@
   color: black;
   border-radius: 0.3rem;
   transition: all var(--slowTransition) ease-in-out;
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    margin: 0.5rem;
+    gap: 0.5rem;
+    padding-left: 0.5rem;
+  }
+
+  .setsContainer {
+    height: 2.8rem;
+    min-width: 2.8rem;
+    padding: 0 0.25rem 0 0.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--gray);
+    box-shadow: var(--cardShadow);
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: var(--font);
+    color: black;
+    border-radius: 0.3rem;
+    transition: all var(--slowTransition) ease-in-out;
+  }
 }

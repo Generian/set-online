@@ -11,6 +11,7 @@
   background-color: rgba(211, 211, 211, 0);
   border-radius: 0.5rem;
   transition: all var(--fastTransition) ease-in-out;
+  transition: top 1s, left 1s;
   box-shadow: var(--cardShadow);
   z-index: 110;
 }
@@ -25,7 +26,6 @@
   border-radius: 1.5rem;
   border: 1px solid var(--lightGray);
   cursor: pointer;
-  font-size: 2rem;
   transition: all var(--fastTransition) ease-in-out;
   background-color: var(--lightGray);
   display: flex;
@@ -37,4 +37,12 @@
   border: 2px solid var(--purple);
   color: var(--purple);
   background-color: var(--yellow);
+}
+
+@media only screen and (max-width: 600px) {
+  .button {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 1.2rem;
+  }
 }
