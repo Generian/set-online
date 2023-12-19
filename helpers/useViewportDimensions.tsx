@@ -24,7 +24,6 @@ export default function useViewportDimensions() {
   useEffect(() => {
     function handleResize() {
       const newViewportDimensions = getViewportDimensions()
-      console.log(newViewportDimensions)
       setViewportDimensions(newViewportDimensions)
       setIsMobile(newViewportDimensions.width <= 600)
     }

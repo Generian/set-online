@@ -1,19 +1,28 @@
 import { getCookie } from "@/helpers/cookies"
 import { GameAction, Games, UserAction } from "@/helpers/gameHandling"
+import { handleActionLocally } from "@/helpers/handleActionLocally"
 import {
   ServerToClientEvents,
   ClientToServerEvents,
 } from "@/helpers/socketHelpers"
 import { PublicUsers } from "@/helpers/userHandling"
-import { getUuid, handleNewUuid } from "@/helpers/uuidHandler"
+import { getPublicUuid, getUuid, handleNewUuid } from "@/helpers/uuidHandler"
 import { useRouter } from "next/router"
-import { createContext, useEffect, useState } from "react"
+import {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useEffect,
+  useState,
+} from "react"
 import { io, Socket } from "socket.io-client"
 
 let socket: Socket<ServerToClientEvents, ClientToServerEvents>
 
 interface SocketContextProps {
   gameData: Games
+  localGameData: Games
+  setLocalGameData: Dispatch<SetStateAction<Games>>
   userData: PublicUsers
   submitAction: (
     a: GameAction | UserAction,
@@ -23,6 +32,8 @@ interface SocketContextProps {
 
 export const SocketContext = createContext<SocketContextProps>({
   gameData: {},
+  localGameData: {},
+  setLocalGameData: () => {},
   userData: {},
   submitAction: () => {},
 })
@@ -31,8 +42,14 @@ interface SocketConnectionProps {
   children?: JSX.Element
 }
 
+export type EnrichedAction = (GameAction | UserAction) & {
+  lobbyId: string
+  publicUuid: string
+}
+
 const SocketConnection = ({ children }: SocketConnectionProps) => {
   const [gameData, setGameData] = useState<Games>({})
+  const [localGameData, setLocalGameData] = useState<Games>({})
   const [userData, setUserData] = useState<PublicUsers>({})
   const [submitAction, setSubmitAction] = useState<
     (a: GameAction, callback?: (obj: any) => void) => void
@@ -51,18 +68,33 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
       action: GameAction,
       callback?: (obj: any) => void
     ) => {
-      const enrichedAction = {
+      const enrichedAction: EnrichedAction = {
         ...action,
-        lobbyId,
+        lobbyId: lobbyId as string,
+        publicUuid: getPublicUuid(),
       }
       console.log("Submit action:", enrichedAction)
+
+      // Local action handling
+      handleActionLocally(enrichedAction, localGameData, setLocalGameData)
+
+      // Emit action to server
       socket.emit("action", getUuid(), enrichedAction, callback)
     }
 
     setSubmitAction((s: any) => {
       return submitActionHandler
     })
-  }, [lobbyId])
+  }, [lobbyId, localGameData])
+
+  useEffect(() => {
+    console.log(
+      "local:",
+      localGameData,
+      lobbyId,
+      localGameData[lobbyId as string]
+    )
+  }, [localGameData, lobbyId])
 
   const socketInitializer = async () => {
     console.log("Initialising socket")
@@ -86,6 +118,18 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
     socket.on("gameDataUpdate", (data: Games) => {
       console.log("receiving game data:", data)
       setGameData(data)
+      setLocalGameData((localGameData) => {
+        if (!Object.keys(localGameData).length) {
+          console.log("Setting local game data from scratch.")
+          return { ...data }
+        } else if (typeof lobbyId == "string" && !localGameData[lobbyId]) {
+          console.log("Enriching local game data with data for this lobby.")
+          return { ...data }
+        } else {
+          console.log("Local game data for lobby already set. Not updating.")
+          return localGameData
+        }
+      })
     })
 
     socket.on("userDataUpdate", (data: PublicUsers) => {
@@ -95,7 +139,15 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
   }
 
   return (
-    <SocketContext.Provider value={{ gameData, userData, submitAction }}>
+    <SocketContext.Provider
+      value={{
+        gameData,
+        localGameData,
+        setLocalGameData,
+        userData,
+        submitAction,
+      }}
+    >
       {children}
     </SocketContext.Provider>
   )

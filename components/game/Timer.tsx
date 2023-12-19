@@ -18,8 +18,6 @@ const TimeAttackTimer = ({ game }: TimerProps) => {
 
   const { isMobile } = useViewportDimensions()
 
-  console.log("ismobile:", isMobile)
-
   const isFirstRender = useRef(true)
 
   const publicUuid = getPublicUuid()

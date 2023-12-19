@@ -101,27 +101,43 @@ export interface SetWon {
 }
 
 export const handleGameAction = (
-  action: GameAction,
-  privateUuid: string,
-  socketId: string,
-  users: Users,
-  games: Games
+  action: GameAction & {
+    lobbyId: string
+    publicUuid: string
+  },
+  games: Games,
+  privateUuid?: string,
+  socketId?: string,
+  users?: Users,
+  isLocalCheck?: boolean
 ): {
   lobbyId?: string | undefined
   newGameData?: Game | undefined
   error?: string | undefined
   isValidSet?: boolean
+  isLocalCheck?: boolean
 } => {
-  // Resolve public uuid from private one
-  const user = users[privateUuid]
+  if (!isLocalCheck) {
+    if (!socketId) {
+      return { error: "No socketId found." }
+    }
 
-  if (!user.publicUuid) {
-    return { error: "Could not resolve user." }
+    const user = users && privateUuid && users[privateUuid]
+
+    if (!user) {
+      return { error: "No user found." }
+    }
+
+    if (!user?.publicUuid) {
+      return { error: "User data corrupted." }
+    }
+
+    if (!user.sockets.includes(socketId)) {
+      return { error: "Socket unknown for given user." }
+    }
   }
 
-  if (!user.sockets.includes(socketId)) {
-    return { error: "Socket unknown for given user." }
-  }
+  const { publicUuid } = action
 
   // Handle action
   if (!action?.lobbyId) {
@@ -131,7 +147,7 @@ export const handleGameAction = (
       const newGame: Game = {
         lobbyId: createLobbyId(),
         gameType: a.gameType,
-        players: [user.publicUuid],
+        players: [publicUuid],
         cards: cards,
         maxColumns: 4,
         hasSet: !!findSetInCards(cards),
@@ -154,12 +170,13 @@ export const handleGameAction = (
     const game = games[action.lobbyId]
 
     if (!game) {
+      console.log(games, action.lobbyId)
       return { error: "No game found!" }
     }
 
     // Check if player is authorised to perform action
 
-    if (!game.players.includes(user.publicUuid)) {
+    if (!game.players.includes(publicUuid)) {
       return {
         error: "Player not authorised to perform action.",
       }
@@ -167,18 +184,10 @@ export const handleGameAction = (
 
     switch (action.type) {
       case "SUBMIT_SET":
-        return handleSubmitSet(
-          action as Action_SubmitSet,
-          game,
-          user.publicUuid
-        )
+        return handleSubmitSet(action as Action_SubmitSet, game, publicUuid)
 
       case "REQUEST_CARDS":
-        return handleRequestCards(
-          action as Action_SubmitSet,
-          game,
-          user.publicUuid
-        )
+        return handleRequestCards(action as Action_SubmitSet, game, publicUuid)
 
       default:
         return { error: "Unknown action!" }
@@ -243,8 +252,6 @@ const handleSubmitSet = (
 
       // Add additional cards if valid
       if (newCards.filter((c) => !c.hidden).length < 12) {
-        console.log("adding cards", newCards.filter((c) => !c.hidden).length)
-
         newCards = addCards(newCards, 3).newCards
       }
 
@@ -302,7 +309,6 @@ const addCards = (cards: CardProps[], cardsToAdd: number) => {
         hidden: false,
         ...freePositions[cardsToAdd - cardsLeftToAdd],
       }
-      console.log("Adding card:", newCards[index])
       cardsLeftToAdd--
     }
   }

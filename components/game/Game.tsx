@@ -46,26 +46,76 @@ export const Game = () => {
   const [maxColumns, setMaxColumns] = useState(4)
   const [game, setGame] = useState<GameProps>()
 
-  const { gameData, submitAction } = useContext(SocketContext)
+  const { gameData, localGameData, submitAction } = useContext(SocketContext)
 
   const router = useRouter()
   const { lobbyId } = router.query
 
-  // Handle new game data received from server
+  // Handle new game data received from server and locally. Optimise for fast rendering based on local data before server-validated data
   useEffect(() => {
-    console.log("gameData:", gameData)
     if (typeof lobbyId === "string") {
       const game = gameData[lobbyId]
-      if (game) {
+      const localGame = localGameData[lobbyId]
+      if (game && localGame) {
+        if (game.actions.length < localGame.actions.length) {
+          console.log("Using local game state to render game.")
+          setGame(localGame)
+          setCards(localGame.cards)
+          setMaxColumns(localGame.maxColumns)
+        } else {
+          console.log("Using server game state to render game.")
+          setGame(game)
+          setCards(game.cards)
+          setMaxColumns(game.maxColumns)
+
+          // Validation of local game state vs server game state
+          const serverAheadOfLocal =
+            game.actions.length > localGame.actions.length
+          if (serverAheadOfLocal) {
+            console.warn("Server game state ahead of local game state.")
+          } else {
+            // Server and local state are on the same action index
+            const latestLocalActionType = localGame.actions.slice(-1)[0].type
+            const latestServerActionType = game.actions.slice(-1)[0].type
+            const latestActionNotEqual =
+              latestLocalActionType !== latestServerActionType
+
+            if (latestActionNotEqual) {
+              console.error(
+                "Latest game action differs between local and server state. Local:",
+                latestLocalActionType,
+                "Server:",
+                latestServerActionType
+              )
+              const getCardIdSum = (cards: CardProps[]) => {
+                return cards
+                  .filter((c) => !c.hidden && !c.set)
+                  .reduce((accumulator, card) => accumulator + card.id, 0)
+              }
+              const cardsNotEqual =
+                getCardIdSum(game.cards) !== getCardIdSum(localGame.cards)
+
+              if (cardsNotEqual) {
+                console.error(
+                  "Although on the same action index, the cards don't match between local and server state."
+                )
+              }
+            }
+          }
+        }
+      } else if (game && !localGame) {
         setGame(game)
         setCards(game.cards)
         setMaxColumns(game.maxColumns)
-        // findSetInCards(game.cards)?.forEach((c, i) => {
-        //   console.log("Set card", i, ":", c.count, c.shading, c.color, c.type)
-        // })
+      } else if (!game && !localGame) {
+        console.log("No game data available to render game. Waiting for data.")
+      } else {
+        console.error(
+          "Case should not be possible. Server data for the game should always exist if local data exists."
+        )
       }
     }
-  }, [gameData, lobbyId])
+  }, [gameData, localGameData, lobbyId])
 
   // Evaluate Set if card gets selected
   useEffect(() => {

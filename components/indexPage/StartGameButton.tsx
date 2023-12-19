@@ -2,7 +2,7 @@ import styles from "@/styles/StartGameButton.module.css"
 import { SocketContext } from "@/components/general/SocketConnection"
 import { useRouter } from "next/router"
 import { useContext } from "react"
-import { GameType } from "@/helpers/gameHandling"
+import { Game, GameType } from "@/helpers/gameHandling"
 
 interface StartGameButtonProps {
   gameType: GameType
@@ -14,7 +14,7 @@ export const StartGameButton = ({ gameType }: StartGameButtonProps) => {
   const router = useRouter()
 
   const navigateToGamePage = (obj: any) => {
-    router.push(`/game?lobbyId=${obj.lobbyId}`)
+    router.push(`/game?lobbyId=${obj.lobbyId}`, undefined, { shallow: true })
   }
 
   const handleClick = () => {

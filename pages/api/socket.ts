@@ -121,7 +121,10 @@ const SocketHandler = async (
         "action",
         (
           privateUuid: string,
-          action: GameAction | UserAction,
+          action: (GameAction | UserAction) & {
+            lobbyId: string
+            publicUuid: string
+          },
           callback?: (obj: any) => void
         ) => {
           // Log new action received by the server
@@ -133,10 +136,10 @@ const SocketHandler = async (
             // Handle action
             const actionResponse = handleGameAction(
               action,
+              games,
               privateUuid,
               socket.id,
-              users,
-              games
+              users
             )
 
             const { lobbyId, newGameData, error } = actionResponse

@@ -96,6 +96,7 @@ export default function HighscoreList() {
           highscore={h}
           highlight={i == highscoreIndexToHighlight}
           thisGame={h.lobbyId == game?.lobbyId}
+          gameOver={!!game?.gameOver}
         />
       ))}
       {!highscores.length && (
@@ -115,11 +116,13 @@ const Highscore = ({
   highscore,
   highlight,
   thisGame,
+  gameOver,
 }: {
   rank: number
   highscore: Highscore
   highlight: boolean
   thisGame: boolean
+  gameOver: boolean
 }) => {
   const { userData } = useContext(SocketContext)
   const { totalTime, penalties, publicUuid } = highscore
@@ -146,7 +149,7 @@ const Highscore = ({
       >
         {penalties}
       </div>
-      {highlight && !thisGame && (
+      {highlight && !gameOver && (
         <div className={styles.highlight}>
           <KeyboardArrowLeftIcon />
         </div>

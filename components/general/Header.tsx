@@ -16,7 +16,7 @@ const Header = () => {
   return (
     <div className={styles.container}>
       <div className={styles.logoContainer} onClick={handleLogoClick}>
-        <Image src={logo} alt="logo" className={styles.logo} />
+        <Image src={logo} alt="logo" priority={true} className={styles.logo} />
       </div>
       <div className={styles.user}>
         <User />

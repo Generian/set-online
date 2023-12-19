@@ -51,8 +51,6 @@ export const validateCards = (
 }
 
 export const findSetInCards = (rawCards: CardProps[]): CardProps[] | null => {
-  console.log("start validating cards for set")
-
   let set: CardProps[] = []
   const cards = rawCards.filter((c) => !c.hidden)
 
@@ -85,6 +83,5 @@ export const findSetInCards = (rawCards: CardProps[]): CardProps[] | null => {
     index++
   }
 
-  console.log("completed validation. Has set:", !(set.length === 0))
   return set.length > 0 ? set : null
 }
