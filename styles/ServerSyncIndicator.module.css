@@ -1,0 +1,33 @@
+.container {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #1976d2;
+  opacity: 0;
+  transition: opacity var(--regularTransition) ease-in-out 0.5s;
+}
+
+.show {
+  opacity: 1;
+}
+
+.text {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

@@ -2,7 +2,7 @@ import styles from "@/styles/StartGameButton.module.css"
 import { SocketContext } from "@/components/general/SocketConnection"
 import { useRouter } from "next/router"
 import { useContext } from "react"
-import { Game, GameType } from "@/helpers/gameHandling"
+import { GameType } from "@/helpers/gameHandling"
 
 interface StartGameButtonProps {
   gameType: GameType

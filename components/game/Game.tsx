@@ -8,7 +8,6 @@ import {
 } from "react"
 import { Card, CardProps } from "./Card"
 import { Field } from "./Field"
-import { findSetInCards } from "@/helpers/setValidator"
 import { evaluateSelectedCardsForSet } from "@/helpers/evaluateSelectedCards"
 import { SocketContext } from "../general/SocketConnection"
 import { useRouter } from "next/router"
@@ -20,6 +19,7 @@ import SetAnnouncer from "./SetAnnouncer"
 import HighscoreList from "./Highscores"
 import SetsCounter from "./SetsCounter"
 import GameOverInfo from "./GameOverInfo"
+import ServerSyncIndicator from "./ServerSyncIndicator"
 
 interface GameContextProps {
   game: GameProps | undefined
@@ -45,6 +45,8 @@ export const Game = () => {
   const [errorCards, setErrorCards] = useState<CardProps[]>([])
   const [maxColumns, setMaxColumns] = useState(4)
   const [game, setGame] = useState<GameProps>()
+  const [waitingForServerSync, setWaitingForServerSync] =
+    useState<boolean>(false)
 
   const { gameData, localGameData, submitAction } = useContext(SocketContext)
 
@@ -62,11 +64,13 @@ export const Game = () => {
           setGame(localGame)
           setCards(localGame.cards)
           setMaxColumns(localGame.maxColumns)
+          setWaitingForServerSync(true)
         } else {
           console.log("Using server game state to render game.")
           setGame(game)
           setCards(game.cards)
           setMaxColumns(game.maxColumns)
+          setWaitingForServerSync(false)
 
           // Validation of local game state vs server game state
           const serverAheadOfLocal =
@@ -107,6 +111,7 @@ export const Game = () => {
         setGame(game)
         setCards(game.cards)
         setMaxColumns(game.maxColumns)
+        setWaitingForServerSync(false)
       } else if (!game && !localGame) {
         console.log("No game data available to render game. Waiting for data.")
       } else {
@@ -147,6 +152,7 @@ export const Game = () => {
             <AddCardsButton />
             {game && <SetAnnouncer game={game} />}
             {!!game?.gameOver && <GameOverInfo game={game} />}
+            {<ServerSyncIndicator show={waitingForServerSync} />}
           </Field>
         }
         infoContainer={
