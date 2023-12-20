@@ -12,6 +12,7 @@
 
 .logoContainer {
   height: 2.8rem;
+  aspect-ratio: 682/318;
 }
 
 .logoContainer:hover {
