@@ -55,7 +55,7 @@ export const getCoordinatesAndSize = (
     const cardHeight = (cardWidth * 11.5) / 8
 
     const gap = cardWidth * 0.1
-    const leftMargin = (width - (maxColumns - 1) * (cardWidth + gap) + gap) / 2
+    const leftMargin = (width - 3 * (cardWidth + gap) + gap) / 2
 
     if (set) {
       return {
