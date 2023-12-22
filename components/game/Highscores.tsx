@@ -6,6 +6,9 @@ import { getPublicUuid } from "@/helpers/uuidHandler"
 import { TimeAttackGame } from "@/helpers/gameHandling"
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
 import { SocketContext } from "../general/SocketConnection"
+import useViewportDimensions from "@/helpers/useViewportDimensions"
+import { LinearProgress } from "@mui/material"
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded"
 
 export interface Highscore {
   publicUuid: string
@@ -21,8 +24,10 @@ export default function HighscoreList() {
   const [highscoreIndexToHighlight, setHighscoreIndexToHighlight] = useState<
     number | undefined
   >()
+  const [isExpanded, setIsExpanded] = useState<boolean>(false)
 
   const { game } = useContext(GameContext)
+  const { isMobile } = useViewportDimensions()
 
   const fetchHighscores = () => {
     fetch("/api/highscores")
@@ -84,31 +89,71 @@ export default function HighscoreList() {
 
   if (!game || game?.gameType !== "TIME_ATTACK") return <></>
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.title}>
-        <span>Highscores</span>
-      </div>
-      {highscores.map((h, i) => (
-        <Highscore
-          key={`highscore_${h.lobbyId}`}
-          rank={i + 1}
-          highscore={h}
-          highlight={i == highscoreIndexToHighlight}
-          thisGame={h.lobbyId == game?.lobbyId}
-          gameOver={!!game?.gameOver}
-        />
-      ))}
-      {!highscores.length && (
-        <div className={styles.retryText}>
-          <p>
-            Unable to load highscores. <br />{" "}
-            <a onClick={fetchHighscores}>Retry</a>
-          </p>
+  if (!isMobile) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.title}>
+          <span>Highscores</span>
         </div>
-      )}
-    </div>
-  )
+        {highscores.map((h, i) => (
+          <Highscore
+            key={`highscore_${h.lobbyId}`}
+            rank={i + 1}
+            highscore={h}
+            highlight={i == highscoreIndexToHighlight}
+            thisGame={h.lobbyId == game?.lobbyId}
+            gameOver={!!game?.gameOver}
+          />
+        ))}
+        {!highscores.length && (
+          <div className={styles.retryText}>
+            <p>
+              Unable to load highscores. <br />{" "}
+              <a onClick={fetchHighscores}>Retry</a>
+            </p>
+          </div>
+        )}
+      </div>
+    )
+  } else {
+    const handleMobileContainerToggle = () => {
+      setIsExpanded((e) => !e)
+    }
+    return (
+      <div className={styles.mobileContainer}>
+        <div
+          className={styles.mobileNextHighscoreContainer}
+          onClick={handleMobileContainerToggle}
+        >
+          <div
+            className={`${styles.arrow} ${isExpanded ? styles.closeArrow : ""}`}
+          >
+            <KeyboardArrowUpRoundedIcon />
+          </div>
+        </div>
+        <LinearProgress
+          variant="determinate"
+          value={100}
+          className={styles.mobileProgress}
+        />
+        <div
+          className={styles.mobileHighscoresContainer}
+          style={{ maxHeight: isExpanded ? "2000px" : "0px" }}
+        >
+          {highscores.map((h, i) => (
+            <Highscore
+              key={`highscore_${h.lobbyId}`}
+              rank={i + 1}
+              highscore={h}
+              highlight={i == highscoreIndexToHighlight}
+              thisGame={h.lobbyId == game?.lobbyId}
+              gameOver={!!game?.gameOver}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
 }
 
 const Highscore = ({
@@ -140,7 +185,10 @@ const Highscore = ({
       <div className={styles.rank}>{`${rank}.`}</div>
       <div className={styles.innerContainer}>
         <div className={styles.time}>{formatTime(totalTime)}</div>
-        <div className={styles.extraInfo}>{username}</div>
+        <div className={styles.extraInfo}>
+          {"by "}
+          <span>{username}</span>
+        </div>
       </div>
       <div
         className={`${styles.penalties} ${

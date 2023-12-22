@@ -81,6 +81,10 @@
   font-size: 0.5rem;
 }
 
+.extraInfo span {
+  font-weight: bold;
+}
+
 .retryText {
   font-size: x-small;
 }
@@ -92,7 +96,52 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .container {
-    display: none;
+  .innerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
   }
+}
+
+/* Mobile styling */
+
+.mobileContainer {
+  position: fixed;
+  z-index: 400;
+  bottom: 0;
+  width: 100%;
+  background-color: blueviolet;
+}
+
+.mobileProgress {
+  box-shadow: var(--cardShadow);
+}
+
+.mobileNextHighscoreContainer {
+  display: flex;
+  position: absolute;
+  z-index: 0;
+  right: 0.5rem;
+  top: -1.5rem;
+  height: 1.5rem;
+  width: 3rem;
+  /* padding: 0.25rem; */
+  background-color: var(--white);
+  border-radius: 0.5rem 0.5rem 0 0;
+  box-shadow: var(--cardShadow);
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow {
+  transition: transform var(--slowTransition) ease-in-out;
+}
+
+.closeArrow {
+  transform: rotate(-180deg);
+}
+
+.mobileHighscoresContainer {
+  transition: max-height var(--slowTransition) ease-in-out;
 }
