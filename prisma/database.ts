@@ -179,6 +179,11 @@ export const retrieveListOfHighscoresFromDatabase = async (
       highscoreData: string
       publicUuid: string
       lobbyId: string
-    }) => JSON.parse(h.highscoreData)
+    }) => {
+      return {
+        ...JSON.parse(h.highscoreData),
+        createdAt: h.createdAt,
+      }
+    }
   )
 }

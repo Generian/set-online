@@ -9,6 +9,7 @@ import { SocketContext } from "../general/SocketConnection"
 import useViewportDimensions from "@/helpers/useViewportDimensions"
 import { LinearProgress } from "@mui/material"
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded"
+import { formatTimeDifference } from "@/helpers/utils"
 
 export interface Highscore {
   publicUuid: string
@@ -187,7 +188,10 @@ const Highscore = ({
         <div className={styles.time}>{formatTime(totalTime)}</div>
         <div className={styles.extraInfo}>
           {"by "}
-          <span>{username}</span>
+          <span className={styles.userName}>{`${username} `}</span>
+          {highscore.createdAt && (
+            <span>{formatTimeDifference(highscore.createdAt)}</span>
+          )}
         </div>
       </div>
       <div
