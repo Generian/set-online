@@ -173,6 +173,8 @@ const Highscore = ({
   const { userData } = useContext(SocketContext)
   const { totalTime, penalties, publicUuid } = highscore
 
+  const { isMobile } = useViewportDimensions()
+
   const username = userData[publicUuid]?.globalUsername
     ? userData[publicUuid].globalUsername
     : "Unknown Player"
@@ -189,7 +191,7 @@ const Highscore = ({
         <div className={styles.extraInfo}>
           {"by "}
           <span className={styles.userName}>{`${username} `}</span>
-          {highscore.createdAt && (
+          {highscore.createdAt && isMobile && (
             <span>{formatTimeDifference(highscore.createdAt)}</span>
           )}
         </div>
