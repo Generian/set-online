@@ -1,7 +1,13 @@
 import styles from "@/styles/Card.module.css"
 import { useContext, useEffect, useState } from "react"
 import { GameContext } from "./Game"
-import { Shape } from "./Shape"
+import {
+  BoxVariant,
+  CustomColors,
+  OvalVariant,
+  Shape,
+  ShapeVariants,
+} from "./Shape"
 import { BaseCard } from "@/helpers/cardsInitialiser"
 import { getCoordinatesAndSize } from "@/helpers/positions"
 import useViewportDimensions from "@/helpers/useViewportDimensions"
@@ -12,15 +18,24 @@ export interface CardProps extends BaseCard {
   hidden: boolean
   rank: number
   set?: boolean
+  customPosition?: {
+    left: number
+    top: number
+    height: number
+  }
+  shapeVariants?: ShapeVariants
+  customColors?: CustomColors
+  customSelected?: boolean
+  customOnClick?: () => void
 }
 
-export type CardPropList = "type" | "count" | "color" | "shading"
-export const cardProps: CardPropList[] = ["type", "count", "color", "shading"]
+export type CardPropList = "shape" | "count" | "color" | "shading"
+export const cardProps: CardPropList[] = ["shape", "count", "color", "shading"]
 
 export const Card = ({
   id,
   rank,
-  type,
+  shape,
   count,
   color,
   shading,
@@ -28,6 +43,11 @@ export const Card = ({
   row,
   hidden,
   set,
+  customPosition,
+  shapeVariants,
+  customColors,
+  customSelected,
+  customOnClick,
 }: CardProps) => {
   const [selected, setSelected] = useState(false)
   const [error, setError] = useState(false)
@@ -67,7 +87,7 @@ export const Card = ({
         {
           id,
           rank,
-          type,
+          shape,
           count,
           color,
           shading,
@@ -83,32 +103,23 @@ export const Card = ({
   const shapes = []
 
   for (let i = 0; i < count; i++) {
+    const shapeVariant = shapeVariants ? shapeVariants[shape] : undefined
     shapes.push(
       <Shape
-        key={`${id}_${type}_${color}_${shading}_${i}`}
-        type={type}
+        key={`${id}_${shape}_${color}_${shading}_${i}`}
+        shape={shape}
         color={color}
         shading={shading}
+        shapeVariant={shapeVariant}
+        customColors={customColors}
       />
     )
   }
 
   // Get Coordinates
-  const { left, top, height } = getCoordinatesAndSize(
-    viewportDimensions,
-    column,
-    row,
-    maxColumns,
-    set
-  )
-
-  // if (hidden) {
-  //   return (
-  //     <div className={`${styles.container} ${styles.hidden}`}>
-  //       <div className={styles.shapeContainer}>{shapes}</div>
-  //     </div>
-  //   )
-  // }
+  let { left, top, height } = customPosition
+    ? customPosition
+    : getCoordinatesAndSize(viewportDimensions, column, row, maxColumns, set)
 
   return (
     <div
@@ -121,12 +132,18 @@ export const Card = ({
         height,
         zIndex: set ? rank + 100 : row ? rank : -rank + 100,
       }}
-      onClick={hidden || game?.gameOver ? () => {} : () => onClick()}
+      onClick={
+        hidden || game?.gameOver
+          ? () => {}
+          : customOnClick
+          ? customOnClick
+          : () => onClick()
+      }
     >
       <div
-        className={`${styles.card} ${selected ? styles.selected : ""} ${
-          hidden ? styles.hidden : ""
-        } ${error ? styles.errorShake : ""}`}
+        className={`${styles.card} ${
+          selected || customSelected ? styles.selected : ""
+        } ${hidden ? styles.hidden : ""} ${error ? styles.errorShake : ""}`}
       >
         <div
           className={`${styles.card__face} ${styles.card__front} ${

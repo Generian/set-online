@@ -23,6 +23,17 @@
   height: 18%;
 }
 
+/* ShapeVariants */
+
+.DIAMOND {
+  height: 18%;
+  overflow: visible;
+}
+
+.TUBE {
+  border-radius: 999px;
+}
+
 /* Colors */
 
 .red {

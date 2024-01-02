@@ -20,6 +20,9 @@ import HighscoreList from "./Highscores"
 import SetsCounter from "./SetsCounter"
 import GameOverInfo from "./GameOverInfo"
 import ServerSyncIndicator from "./ServerSyncIndicator"
+import { defaultColors, ShapeVariants } from "./Shape"
+import { getCookie } from "@/helpers/cookies"
+import { UserPreferences } from "../general/Settings"
 
 interface GameContextProps {
   game: GameProps | undefined
@@ -45,6 +48,8 @@ export const Game = () => {
   const [errorCards, setErrorCards] = useState<CardProps[]>([])
   const [maxColumns, setMaxColumns] = useState(4)
   const [game, setGame] = useState<GameProps>()
+  const [shapeVariants, setShapeVariants] = useState<ShapeVariants>()
+  const [colors, setColors] = useState(defaultColors)
   const [waitingForServerSync, setWaitingForServerSync] =
     useState<boolean>(false)
 
@@ -52,6 +57,18 @@ export const Game = () => {
 
   const router = useRouter()
   const { lobbyId } = router.query
+
+  // Load custom user preferences
+  useEffect(() => {
+    const userPreferencesRaw = getCookie("userPreferences")
+    if (userPreferencesRaw) {
+      const { shapeVariants, customColors } = JSON.parse(
+        userPreferencesRaw
+      ) as UserPreferences
+      setShapeVariants(shapeVariants)
+      setColors(customColors)
+    }
+  }, [])
 
   // Handle new game data received from server and locally. Optimise for fast rendering based on local data before server-validated data
   useEffect(() => {
@@ -147,7 +164,14 @@ export const Game = () => {
         field={
           <Field>
             {cards.map((c) => (
-              <Card key={c.id} {...c} column={c.column} row={c.row} />
+              <Card
+                key={c.id}
+                {...c}
+                shapeVariants={shapeVariants}
+                column={c.column}
+                row={c.row}
+                customColors={colors}
+              />
             ))}
             <AddCardsButton />
             {game && <SetAnnouncer game={game} />}

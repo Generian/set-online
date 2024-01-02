@@ -4,7 +4,7 @@ import { getPositions } from "./positions"
 
 export interface BaseCard {
   id: number
-  type: ShapeType
+  shape: ShapeType
   count: Count
   color: Color
   shading: Shading
@@ -26,7 +26,7 @@ export const initialiseCards = (numberOfCards: number) => {
         counts.forEach((count, l) => {
           cards.push({
             id: Number(`${i}${j}${k}${l}`),
-            type: t,
+            shape: t,
             count: count,
             color: c,
             shading: s,

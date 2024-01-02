@@ -1,8 +1,8 @@
 :root {
   --font: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  --red: red;
-  --blue: blue;
-  --green: green;
+  --red: #ff0000;
+  --blue: #0000ff;
+  --green: #008000;
   --white: #ffffff;
   --lightgray: #fafafa;
   --gray: #eeeeee;

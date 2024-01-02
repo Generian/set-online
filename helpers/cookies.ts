@@ -1,7 +1,7 @@
 export const setCookie = (
   name: string,
   value: string,
-  lifetimeInDays: number
+  lifetimeInDays: number = 365
 ) => {
   document.cookie = `${name}=${value}; expires=${new Date(
     new Date().getTime() + 60 * 60 * 1000 * 24 * lifetimeInDays
