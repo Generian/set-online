@@ -40,6 +40,10 @@ export const retrieveListOfGamesFromDatabase = async (): Promise<Games> => {
   const games_raw = await prisma.game.findMany({
     where: {
       environment: process.env.NODE_ENV,
+      updatedAt: {
+        lte: new Date(),
+        gt: new Date(new Date(Date.now() - 24 * 3600 * 1000)),
+      },
     },
     orderBy: {
       createdAt: "desc",

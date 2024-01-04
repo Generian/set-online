@@ -79,7 +79,7 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
       handleActionLocally(enrichedAction, localGameData, setLocalGameData)
 
       // Emit action to server
-      socket.emit("action", getUuid(), enrichedAction, callback)
+      socket && socket.emit("action", getUuid(), enrichedAction, callback)
     }
 
     setSubmitAction((s: any) => {

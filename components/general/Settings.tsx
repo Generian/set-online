@@ -1,26 +1,16 @@
-import { getPublicUuid } from "@/helpers/uuidHandler"
 import styles from "@/styles/Settings.module.css"
-import { Button, TextField, debounce } from "@mui/material"
-import { useContext, useEffect, useMemo, useState } from "react"
-import { SocketContext } from "./SocketConnection"
+import { Button, TextField } from "@mui/material"
 import { Card } from "../game/Card"
 import {
   BoxVariant,
   Color,
   Count,
-  CustomColors,
   OvalVariant,
   Shading,
   ShapeType,
-  ShapeVariants,
   defaultColors,
 } from "../game/Shape"
-import { getCookie, setCookie } from "@/helpers/cookies"
-
-export interface UserPreferences {
-  shapeVariants: ShapeVariants
-  customColors: CustomColors
-}
+import useUserPreferences from "@/helpers/useUserPreferences"
 
 const exampleCard = {
   rank: 1,
@@ -34,61 +24,20 @@ const exampleCard = {
 }
 
 const Settings = () => {
-  const [boxVariant, setBoxVariant] = useState<BoxVariant>("RECTANGLE")
-  const [ovalVariant, setOvalVariant] = useState<OvalVariant>("OVAL")
-  const [colors, setColors] = useState<CustomColors>(defaultColors)
-
-  const { userData } = useContext(SocketContext)
-  let { submitAction } = useContext(SocketContext)
-
-  const user = userData[getPublicUuid()]
-
-  useEffect(() => {
-    const userPreferencesRaw = getCookie("userPreferences")
-    if (userPreferencesRaw) {
-      const {
-        shapeVariants: { box, oval },
-        customColors,
-      } = JSON.parse(userPreferencesRaw) as UserPreferences
-      box && setBoxVariant(box)
-      oval && setOvalVariant(oval)
-      setColors(customColors)
-    }
-  }, [])
-
-  const setUserPreferenceCookie = debounce(
-    (boxVariant, ovalVariant, colors) => {
-      if (boxVariant || ovalVariant || colors) {
-        setCookie(
-          "userPreferences",
-          JSON.stringify({
-            shapeVariants: {
-              box: boxVariant,
-              oval: ovalVariant,
-            },
-            customColors: colors,
-          })
-        )
-      }
-    },
-    500
-  )
-
-  useEffect(() => {
-    setUserPreferenceCookie(boxVariant, ovalVariant, colors)
-  }, [boxVariant, ovalVariant, colors])
-
-  if (!user) return <></>
-
-  const { globalUsername } = user
+  const {
+    username,
+    setUsername,
+    boxVariant,
+    setBoxVariant,
+    ovalVariant,
+    setOvalVariant,
+    colors,
+    setColors,
+  } = useUserPreferences()
 
   // Event handlers
   const handleUsernameChange = (newUsername: string) => {
-    console.log(newUsername)
-    submitAction({
-      type: "SET_USERNAME",
-      username: newUsername,
-    })
+    setUsername(newUsername)
   }
 
   const handleColorChange = (
@@ -118,8 +67,8 @@ const Settings = () => {
             id="outlined-basic"
             label="Username"
             variant="outlined"
-            defaultValue={globalUsername ? globalUsername : ""}
-            onBlur={(event) => handleUsernameChange(event.target.value)}
+            value={username}
+            onChange={(event) => handleUsernameChange(event.target.value)}
           />
         </div>
         <div className={styles.settigsSection}>
