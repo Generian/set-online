@@ -14,11 +14,11 @@
 }
 
 .image {
-  opacity: 0;
+  opacity: 1;
 }
 
 .shape {
-  fill: var(--greenBackground);
+  fill: var(--purpleBackground);
   filter: drop-shadow(5px 12px 0px rgb(0 0 0 / 1));
 }
 
@@ -29,7 +29,7 @@
 
 .animate {
   animation: shoot 1s ease-out;
-  opacity: 0;
+  opacity: 1;
 }
 @keyframes shoot {
   0% {
