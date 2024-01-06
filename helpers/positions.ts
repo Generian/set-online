@@ -16,13 +16,16 @@ export const getCoordinatesAndSize = (
     isMobile: boolean
     width: number
     height: number
+    fieldWidth: number | undefined
+    fieldHeight: number | undefined
   },
   column: number | null,
   row: number | null,
   maxColumns: number,
   set: boolean | undefined
 ) => {
-  const { width, height, isMobile } = viewportDimensions
+  const { width, height, fieldWidth, fieldHeight, isMobile } =
+    viewportDimensions
 
   if (!isMobile) {
     const cardHeight = 150
@@ -51,8 +54,11 @@ export const getCoordinatesAndSize = (
       }
     }
   } else {
-    const cardWidth = width / 4.5
-    const cardHeight = (cardWidth * 11.5) / 8
+    let cardHeight = fieldHeight
+      ? fieldHeight / 5.5
+      : ((width / 4.5) * 11.5) / 8
+
+    const cardWidth = (cardHeight * 8) / 11.5
 
     const gap = cardWidth * 0.1
     const leftMargin = (width - 3 * (cardWidth + gap) + gap) / 2

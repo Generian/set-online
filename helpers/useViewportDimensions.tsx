@@ -5,12 +5,19 @@ const getViewportDimensions = () => {
     return {
       width: 0,
       height: 0,
+      fieldWidth: 0,
+      fieldHeight: 0,
     }
   } else {
     const { innerWidth: width, innerHeight: height } = window
+    const field = document.getElementById("fieldContainer")
+    const fieldWidth = field?.offsetWidth
+    const fieldHeight = field?.offsetHeight
     return {
       width,
       height,
+      fieldWidth,
+      fieldHeight,
     }
   }
 }
