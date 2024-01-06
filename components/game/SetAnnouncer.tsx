@@ -8,7 +8,7 @@ interface SetAnnouncerProps {
 
 const SetAnnouncer = ({ game }: SetAnnouncerProps) => {
   const [wonSets, setWonSets] = useState(0)
-  const [showSetAnnouncer, setShowSetAnnouncer] = useState(true)
+  const [showSetAnnouncer, setShowSetAnnouncer] = useState(false)
   const isFirstRender = useRef(true)
 
   const { setsWon } = game as Game
@@ -26,7 +26,7 @@ const SetAnnouncer = ({ game }: SetAnnouncerProps) => {
     setShowSetAnnouncer(true)
     clearTimeout(timeout)
     timeout = setTimeout(() => {
-      setShowSetAnnouncer(true)
+      setShowSetAnnouncer(false)
     }, 2000)
 
     return () => {

@@ -14,7 +14,7 @@
 }
 
 .image {
-  opacity: 1;
+  opacity: 0;
 }
 
 .shape {
@@ -29,7 +29,7 @@
 
 .animate {
   animation: shoot 1s ease-out;
-  opacity: 1;
+  opacity: 0;
 }
 @keyframes shoot {
   0% {
