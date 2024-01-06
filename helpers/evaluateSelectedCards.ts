@@ -9,7 +9,8 @@ export const evaluateSelectedCardsForSet = (
   submitAction: (a: GameAction, callback?: (obj: any) => void) => void
 ) => {
   if (selectedCards.length >= 3) {
-    // Submit set to server
+    setSelectedCards([])
+    // Submit action
     submitAction(
       {
         type: "SUBMIT_SET",
@@ -36,8 +37,6 @@ export const evaluateSelectedCardsForSet = (
             })
           }, 2000)
         }
-        // Reset state
-        setSelectedCards([])
       }
     )
   }

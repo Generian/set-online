@@ -37,57 +37,66 @@ export const retrieveSpecificGameFromDatabase = async (
 }
 
 export const retrieveListOfGamesFromDatabase = async (): Promise<Games> => {
-  const games_raw = await prisma.game.findMany({
-    where: {
-      environment: process.env.NODE_ENV,
-      updatedAt: {
-        lte: new Date(),
-        gt: new Date(new Date(Date.now() - 24 * 3600 * 1000)),
+  try {
+    const games_raw = await prisma.game.findMany({
+      where: {
+        environment: process.env.NODE_ENV,
+        updatedAt: {
+          lte: new Date(),
+          gt: new Date(new Date(Date.now() - 24 * 3600 * 1000)),
+        },
       },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  })
-  const games: Games = {}
-  games_raw.map(
-    (game: {
-      id: number
-      lobbyId: string
-      createdAt: Date
-      updatedAt: Date
-      environment: string
-      gameData: string
-    }) => {
-      games[game.lobbyId] = JSON.parse(game.gameData)
-    }
-  )
+      orderBy: {
+        createdAt: "desc",
+      },
+    })
+    const games: Games = {}
+    games_raw.map(
+      (game: {
+        id: number
+        lobbyId: string
+        createdAt: Date
+        updatedAt: Date
+        environment: string
+        gameData: string
+      }) => {
+        games[game.lobbyId] = JSON.parse(game.gameData)
+      }
+    )
 
-  return games
+    return games
+  } catch (error) {
+    console.error(error)
+    return {}
+  }
 }
 
 // Users
 
 export const saveUserToDatabase = async (user: User, uuid: string) => {
-  const save = await prisma.user.upsert({
-    where: {
-      uuid: uuid,
-    },
-    update: {
-      updatedAt: new Date().toISOString(),
-      userName: user.globalUsername ? user.globalUsername : "",
-      language: "DE",
-    },
-    create: {
-      uuid: uuid,
-      publicUuid: user.publicUuid,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      environment: process.env.NODE_ENV,
-      userName: user.globalUsername ? user.globalUsername : "",
-      language: "DE",
-    },
-  })
+  try {
+    const save = await prisma.user.upsert({
+      where: {
+        uuid: uuid,
+      },
+      update: {
+        updatedAt: new Date().toISOString(),
+        userName: user.globalUsername ? user.globalUsername : "",
+        language: "DE",
+      },
+      create: {
+        uuid: uuid,
+        publicUuid: user.publicUuid,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        environment: process.env.NODE_ENV,
+        userName: user.globalUsername ? user.globalUsername : "",
+        language: "DE",
+      },
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export const retrieveSpecificUserFromDatabase = async (
@@ -110,33 +119,38 @@ export const retrieveSpecificUserFromDatabase = async (
 }
 
 export const retrieveListOfUsersFromDatabase = async (): Promise<Users> => {
-  const users_raw = await prisma.user.findMany({
-    where: {
-      environment: process.env.NODE_ENV,
-    },
-  })
-  const users: Users = {}
-  users_raw.map(
-    (user: {
-      id: number
-      uuid: string
-      publicUuid: string
-      createdAt: Date
-      updatedAt: Date
-      environment: string
-      userName: string
-      language: string
-    }) => {
-      users[user.uuid] = {
-        sockets: [],
-        publicUuid: user.publicUuid,
-        globalUsername: user.userName,
-        online: false,
+  try {
+    const users_raw = await prisma.user.findMany({
+      where: {
+        environment: process.env.NODE_ENV,
+      },
+    })
+    const users: Users = {}
+    users_raw.map(
+      (user: {
+        id: number
+        uuid: string
+        publicUuid: string
+        createdAt: Date
+        updatedAt: Date
+        environment: string
+        userName: string
+        language: string
+      }) => {
+        users[user.uuid] = {
+          sockets: [],
+          publicUuid: user.publicUuid,
+          globalUsername: user.userName,
+          online: false,
+        }
       }
-    }
-  )
+    )
 
-  return users
+    return users
+  } catch (error) {
+    console.error(error)
+    return {}
+  }
 }
 
 // Highscores

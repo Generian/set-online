@@ -7,7 +7,6 @@ import { TimeAttackGame } from "@/helpers/gameHandling"
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
 import { SocketContext } from "../general/SocketConnection"
 import useViewportDimensions from "@/helpers/useViewportDimensions"
-import { LinearProgress } from "@mui/material"
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded"
 import { formatTimeDifference } from "@/helpers/utils"
 
@@ -132,11 +131,6 @@ export default function HighscoreList() {
             <KeyboardArrowUpRoundedIcon />
           </div>
         </div>
-        <LinearProgress
-          variant="determinate"
-          value={100}
-          className={styles.mobileProgress}
-        />
         <div
           className={styles.mobileHighscoresContainer}
           style={{ maxHeight: isExpanded ? "2000px" : "0px" }}
