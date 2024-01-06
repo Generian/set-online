@@ -208,9 +208,9 @@ const handleSubmitSet = (
   if (!(action.selectedCards.length == 3)) {
     return { error: "Not exactly three cards submitted" }
   } else {
-    const { valid, error } = validateCards(action.selectedCards)
+    const { valid, error } = validateCards(action.selectedCards, game.cards)
     if (!valid) {
-      console.log("Set validation failed. Not a valid set.")
+      console.log("Set validation failed. Error:", error)
 
       if (game.gameType == "TIME_ATTACK") {
         let newGameData = { ...game } as TimeAttackGame

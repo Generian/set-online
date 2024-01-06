@@ -22,7 +22,7 @@ import GameOverInfo from "./GameOverInfo"
 import ServerSyncIndicator from "./ServerSyncIndicator"
 import { defaultColors, ShapeVariants } from "./Shape"
 import { getCookie } from "@/helpers/cookies"
-import { UserPreferences } from "../general/Settings"
+import { UserPreferences } from "@/helpers/useUserPreferences"
 
 interface GameContextProps {
   game: GameProps | undefined
@@ -77,7 +77,12 @@ export const Game = () => {
       const localGame = localGameData[lobbyId]
       if (game && localGame) {
         if (game.actions.length < localGame.actions.length) {
-          console.log("Using local game state to render game.")
+          console.log(
+            "Using local game state to render game. Server state index:",
+            game.actions.length,
+            "Local state index:",
+            localGame.actions.length
+          )
           setGame(localGame)
           setCards(localGame.cards)
           setMaxColumns(localGame.maxColumns)

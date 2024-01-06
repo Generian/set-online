@@ -22,13 +22,36 @@ const validateProperty = (
 }
 
 export const validateCards = (
-  cards: CardProps[]
+  cards: CardProps[],
+  gameCards?: CardProps[]
 ): { valid: boolean; error: string } => {
   // Check if three cards were provided
   if (cards.length !== 3) {
     return {
       valid: false,
       error: `Only exactly three cards form one set. You provided ${cards.length} cards.`,
+    }
+  }
+
+  // Check if cards are currently visible
+  if (gameCards) {
+    console.log("validating cards for visibility")
+
+    for (let index = 0; index < cards.length; index++) {
+      const card = cards[index]
+      const cardInDeck = gameCards.find((c) => c.id == card.id)
+      console.log(cardInDeck, cardInDeck?.hidden)
+      if (
+        cardInDeck?.hidden ||
+        cardInDeck?.set ||
+        !cardInDeck?.row ||
+        !cardInDeck?.column
+      ) {
+        return {
+          valid: false,
+          error: `Card is not visible and can't be selected for set: ${cardInDeck?.count} ${cardInDeck?.color} ${cardInDeck?.shape} ${cardInDeck?.shading}`,
+        }
+      }
     }
   }
 

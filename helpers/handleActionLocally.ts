@@ -5,7 +5,8 @@ import { EnrichedAction } from "@/components/general/SocketConnection"
 export const handleActionLocally = (
   action: EnrichedAction,
   localGameData: Games,
-  setLocalGameData: Dispatch<SetStateAction<Games>>
+  setLocalGameData: Dispatch<SetStateAction<Games>>,
+  callback?: (obj: any) => void
 ) => {
   if (
     getActionCategory(action) == "GAME" &&
@@ -32,9 +33,12 @@ export const handleActionLocally = (
         actions: [...newGameData.actions, action],
       }
 
-      // Save game to database
+      // Save game locally
       console.log("Setting new local game data:", newLocalGameData[lobbyId])
       setLocalGameData(newLocalGameData)
+
+      // Execute callback
+      callback && callback(actionResponse)
     }
   }
 }
