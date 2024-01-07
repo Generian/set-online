@@ -41,3 +41,14 @@ export const formatTimeDifference = (
     return num + ` year${num == 1 ? "" : "s"} ago`
   }
 }
+
+export const resolveUrlFromEnv = () => {
+  const env = process.env.NODE_ENV
+  if (env == "development") {
+    return "http://localhost:3000/"
+  } else if (env == "production") {
+    return "https://set-online-79de5c5c5632.herokuapp.com/"
+  } else {
+    return "https://set-online-79de5c5c5632.herokuapp.com/"
+  }
+}

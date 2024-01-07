@@ -1,13 +1,17 @@
 import { CardProps } from "@/components/game/Card"
 import { initialiseCards } from "./cardsInitialiser"
 import { createLobbyId } from "./utils"
-import { Users } from "./userHandling"
+import { User, Users } from "./userHandling"
 import { findSetInCards, validateCards } from "./setValidator"
 import { reorderCards } from "./reorderCards"
 import { getMaxColumn } from "./getMaxColumns"
 import { getPositions } from "./positions"
 import { saveHighscoreToDatabase } from "@/prisma/database"
-import { getTotalTimeAndPenalties } from "@/components/game/Timer"
+import { formatTime, getTotalTimeAndPenalties } from "@/components/game/Timer"
+import {
+  informSlackAboutNewTimeattackHighscore,
+  informSlackAboutTimeattackGameStarted,
+} from "./slackHelper"
 
 export type Game = TimeAttackGame | MultiplayerkGame
 
@@ -117,12 +121,12 @@ export const handleGameAction = (
   isValidSet?: boolean
   isLocalCheck?: boolean
 } => {
+  const user = users && privateUuid && users[privateUuid]
+
   if (!isLocalCheck) {
     if (!socketId) {
       return { error: "No socketId found." }
     }
-
-    const user = users && privateUuid && users[privateUuid]
 
     if (!user) {
       return { error: "No user found." }
@@ -159,6 +163,14 @@ export const handleGameAction = (
         actions: [],
         gameOver: 0,
       }
+
+      // Inform slack
+      informSlackAboutTimeattackGameStarted(
+        user ? user.globalUsername : "unknown",
+        newGame.lobbyId
+      )
+
+      // Return new game
       return {
         lobbyId: newGame.lobbyId,
         newGameData: newGame,
@@ -184,10 +196,22 @@ export const handleGameAction = (
 
     switch (action.type) {
       case "SUBMIT_SET":
-        return handleSubmitSet(action as Action_SubmitSet, game, publicUuid)
+        return handleSubmitSet(
+          action as Action_SubmitSet,
+          game,
+          publicUuid,
+          isLocalCheck,
+          user as User
+        )
 
       case "REQUEST_CARDS":
-        return handleRequestCards(action as Action_SubmitSet, game, publicUuid)
+        return handleRequestCards(
+          action as Action_SubmitSet,
+          game,
+          publicUuid,
+          isLocalCheck,
+          user as User
+        )
 
       default:
         return { error: "Unknown action!" }
@@ -198,7 +222,9 @@ export const handleGameAction = (
 const handleSubmitSet = (
   action: Action_SubmitSet,
   game: Game,
-  publicUuid: string
+  publicUuid: string,
+  isLocalCheck: boolean | undefined,
+  user?: User
 ): {
   lobbyId?: string | undefined
   newGameData?: Game | undefined
@@ -282,7 +308,24 @@ const handleSubmitSet = (
       // Save highscore
       if (gameOver) {
         newGameData.gameOver = new Date().getTime()
-        saveHighscore(newGameData, publicUuid, action.lobbyId as string)
+        !isLocalCheck &&
+          saveHighscore(newGameData, publicUuid, action.lobbyId as string)
+
+        // Inform slack about new highscore
+        if (game.gameType == "TIME_ATTACK") {
+          const {
+            lobbyId,
+            gameOver,
+            timeAttackAttributes: { startTime, userPenalties },
+          } = newGameData as TimeAttackGame
+          !isLocalCheck &&
+            informSlackAboutNewTimeattackHighscore(
+              user?.globalUsername ? user?.globalUsername : "unknown",
+              lobbyId,
+              formatTime(gameOver - startTime),
+              userPenalties[publicUuid]
+            )
+        }
       }
 
       // Return new game data
@@ -319,7 +362,9 @@ const addCards = (cards: CardProps[], cardsToAdd: number) => {
 const handleRequestCards = (
   action: Action_SubmitSet,
   gameData: Game,
-  publicUuid: string
+  publicUuid: string,
+  isLocalCheck: boolean | undefined,
+  user?: User
 ): {
   lobbyId?: string | undefined
   newGameData?: Game | undefined
@@ -369,7 +414,19 @@ const handleRequestCards = (
       // Save highscore
       if (gameOver) {
         newGameData.gameOver = new Date().getTime()
-        saveHighscore(newGameData, publicUuid, action.lobbyId as string)
+        !isLocalCheck &&
+          saveHighscore(newGameData, publicUuid, action.lobbyId as string)
+
+        // Inform slack about new highscore
+        !isLocalCheck &&
+          informSlackAboutNewTimeattackHighscore(
+            user?.globalUsername ? user?.globalUsername : "unknown",
+            newGameData.lobbyId,
+            formatTime(
+              newGameData.gameOver - newGameData.timeAttackAttributes.startTime
+            ),
+            newGameData.timeAttackAttributes.userPenalties[publicUuid]
+          )
       }
     }
     return { lobbyId: action.lobbyId, newGameData }
