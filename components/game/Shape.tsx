@@ -28,18 +28,28 @@ export const Shape = ({
   shape,
   color,
   shading,
-  shapeVariant,
+  shapeVariants,
   customColors,
 }: {
   shape: ShapeType
   color: Color
   shading: Shading
-  shapeVariant?: BoxVariant | OvalVariant
-  customColors?: CustomColors
+  shapeVariants: ShapeVariants | undefined
+  customColors?: CustomColors | undefined
 }) => {
   const colorToUse = customColors ? customColors[color] : color
 
   // Styles
+
+  const baseStyle = {
+    strokeWidth: "0.60rem",
+    overflow: "visible",
+    width: "100%",
+  }
+
+  const colorStyle = {
+    stroke: colorToUse,
+  }
 
   const solid = {
     stroke: "none",
@@ -60,133 +70,84 @@ export const Shape = ({
     fill: "none",
   }
 
-  // Color styles
-
-  const colorClass = {
-    borderColor: colorToUse,
-    stroke: colorToUse,
-  }
-
   //////////
 
-  switch (shape) {
-    case "oval":
-      return (
-        <div
-          className={`${styles.shape} ${styles[shape]} ${
-            shapeVariant ? styles[shapeVariant] : ""
-          }`}
-          style={
-            shading == "solid"
-              ? { ...colorClass, ...solid }
-              : shading == "striped"
-              ? { ...colorClass, ...striped }
-              : { ...colorClass, ...open }
-          }
-        ></div>
-      )
+  const style =
+    shading == "solid"
+      ? { ...colorStyle, ...solid }
+      : shading == "striped"
+      ? { ...colorStyle, ...striped }
+      : { ...colorStyle, ...open }
 
-    case "squiggle":
-      return (
-        <svg
-          version="1.2"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 200 100"
-          className={`${styles[shape]}`}
-        >
-          <defs>
-            <pattern
-              id={`${shading}_${colorToUse}`}
+  const fill = `url(#${shading}_${colorToUse})`
+
+  const pathAttributes = {
+    style,
+    fill,
+  }
+
+  const path = () => {
+    switch (shape) {
+      case "box":
+        if (shapeVariants?.box == "DIAMOND") {
+          return <path {...pathAttributes} d="m0 50l100-45 100 45-100 45z" />
+        } else {
+          return <path {...pathAttributes} d="m5 10h190v80h-190z" />
+        }
+
+      case "oval":
+        if (shapeVariants?.oval == "TUBE") {
+          return (
+            <rect
               x="0"
-              y="0"
-              width="12"
-              height="12"
-              patternUnits="userSpaceOnUse"
-            >
-              <circle
-                cx="3"
-                cy="3"
-                r="3"
-                // className={styles[`solid_${color}`]}
-                style={solid}
-              />
-            </pattern>
-          </defs>
+              y="5"
+              rx="45"
+              ry="45"
+              width="200"
+              height="90"
+              {...pathAttributes}
+            />
+          )
+        } else {
+          return (
+            <ellipse cx="100" cy="50" rx="100" ry="45" {...pathAttributes} />
+          )
+        }
+
+      case "squiggle":
+        return (
           <path
-            className={`${styles.shape} ${styles[shape]}`}
-            style={
-              shading == "solid"
-                ? { ...colorClass, ...solid }
-                : shading == "striped"
-                ? { ...colorClass, ...striped }
-                : { ...colorClass, ...open }
-            }
-            fill={`url(#${shading}_${colorToUse})`}
+            {...pathAttributes}
             d="m0 57.4c-1.3 34.4 22.3 42.7 30 42.6 17.3-0.2 25.9-19.4 42.7-19.1 16.8 0.2 46.9 13.1 72.4 10.7 21.3-2 36.1-10.7 45.2-24.3 6.1-9 10.7-24.5 9.7-35.9-1.1-12.6-9-31.1-27.7-31.4-18.7-0.3-26.8 19.4-41 22.1-21.2 4-64.4-14.3-86.8-12.6-25.8 1.8-43.7 24.8-44.5 47.9z"
           />
-        </svg>
-      )
-
-    case "box":
-      if (!shapeVariant || shapeVariant == "RECTANGLE") {
-        return (
-          <div
-            className={`${styles.shape} ${styles[shape]} ${
-              shapeVariant ? styles[shapeVariant] : ""
-            }`}
-            style={
-              shading == "solid"
-                ? { ...colorClass, ...solid }
-                : shading == "striped"
-                ? { ...colorClass, ...striped }
-                : { ...colorClass, ...open }
-            }
-          ></div>
         )
-      } else {
-        return (
-          <svg
-            version="1.2"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 250 100"
-            className={`${styles[shapeVariant]}`}
-            style={{ borderColor: colorToUse }}
-          >
-            <defs>
-              <pattern
-                id={`${shading}_${colorToUse}`}
-                x="0"
-                y="0"
-                width="12"
-                height="12"
-                patternUnits="userSpaceOnUse"
-              >
-                <circle
-                  cx="3"
-                  cy="3"
-                  r="3"
-                  // className={styles[`solid_${color}`]}
-                  style={solid}
-                />
-              </pattern>
-            </defs>
-            <path
-              className={`${styles.shape} ${styles[shape]}`}
-              style={
-                shading == "solid"
-                  ? { ...colorClass, ...solid }
-                  : shading == "striped"
-                  ? { ...colorClass, ...striped }
-                  : { ...colorClass, ...open }
-              }
-              fill={`url(#${shading}_${colorToUse})`}
-              d="m0 50l125-50 125 50-125 50z"
-            />
-          </svg>
-        )
-      }
 
-    default:
-      return <></>
+      default:
+        return <></>
+    }
   }
+
+  // Return path inside svg
+  return (
+    <svg
+      version="1.2"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 200 100"
+      style={baseStyle}
+    >
+      <defs>
+        <pattern
+          id={`${shading}_${colorToUse}`}
+          x="0"
+          y="0"
+          width="8"
+          height="8"
+          patternUnits="userSpaceOnUse"
+        >
+          <circle cx="6" cy="6" r="2" style={solid} />
+        </pattern>
+      </defs>
+      {path()}
+    </svg>
+  )
 }

@@ -110,7 +110,7 @@ export const Card = ({
         shape={shape}
         color={color}
         shading={shading}
-        shapeVariant={shapeVariant}
+        shapeVariants={shapeVariants}
         customColors={customColors}
       />
     )
