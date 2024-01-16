@@ -1,6 +1,6 @@
 import styles from "@/styles/Settings.module.css"
 import { Button, TextField } from "@mui/material"
-import { Card } from "../game/Card"
+import { Card } from "../../components/game/Card"
 import {
   BoxVariant,
   Color,
@@ -9,7 +9,7 @@ import {
   Shading,
   ShapeType,
   defaultColors,
-} from "../game/Shape"
+} from "../../components/game/Shape"
 import useUserPreferences from "@/helpers/useUserPreferences"
 
 const exampleCard = {

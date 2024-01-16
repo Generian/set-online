@@ -7,7 +7,7 @@ import {
 } from "@/helpers/socketHelpers"
 import { PublicUsers } from "@/helpers/userHandling"
 import { getPublicUuid, getUuid, handleNewUuid } from "@/helpers/uuidHandler"
-import { useRouter } from "next/router"
+import { useRouter, useSearchParams } from "next/navigation"
 import {
   Dispatch,
   SetStateAction,
@@ -55,8 +55,9 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
     (a: GameAction, callback?: (obj: any) => void) => void
   >((a: GameAction, callback?: (obj: any) => void) => {})
 
-  const router = useRouter()
-  let { lobbyId } = router.query
+  // const router = useRouter()
+  const searchParams = useSearchParams()
+  const lobbyId = searchParams?.get("lobbyId")
 
   // Initialise socket when component mounts
   useEffect(() => {
