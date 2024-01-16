@@ -1,5 +1,3 @@
-import styles from "@/styles/Shape.module.css"
-
 export type ShapeType = "oval" | "squiggle" | "box"
 export type Color = "red" | "blue" | "green"
 export type Shading = "solid" | "striped" | "open"
