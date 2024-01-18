@@ -1,4 +1,4 @@
-import { CardProps } from "@/components/game/Card"
+import { CardProps } from "@/app/game/Card"
 import { initialiseCards } from "./cardsInitialiser"
 import { createLobbyId } from "./utils"
 import { User, Users } from "./userHandling"
@@ -7,7 +7,7 @@ import { reorderCards } from "./reorderCards"
 import { getMaxColumn } from "./getMaxColumns"
 import { getPositions } from "./positions"
 import { saveHighscoreToDatabase } from "@/prisma/database"
-import { formatTime, getTotalTimeAndPenalties } from "@/components/game/Timer"
+import { formatTime, getTotalTimeAndPenalties } from "@/app/game/Timer"
 import {
   informSlackAboutNewTimeattackHighscore,
   informSlackAboutTimeattackGameStarted,

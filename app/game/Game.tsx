@@ -9,8 +9,8 @@ import {
 import { Card, CardProps } from "./Card"
 import { Field } from "./Field"
 import { evaluateSelectedCardsForSet } from "@/helpers/evaluateSelectedCards"
-import { SocketContext } from "../general/SocketConnection"
-import { useRouter } from "next/router"
+import { SocketContext } from "../../components/general/SocketConnection"
+import { useSearchParams } from "next/navigation"
 import Layout from "./Layout"
 import Timer from "./Timer"
 import { Game as GameProps } from "../../helpers/gameHandling"
@@ -55,8 +55,7 @@ export const Game = () => {
 
   const { gameData, localGameData, submitAction } = useContext(SocketContext)
 
-  const router = useRouter()
-  const { lobbyId } = router.query
+  const lobbyId = useSearchParams()?.get("lobbyId")
 
   // Load custom user preferences
   useEffect(() => {

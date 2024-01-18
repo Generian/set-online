@@ -1,13 +1,14 @@
-import { Game } from "@/components/game/Game"
+"use client"
+
+import { Game } from "@/app/game/Game"
 import PageFrame from "@/components/general/PageFrame"
 import { SocketContext } from "@/components/general/SocketConnection"
-import { useRouter } from "next/router"
+import { useSearchParams } from "next/navigation"
 import { useContext, useEffect } from "react"
 
 export default function Home() {
   const { gameData } = useContext(SocketContext)
-  const router = useRouter()
-  const { lobbyId } = router.query
+  const lobbyId = useSearchParams()?.get("lobbyId")
 
   useEffect(() => {
     if (typeof lobbyId === "string" && gameData) {

@@ -1,3 +1,5 @@
+"use client"
+
 import { getCookie } from "@/helpers/cookies"
 import { GameAction, Games, UserAction } from "@/helpers/gameHandling"
 import { handleActionLocally } from "@/helpers/handleActionLocally"

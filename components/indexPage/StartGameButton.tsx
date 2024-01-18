@@ -1,6 +1,8 @@
+"use client"
+
 import styles from "@/styles/StartGameButton.module.css"
 import { SocketContext } from "@/components/general/SocketConnection"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import { useContext } from "react"
 import { GameType } from "@/helpers/gameHandling"
 
@@ -14,7 +16,7 @@ export const StartGameButton = ({ gameType }: StartGameButtonProps) => {
   const router = useRouter()
 
   const navigateToGamePage = (obj: any) => {
-    router.push(`/game?lobbyId=${obj.lobbyId}`, undefined, { shallow: true })
+    router.push(`/game?lobbyId=${obj.lobbyId}`, undefined)
   }
 
   const handleClick = () => {

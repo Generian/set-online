@@ -1,4 +1,4 @@
-import { CardProps } from "@/components/game/Card"
+import { CardProps } from "@/app/game/Card"
 import { Dispatch, SetStateAction } from "react"
 import { GameAction } from "./gameHandling"
 

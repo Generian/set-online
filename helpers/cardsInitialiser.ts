@@ -1,5 +1,5 @@
-import { CardProps } from "../components/game/Card"
-import { Color, Count, Shading, ShapeType } from "../components/game/Shape"
+import { CardProps } from "../app/game/Card"
+import { Color, Count, Shading, ShapeType } from "../app/game/Shape"
 import { getPositions } from "./positions"
 
 export interface BaseCard {

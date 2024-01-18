@@ -1,4 +1,4 @@
-import { Highscore } from "@/components/game/Highscores"
+import { Highscore } from "@/app/game/Highscores"
 import { retrieveListOfHighscoresFromDatabase } from "@/prisma/database"
 import type { NextApiRequest, NextApiResponse } from "next"
 

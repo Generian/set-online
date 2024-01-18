@@ -1,4 +1,4 @@
-import { CardProps } from "@/components/game/Card"
+import { CardProps } from "@/app/game/Card"
 
 export const reorderCards = (unorderedCards: CardProps[]) => {
   let reorderedCards: CardProps[] = [...unorderedCards]

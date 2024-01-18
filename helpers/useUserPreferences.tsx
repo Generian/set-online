@@ -1,3 +1,5 @@
+"use client"
+
 import { debounce } from "@mui/material"
 import { useState, useEffect, useContext } from "react"
 import { getCookie, setCookie } from "./cookies"
@@ -7,7 +9,7 @@ import {
   OvalVariant,
   ShapeVariants,
   defaultColors,
-} from "@/components/game/Shape"
+} from "@/app/game/Shape"
 import { SocketContext } from "@/components/general/SocketConnection"
 
 export interface UserPreferences {

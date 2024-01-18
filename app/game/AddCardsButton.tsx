@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { SocketContext } from "../general/SocketConnection"
+import { SocketContext } from "../../components/general/SocketConnection"
 import styles from "@/styles/AddCardsButton.module.css"
 import AddIcon from "@mui/icons-material/Add"
 import { GameContext } from "./Game"

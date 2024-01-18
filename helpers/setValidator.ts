@@ -1,8 +1,4 @@
-import {
-  type CardPropList,
-  cardProps,
-  type CardProps,
-} from "@/components/game/Card"
+import { type CardPropList, cardProps, type CardProps } from "@/app/game/Card"
 
 const validateProperty = (
   cards: CardProps[],

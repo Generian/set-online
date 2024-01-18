@@ -1,4 +1,4 @@
-import { Highscore } from "@/components/game/Highscores"
+import { Highscore } from "@/app/game/Highscores"
 import prisma from "./prisma"
 import { Game, Games } from "@/helpers/gameHandling"
 import { User, Users } from "@/helpers/userHandling"
