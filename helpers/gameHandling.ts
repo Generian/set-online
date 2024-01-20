@@ -60,6 +60,7 @@ export type ActionType =
   | "SUBMIT_SET"
   | "REQUEST_CARDS"
   | "SET_USERNAME"
+  | "GET_GAME_DATA"
 
 export const getActionCategory = (action: Action) => {
   const gameActions: ActionType[] = [
@@ -69,10 +70,14 @@ export const getActionCategory = (action: Action) => {
   ]
   const userActions: ActionType[] = ["SET_USERNAME"]
 
+  const metaActions: ActionType[] = ["GET_GAME_DATA"]
+
   if (userActions.includes(action.type)) {
     return "USER"
   } else if (gameActions.includes(action.type)) {
     return "GAME"
+  } else if (metaActions.includes(action.type)) {
+    return "META"
   } else {
     return "UNKNOWN"
   }
@@ -80,7 +85,7 @@ export const getActionCategory = (action: Action) => {
 
 export type ActionCategory = "USER" | "GAME"
 
-interface Action {
+export interface Action {
   type: ActionType
   lobbyId?: string
 }

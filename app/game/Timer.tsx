@@ -3,8 +3,6 @@ import { getPublicUuid } from "@/helpers/uuidHandler"
 import styles from "@/styles/Timer.module.css"
 import { useEffect, useRef, useState } from "react"
 import Progressbar from "./Progressbar"
-import { GameContext } from "./Game"
-import useViewportDimensions from "@/helpers/useViewportDimensions"
 
 // Types
 interface TimerProps {
@@ -16,14 +14,11 @@ const TimeAttackTimer = ({ game }: TimerProps) => {
   const [time, setTime] = useState(0)
   const [penaltyTimers, setPenaltyTimers] = useState<number[]>([])
 
-  const { isMobile } = useViewportDimensions()
-
   const isFirstRender = useRef(true)
 
   const publicUuid = getPublicUuid()
 
   const {
-    gameType,
     gameOver,
     timeAttackAttributes: {
       startTime,
@@ -50,7 +45,7 @@ const TimeAttackTimer = ({ game }: TimerProps) => {
       })
     }, 30)
 
-    if (game?.gameOver) {
+    if (gameOver) {
       clearInterval(clock)
       clearInterval(penaltyClock)
     }
@@ -71,6 +66,8 @@ const TimeAttackTimer = ({ game }: TimerProps) => {
 
   let totalTime = game?.gameOver ? game?.gameOver - startTime : time // TODO use getTotalTime function from below
 
+  const timeTooHigh = totalTime >= 36000000
+
   if (!!penalties) {
     totalTime = totalTime + penalties * 1000 * 60
   }
@@ -84,20 +81,8 @@ const TimeAttackTimer = ({ game }: TimerProps) => {
   return (
     <div className={styles.container}>
       <div className={styles.innerContainer}>
-        <div
-          className={styles.timeContainer}
-          style={{
-            width: `${
-              totalTime / (1000.0 * 3600) > 1
-                ? isMobile
-                  ? "9rem"
-                  : "13.6rem"
-                : isMobile
-                ? "7rem"
-                : "10.7rem"
-            }`,
-          }}
-        >
+        <div className={styles.timeContainer}>
+          <span className={styles.timeStatic}>{formatTime(totalTime)}</span>
           <span
             className={`${styles.time} ${
               penaltyTimers.filter((t) => t > 0).length > 0
@@ -108,39 +93,33 @@ const TimeAttackTimer = ({ game }: TimerProps) => {
             {formatTime(totalTime)}
           </span>
           <div className={styles.penaltyContainer}>
-            {penaltyTimers
-              .filter((t) => t > 0)
-              .map((t, i) => (
-                <span
-                  key={`timer_${i}`}
-                  className={styles.penalty}
-                  style={{
-                    transform: `translateY(${t / 2 + 30}px)`,
-                    opacity: t / 60.0,
-                  }}
-                >
-                  {`+${t > 9 ? "" : 0}${t}`}
-                </span>
-              ))}
+            {!timeTooHigh &&
+              penaltyTimers
+                .filter((t) => t > 0)
+                .map((t, i) => (
+                  <span
+                    key={`timer_${i}`}
+                    className={styles.penalty}
+                    style={{
+                      transform: `translateY(${t / 2}px)`,
+                      opacity: t / 60.0,
+                    }}
+                  >
+                    {`+${t > 9 ? "" : 0}${t}`}
+                  </span>
+                ))}
           </div>
         </div>
         <div
           className={`${styles.penaltiesCountContainer} ${
             !penalties ? styles.noPenalties : ""
           }`}
-          style={{
-            width: `${
-              penalties > 9
-                ? isMobile
-                  ? "3rem"
-                  : "4.8rem"
-                : isMobile
-                ? "2.8rem"
-                : "3.8rem"
-            }`,
-          }}
         >
-          <span className={styles.penaltiesCount}>
+          <span
+            className={`${styles.penaltiesCount} ${
+              penalties > 9 ? styles.highPenalties : ""
+            }`}
+          >
             {penalties ? penalties : 0}
           </span>
         </div>
@@ -188,14 +167,18 @@ const formatToTwoDigits = (number: number) => {
 }
 
 export const formatTime = (c: number) => {
-  const hours = Math.floor(c / (1000.0 * 60 * 60))
-  const minutes = Math.floor((c - hours * 1000.0 * 60 * 60) / (1000.0 * 60))
-  const seconds = Math.floor(
-    (c - minutes * 1000 * 60 - hours * 1000.0 * 60 * 60) / 1000.0
-  )
-  return `${hours ? hours + ":" : ""}${formatToTwoDigits(
-    minutes
-  )}:${formatToTwoDigits(seconds)}`
+  if (c < 36000000) {
+    const hours = Math.floor(c / (1000.0 * 60 * 60))
+    const minutes = Math.floor((c - hours * 1000.0 * 60 * 60) / (1000.0 * 60))
+    const seconds = Math.floor(
+      (c - minutes * 1000 * 60 - hours * 1000.0 * 60 * 60) / 1000.0
+    )
+    return `${hours ? hours + ":" : ""}${formatToTwoDigits(
+      minutes
+    )}:${formatToTwoDigits(seconds)}`
+  } else {
+    return "∞"
+  }
 }
 
 export const getTotalTimeAndPenalties = (

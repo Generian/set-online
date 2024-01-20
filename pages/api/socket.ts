@@ -21,9 +21,9 @@ import {
   retrieveListOfGamesFromDatabase,
   retrieveListOfUsersFromDatabase,
   saveGameToDatabase,
-  saveHighscoreToDatabase,
   saveUserToDatabase,
 } from "@/prisma/database"
+import { handleMetaAction } from "@/helpers/metaHandling"
 
 interface SocketServer extends HTTPServer {
   io?: IOServer | undefined
@@ -119,7 +119,7 @@ const SocketHandler = async (
       // Game handling
       socket.on(
         "action",
-        (
+        async (
           privateUuid: string,
           action: (GameAction | UserAction) & {
             lobbyId: string
@@ -188,6 +188,33 @@ const SocketHandler = async (
 
               // Return values
               io.emit("userDataUpdate", createPublicUserObject(users))
+              callback && callback(actionResponse)
+            }
+          } else if (getActionCategory(action) == "META") {
+            const actionResponse = await handleMetaAction(
+              action,
+              games,
+              users,
+              privateUuid,
+              socket.id
+            )
+
+            const { newGamesData, newUsersData, error } = actionResponse
+
+            if (error) {
+              console.error(error)
+            } else {
+              if (newGamesData) {
+                games = { ...games, ...newGamesData }
+                io.emit("gameDataUpdate", { ...games })
+              }
+
+              if (newUsersData) {
+                users = { ...users, ...newUsersData }
+                io.emit("userDataUpdate", createPublicUserObject(users))
+              }
+
+              // Handle callback
               callback && callback(actionResponse)
             }
           }

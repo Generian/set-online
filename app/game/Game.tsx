@@ -135,6 +135,12 @@ export const Game = () => {
         setWaitingForServerSync(false)
       } else if (!game && !localGame) {
         console.log("No game data available to render game. Waiting for data.")
+        lobbyId &&
+          submitAction &&
+          submitAction({
+            type: "GET_GAME_DATA",
+            lobbyId,
+          })
       } else {
         console.error(
           "Case should not be possible. Server data for the game should always exist if local data exists."

@@ -31,6 +31,13 @@
 .penaltiesCount {
   font-family: var(--font);
   font-weight: bold;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.highPenalties {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .timeContainer {
@@ -40,9 +47,17 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  justify-content: center;
   background-color: var(--white);
   box-shadow: var(--cardShadow);
   border-radius: var(--cardBorderRadius) 0 0 0;
+}
+
+.timeStatic {
+  font-size: 3rem;
+  font-weight: bold;
+  font-family: var(--font);
+  color: transparent;
 }
 
 .time {
@@ -102,9 +117,23 @@
     font-size: 2rem;
   }
 
+  .penaltiesCount {
+    margin-left: 0.8rem;
+    margin-right: 0.8rem;
+  }
+
+  .highPenalties {
+    margin-left: 0.3rem;
+    margin-right: 0.3rem;
+  }
+
   .timeContainer {
     padding: 0.5rem;
     height: 2.8rem;
+  }
+
+  .timeStatic {
+    font-size: 2rem;
   }
 
   .time {
