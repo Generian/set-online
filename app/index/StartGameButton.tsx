@@ -1,7 +1,7 @@
 "use client"
 
 import styles from "@/styles/StartGameButton.module.css"
-import { SocketContext } from "@/components/general/SocketConnection"
+import { SocketContext } from "@/app/SocketConnection"
 import { useRouter } from "next/navigation"
 import { useContext } from "react"
 import { GameType } from "@/helpers/gameHandling"

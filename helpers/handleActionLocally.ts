@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
 import { Games, getActionCategory, handleGameAction } from "./gameHandling"
-import { EnrichedAction } from "@/components/general/SocketConnection"
+import { EnrichedAction } from "@/app/SocketConnection"
 
 export const handleActionLocally = (
   action: EnrichedAction,

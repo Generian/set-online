@@ -9,7 +9,7 @@ import {
 import { Card, CardProps } from "./Card"
 import { Field } from "./Field"
 import { evaluateSelectedCardsForSet } from "@/helpers/evaluateSelectedCards"
-import { SocketContext } from "../../components/general/SocketConnection"
+import { SocketContext } from "../SocketConnection"
 import { useSearchParams } from "next/navigation"
 import Layout from "./Layout"
 import Timer from "./Timer"

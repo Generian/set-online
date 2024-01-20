@@ -10,7 +10,7 @@ import {
   ShapeVariants,
   defaultColors,
 } from "@/app/game/Shape"
-import { SocketContext } from "@/components/general/SocketConnection"
+import { SocketContext } from "@/app/SocketConnection"
 
 export interface UserPreferences {
   username: string
