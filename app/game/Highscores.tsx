@@ -9,6 +9,7 @@ import { SocketContext } from "../SocketConnection"
 import useViewportDimensions from "@/helpers/useViewportDimensions"
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded"
 import { formatTimeDifference } from "@/helpers/utils"
+import { retrieveListOfHighscoresFromDatabase } from "@/app/actions/databaseActions"
 
 export interface Highscore {
   publicUuid: string
@@ -29,13 +30,9 @@ export default function HighscoreList() {
   const { game } = useContext(GameContext)
   const { isMobile } = useViewportDimensions()
 
-  const fetchHighscores = () => {
-    fetch("/api/highscores")
-      .then((res) => res.json())
-      .then((data) => {
-        const { highscores } = data
-        setHighscores(highscores)
-      })
+  const fetchHighscores = async () => {
+    const highscores = await retrieveListOfHighscoresFromDatabase()
+    highscores && setHighscores(highscores)
   }
 
   // Fetch highscore triggers

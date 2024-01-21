@@ -22,7 +22,7 @@ import {
   retrieveListOfUsersFromDatabase,
   saveGameToDatabase,
   saveUserToDatabase,
-} from "@/prisma/database"
+} from "@/app/actions/databaseActions"
 import { handleMetaAction } from "@/helpers/metaHandling"
 
 interface SocketServer extends HTTPServer {

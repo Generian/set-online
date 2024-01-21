@@ -1,4 +1,4 @@
-import { retrieveSpecificGameFromDatabase } from "@/prisma/database"
+import { retrieveSpecificGameFromDatabase } from "@/app/actions/databaseActions"
 import { Action, Games } from "./gameHandling"
 import { Users } from "./userHandling"
 

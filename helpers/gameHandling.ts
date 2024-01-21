@@ -6,7 +6,7 @@ import { findSetInCards, validateCards } from "./setValidator"
 import { reorderCards } from "./reorderCards"
 import { getMaxColumn } from "./getMaxColumns"
 import { getPositions } from "./positions"
-import { saveHighscoreToDatabase } from "@/prisma/database"
+import { saveHighscoreToDatabase } from "@/app/actions/databaseActions"
 import { formatTime, getTotalTimeAndPenalties } from "@/app/game/Timer"
 import {
   informSlackAboutNewTimeattackHighscore,

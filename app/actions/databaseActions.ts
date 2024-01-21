@@ -1,5 +1,7 @@
+"use server"
+
 import { Highscore } from "@/app/game/Highscores"
-import prisma from "./prisma"
+import prisma from "../../prisma/prisma"
 import { Game, Games } from "@/helpers/gameHandling"
 import { User, Users } from "@/helpers/userHandling"
 
