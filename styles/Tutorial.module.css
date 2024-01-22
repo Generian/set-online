@@ -1,0 +1,189 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.contentContainer {
+  max-width: 600px;
+  padding-top: 3rem;
+}
+
+.contentContainer h2 {
+  padding-top: 2rem;
+}
+
+.featureContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.featureExampleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.featureExampleContainer span,
+.cardSelectionContainer span {
+  margin-top: 0.25rem;
+  font-size: smaller;
+  font-style: italic;
+  color: var(--darkgray);
+}
+
+.cardFeatureContainer {
+  position: relative;
+  height: 100px;
+}
+
+.contentContainer p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.listContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+}
+
+.list {
+  margin-left: 0rem;
+  list-style: none;
+}
+
+.highlightText {
+  font-weight: bold;
+  color: var(--purple);
+  /* text-decoration: underline;
+  text-decoration-color: var(--yellow); */
+  border-bottom: 2px solid var(--yellow);
+}
+
+.listSeparator {
+  font-weight: bold;
+}
+
+.setExampleContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cardContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  transition: all var(--slowTransition) ease-in-out;
+}
+
+.cardPlaceholder {
+  aspect-ratio: 8 / 11.5;
+  box-sizing: content-box;
+  padding: 5px;
+  border: 3px dashed var(--gray);
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardPlaceholder span {
+  font-size: 3rem;
+  color: var(--gray);
+}
+
+.solved {
+  border: 3px dashed var(--green);
+}
+
+.error {
+  border: 3px dashed var(--red);
+}
+
+.cardSelectionContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: 1rem;
+  border-left: 2px dashed var(--darkgray);
+}
+
+.cardIsSelected {
+  border: none;
+}
+
+.cardIsSelected span {
+  color: transparent;
+}
+
+.cardIsSelected .cardContainer {
+  position: relative;
+  gap: 0rem;
+}
+
+.answerContainer {
+  padding: 1rem;
+  margin-top: 1rem;
+  box-shadow: var(--cardShadow);
+  border-radius: 0.25rem;
+  background-color: var(--white);
+}
+
+.correctAnswer h3 {
+  color: var(--green);
+}
+
+.wrongAnswer h3 {
+  color: var(--red);
+}
+
+.finishContainer {
+  padding-bottom: 5rem;
+}
+
+.gameContainer {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.gameContainerRow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.cardHighlighter {
+  padding: 0.5rem;
+  border: 2px dashed transparent;
+}
+
+.correctSet {
+  border: 2px dashed var(--green);
+}
+
+.noSet {
+  border: 2px dashed var(--red);
+}
+
+@media only screen and (max-width: 600px) {
+  .contentContainer {
+    max-width: 80%;
+  }
+
+  .listContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+}

@@ -1,3 +1,5 @@
+"use client"
+
 import styles from "@/styles/Card.module.css"
 import { useContext, useEffect, useState } from "react"
 import { GameContext } from "./Game"
@@ -19,8 +21,8 @@ export interface CardProps extends BaseCard {
   rank: number
   set?: boolean
   customPosition?: {
-    left: number
-    top: number
+    left?: number
+    top?: number
     height: number
   }
   shapeVariants?: ShapeVariants
@@ -121,17 +123,33 @@ export const Card = ({
     ? customPosition
     : getCoordinatesAndSize(viewportDimensions, column, row, maxColumns, set)
 
+  let style = {
+    left,
+    top,
+    height,
+    zIndex: set ? rank + 100 : row ? rank : -rank + 100,
+    position: "absolute" as any,
+  }
+
+  if (!top && !left) {
+    style = {
+      ...style,
+      position: "unset",
+    }
+  } else {
+    style = {
+      ...style,
+      left,
+      top,
+    }
+  }
+
   return (
     <div
       className={`${styles.container} ${
         hidden ? styles.container__horizontal : ""
       } ${set ? styles.set : ""}`}
-      style={{
-        left,
-        top,
-        height,
-        zIndex: set ? rank + 100 : row ? rank : -rank + 100,
-      }}
+      style={style}
       onClick={
         hidden || game?.gameOver
           ? () => {}

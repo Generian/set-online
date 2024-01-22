@@ -116,7 +116,7 @@
 
 .mobileContainer {
   position: fixed;
-  z-index: 400;
+  z-index: 1001;
   bottom: 0;
   width: 100%;
   background-color: var(--white);

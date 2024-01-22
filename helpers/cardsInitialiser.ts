@@ -10,9 +10,8 @@ export interface BaseCard {
   shading: Shading
 }
 
-export const initialiseCards = (numberOfCards: number) => {
+export const getAllCards = (): BaseCard[] => {
   const cards: BaseCard[] = []
-  const deck: CardProps[] = []
 
   const types: ShapeType[] = ["oval", "squiggle", "box"]
   const colors: Color[] = ["red", "blue", "green"]
@@ -35,6 +34,13 @@ export const initialiseCards = (numberOfCards: number) => {
       })
     })
   })
+
+  return cards
+}
+
+export const initialiseCards = (numberOfCards: number) => {
+  const cards = getAllCards()
+  const deck: CardProps[] = []
 
   // Shuffle array
   for (let i = cards.length - 1; i > 0; i--) {
