@@ -8,10 +8,12 @@ import { useState } from "react"
 import { Card } from "../game/Card"
 
 export const SetExample = ({
+  initialText,
   initialCards,
   selectableCards,
   nextExample,
 }: {
+  initialText?: string
   initialCards: number[]
   selectableCards: {
     [id: number]: {
@@ -22,15 +24,17 @@ export const SetExample = ({
   nextExample: () => void
 }) => {
   const [selectedCard, setSelectedCard] = useState<number>()
+  const [isComplete, setIsComplete] = useState(false)
   const { isMobile } = useViewportDimensions()
 
   const allCards = getAllCards()
 
   const solved = selectedCard && selectableCards[selectedCard].correct
 
-  const cardHeight = isMobile ? 100 : 125
+  const cardHeight = isMobile ? 75 : 100
   return (
-    <>
+    <div className={isComplete ? styles.completed : ""}>
+      <p>{initialText}</p>
       <div className={styles.setExampleContainer}>
         <div className={styles.cardContainer} style={{ height: cardHeight }}>
           {initialCards.map((c) => {
@@ -126,7 +130,14 @@ export const SetExample = ({
             <p key={`message_${i}`}>{m}</p>
           ))}
           {selectableCards[selectedCard].correct && (
-            <Button variant="contained" color="success" onClick={nextExample}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={() => {
+                setIsComplete(true)
+                nextExample()
+              }}
+            >
               Next
             </Button>
           )}
@@ -141,6 +152,6 @@ export const SetExample = ({
           )}
         </div>
       )}
-    </>
+    </div>
   )
 }

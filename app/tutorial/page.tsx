@@ -343,11 +343,10 @@ export default function Tutorial() {
 
         <h2>Examples</h2>
 
-        <p>
-          OK, let's give it a try. Take a look at the two cards below. Which of
-          the following cards would complete a set?
-        </p>
         <SetExample
+          initialText={
+            "OK, let's give it a try. Take a look at the two cards below. Which of the following cards would complete a set?"
+          }
           initialCards={[2010, 2011]}
           selectableCards={{
             "2221": {
@@ -390,6 +389,9 @@ export default function Tutorial() {
         {exampleSet >= 2 && (
           <>
             <SetExample
+              initialText={
+                "OK, let's give it a try. Take a look at the two cards below. Which of the following cards would complete a set?"
+              }
               initialCards={[100, 202]}
               selectableCards={{
                 "1": {
@@ -479,18 +481,18 @@ export default function Tutorial() {
           </>
         )}
 
-        <p>
-          OK, now you're ready. Let's take off the training wheels. Take a look
-          at the cards below and try to find a set. (Note: There is more than
-          one correct answer.)
-        </p>
+        {exampleSet >= 5 && (
+          <>
+            <p>
+              OK, now you're ready. Let's take off the training wheels. Take a
+              look at the cards below and try to find a set. (Note: There is
+              more than one correct answer.)
+            </p>
 
-        <ExampleGame />
-
-        <div className={styles.finishContainer}>
-          <p>OK, now you're ready to get started!</p>
-          <button>Play</button>
-        </div>
+            <ExampleGame />
+          </>
+        )}
+        <div style={{ height: "10rem" }}></div>
       </div>
     </div>
   )
