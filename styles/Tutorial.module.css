@@ -69,39 +69,15 @@
   font-weight: bold;
 }
 
-.setExampleContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1rem;
+.exampleContainer {
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
 }
 
 .completed {
   opacity: 0.5;
   pointer-events: none;
-}
-
-.cardContainer {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  transition: all var(--slowTransition) ease-in-out;
-}
-
-.cardPlaceholder {
-  aspect-ratio: 8 / 11.5;
-  box-sizing: content-box;
-  padding: 5px;
-  border: 3px dashed var(--gray);
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.cardPlaceholder span {
-  font-size: 3rem;
-  color: var(--gray);
+  border-bottom: 2px solid var(--gray);
 }
 
 .solved {
@@ -112,32 +88,9 @@
   border: 3px dashed var(--red) !important;
 }
 
-.cardSelectionContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding-left: 1rem;
-  border-left: 2px dashed var(--darkgray);
-}
-
-.cardIsSelected {
-  border: none;
-}
-
-.cardIsSelected span {
-  color: transparent;
-}
-
-.cardIsSelected .cardContainer {
-  position: relative;
-  gap: 0rem;
-}
-
 .answerContainer {
   padding: 1rem;
   margin-top: 1rem;
-  margin-bottom: 5rem;
   box-shadow: var(--cardShadow);
   border-radius: 0.25rem;
   background-color: var(--white);
@@ -173,6 +126,7 @@
   padding: 0.25rem;
   border: 3px dashed transparent;
   border-radius: 0.5rem;
+  transform: translateX(-0.25rem);
 }
 
 .correct {
@@ -187,6 +141,46 @@
   margin-top: 2rem;
 }
 
+.finalButtonContainer {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.setExample__cardContainer {
+  margin-top: 3rem;
+  position: relative;
+  transition: all 1s 0.5s ease-in-out;
+}
+
+.setExample__cardPlaceholder {
+  position: absolute;
+  left: 160px;
+  top: -8px;
+  aspect-ratio: 8 / 11.5;
+  box-sizing: content-box;
+  padding: 5px;
+  border: 3px dashed var(--gray);
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.setExample__cardPlaceholder span {
+  font-size: 3rem;
+  color: var(--gray);
+}
+
+.setExample__pickCardInstruction {
+  position: absolute;
+  top: -1.5rem;
+  left: 310px;
+  font-size: smaller;
+  font-style: italic;
+  color: var(--darkgray);
+}
+
 @media only screen and (max-width: 600px) {
   .contentContainer {
     max-width: 80%;
@@ -196,5 +190,14 @@
     display: flex;
     flex-direction: column;
     gap: 0;
+  }
+
+  .setExample__cardContainer {
+    margin-top: 2rem;
+  }
+
+  .setExample__pickCardInstruction {
+    top: 120px;
+    left: 25px;
   }
 }

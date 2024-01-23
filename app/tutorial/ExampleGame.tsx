@@ -166,12 +166,14 @@ export const ExampleGame = ({}: {}) => {
         {solution == "SOLVED" && showOtherSetMessage != "FIRST_SET" && (
           <>
             <p>
-              <b className={styles.correct}>Fantastic!</b> Now you're all set
-              (pun intended) to play your first game.
+              <b className={styles.correct}>Fantastic!</b> Now you're all set to
+              play your first game. <i>(pun intended)</i>
             </p>
-            <Button href="/" variant="contained" color="success">
-              Play!
-            </Button>
+            <div className={styles.finalButtonContainer}>
+              <Button href="/" variant="contained" color="success" size="large">
+                Play First Game
+              </Button>
+            </div>
           </>
         )}
       </div>

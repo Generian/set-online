@@ -345,7 +345,12 @@ export default function Tutorial() {
 
         <SetExample
           initialText={
-            "OK, let's give it a try. Take a look at the two cards below. Which of the following cards would complete a set?"
+            <p>
+              OK, let's give it a try. Take a look at the two cards below.
+              <span className={styles.highlightText}>
+                Which of the following cards would complete a set?
+              </span>{" "}
+            </p>
           }
           initialCards={[2010, 2011]}
           selectableCards={{
@@ -390,7 +395,10 @@ export default function Tutorial() {
           <>
             <SetExample
               initialText={
-                "OK, let's give it a try. Take a look at the two cards below. Which of the following cards would complete a set?"
+                <p>
+                  Great, you understood the concept of the game. Let's give it
+                  another try.
+                </p>
               }
               initialCards={[100, 202]}
               selectableCards={{
@@ -424,6 +432,12 @@ export default function Tutorial() {
         {exampleSet >= 3 && (
           <>
             <SetExample
+              initialText={
+                <p>
+                  Now how about this one. It's getting a bit more challenging
+                  now.
+                </p>
+              }
               initialCards={[222, 1020]}
               selectableCards={{
                 "1121": {
@@ -455,6 +469,12 @@ export default function Tutorial() {
         {exampleSet >= 4 && (
           <>
             <SetExample
+              initialText={
+                <p>
+                  OK, one last time. This time we're looking for the most
+                  difficult type of Set.
+                </p>
+              }
               initialCards={[1111, 2022]}
               selectableCards={{
                 "100": {
@@ -485,8 +505,8 @@ export default function Tutorial() {
           <>
             <p>
               OK, now you're ready. Let's take off the training wheels. Take a
-              look at the cards below and try to find a set. (Note: There is
-              more than one correct answer.)
+              look at the cards below and try to find a set.{" "}
+              <i>(Note: There is more than one correct answer.)</i>
             </p>
 
             <ExampleGame />

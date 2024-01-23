@@ -131,7 +131,7 @@ export const Card = ({
     position: "absolute" as any,
   }
 
-  if (!top && !left) {
+  if (top == undefined && left == undefined) {
     style = {
       ...style,
       position: "unset",
