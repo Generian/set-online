@@ -31,7 +31,7 @@ export const SetExample = ({
 
   const solved = selectedCard && selectableCards[selectedCard].correct
 
-  const cardHeight = isMobile ? 100 : 100
+  const cardHeight = 100
   return (
     <div
       className={`${styles.exampleContainer} ${
@@ -71,7 +71,7 @@ export const SetExample = ({
           className={`${styles.setExample__cardPlaceholder} ${
             selectedCard ? (solved ? styles.solved : styles.error) : ""
           }`}
-          style={{ height: cardHeight }}
+          style={{ height: cardHeight, width: (cardHeight / 11.5) * 8 }}
         >
           <span>?</span>
         </div>

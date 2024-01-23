@@ -38,7 +38,7 @@ const User = () => {
     ? user.globalUsername
     : username
     ? username
-    : ""
+    : "Unknown Player"
 
   return (
     <Link href={"/settings"} className={styles.userContainer}>
