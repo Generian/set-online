@@ -22,7 +22,9 @@ const TimeAttackTimer = ({ game }: TimerProps) => {
     gameOver,
     timeAttackAttributes: {
       startTime,
-      userPenalties: { [publicUuid]: penalties },
+      userPenalties: {
+        [game.players[0] ? game.players[0] : publicUuid]: penalties,
+      },
     },
   } = game as TimeAttackGame
 

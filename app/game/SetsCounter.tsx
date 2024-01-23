@@ -9,9 +9,15 @@ interface SetsCounterProps {
 const SetsCounter = ({ game }: SetsCounterProps) => {
   const publicUuid = getPublicUuid()
 
-  const { setsWon } = game
+  const { setsWon, players } = game
 
-  const count = setsWon.filter((s) => s.publicUuid == publicUuid).length
+  let count
+
+  if (players.find((p) => p == publicUuid)) {
+    count = setsWon.filter((s) => s.publicUuid == publicUuid).length
+  } else {
+    count = setsWon.length
+  }
 
   return (
     <div className={styles.container}>
