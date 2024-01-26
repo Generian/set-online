@@ -28,43 +28,6 @@
 .user {
 }
 
-/* User */
-
-.userContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1rem;
-  padding-left: 1rem;
-  background-color: var(--white);
-  box-shadow: var(--cardShadow);
-  border-radius: var(--cardBorderRadius) 1.4rem 1.4rem var(--cardBorderRadius);
-  text-decoration: none;
-  color: var(--black);
-}
-
-.userContainer:hover {
-  background-color: var(--lightgray);
-}
-
-.username {
-  font-family: var(--font);
-}
-
-.avatar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 2.8rem;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  background-color: var(--purple);
-  box-shadow: var(--cardShadow);
-  font-family: var(--font);
-  font-weight: bold;
-  color: var(--white);
-}
-
 @media only screen and (max-width: 600px) {
   .container {
     padding: 0.5rem;

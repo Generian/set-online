@@ -55,12 +55,15 @@ export type GameAction =
 
 export type UserAction = Action_SetUsername
 
+export type ChatAction = Action_NewChatMessage
+
 export type ActionType =
   | "INITIALISE_GAME"
   | "SUBMIT_SET"
   | "REQUEST_CARDS"
   | "SET_USERNAME"
   | "GET_GAME_DATA"
+  | "NEW_CHAT_MESSAGE"
 
 export const getActionCategory = (action: Action) => {
   const gameActions: ActionType[] = [
@@ -72,12 +75,16 @@ export const getActionCategory = (action: Action) => {
 
   const metaActions: ActionType[] = ["GET_GAME_DATA"]
 
+  const chatActions: ActionType[] = ["NEW_CHAT_MESSAGE"]
+
   if (userActions.includes(action.type)) {
     return "USER"
   } else if (gameActions.includes(action.type)) {
     return "GAME"
   } else if (metaActions.includes(action.type)) {
     return "META"
+  } else if (chatActions.includes(action.type)) {
+    return "CHAT"
   } else {
     return "UNKNOWN"
   }
@@ -102,6 +109,10 @@ export interface Action_RequestCards extends Action {}
 
 export interface Action_SetUsername extends Action {
   username: string
+}
+
+export interface Action_NewChatMessage extends Action {
+  message: string
 }
 
 export interface SetWon {

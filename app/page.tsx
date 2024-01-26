@@ -1,14 +1,17 @@
 import styles from "@/styles/Index.module.css"
-import { StartGameButton } from "./index/StartGameButton"
-import ActiveUserCount from "./index/ActiveUsersCount"
+import { StartGameButton, TutorialButton } from "./index/StartGameButton"
+import GameChat from "./shared/GameChat"
 
 export default function Home() {
   return (
     <div className={styles.container}>
-      <StartGameButton gameType={"TIME_ATTACK"} />
-      <StartGameButton gameType={"MULTIPLAYER"} />
-      <div className={styles.activeUserCountContainer}>
-        <ActiveUserCount />
+      <div className={styles.columnContainer}>
+        <StartGameButton gameType={"TIME_ATTACK"} />
+        <StartGameButton gameType={"MULTIPLAYER"} />
+        <TutorialButton />
+      </div>
+      <div className={styles.columnContainer}>
+        <GameChat />
       </div>
     </div>
   )

@@ -11,7 +11,9 @@ interface StartGameButtonProps {
 }
 
 export const StartGameButton = ({ gameType }: StartGameButtonProps) => {
-  let { submitAction } = useContext(SocketContext)
+  let { submitAction, userData } = useContext(SocketContext)
+
+  const isOnline = Object.values(userData).length
 
   const router = useRouter()
 
@@ -29,7 +31,7 @@ export const StartGameButton = ({ gameType }: StartGameButtonProps) => {
     )
   }
 
-  const disabled = gameType == "MULTIPLAYER"
+  const disabled = !isOnline || gameType == "MULTIPLAYER"
 
   return (
     <div
@@ -39,6 +41,21 @@ export const StartGameButton = ({ gameType }: StartGameButtonProps) => {
       }}
     >
       <h2>{gameType == "TIME_ATTACK" ? "Time attack!" : "Multiplayer"}</h2>
+    </div>
+  )
+}
+
+export const TutorialButton = () => {
+  const router = useRouter()
+
+  return (
+    <div
+      className={styles.container}
+      onClick={() => {
+        router.push("/tutorial")
+      }}
+    >
+      <h2>{"Tutorial"}</h2>
     </div>
   )
 }

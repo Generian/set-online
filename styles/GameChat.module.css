@@ -1,0 +1,110 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--cardShadow);
+  background-color: var(--gray);
+  border-radius: 0.3rem 0.3rem 0 0;
+}
+
+.collapsed {
+  height: 28px !important;
+}
+
+.headerContainer {
+  height: 28px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--gray);
+  box-shadow: var(--cardShadow);
+}
+
+.chatContainer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  /* justify-content: flex-end; */
+  width: 100%;
+  overflow: scroll;
+  padding: 0.5rem;
+  gap: 0.5rem;
+}
+
+.inputContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.5rem;
+  padding-bottom: 0.25rem;
+  box-shadow: var(--cardShadow);
+  background-color: var(--white);
+  border-radius: 0.3rem 0.3rem 0 0;
+}
+
+.input {
+  flex: 1;
+  border: none;
+  padding: 0.1rem;
+  border-bottom: 2px solid var(--gray);
+}
+
+.input:focus {
+  outline: none;
+  border-bottom: 2px solid var(--yellow);
+}
+
+/* Individual Message */
+
+.messageContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ownMessage {
+  flex-direction: row-reverse;
+}
+
+.textBox {
+  text-align: left;
+  background-color: var(--lightgray);
+  font-size: small;
+  padding: 0.2rem 0.5rem 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--cardShadow);
+}
+
+.ownMessage .textBox {
+  background-color: var(--yellow);
+  text-align: right;
+}
+
+.text {
+  /* display: block;
+  word-wrap: break-word; */
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    position: fixed;
+    overflow: hidden;
+    bottom: 0;
+    right: 1rem;
+    width: calc(100% - 2rem);
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--cardShadow);
+    background-color: var(--gray);
+    border-radius: 0.3rem 0.3rem 0 0;
+    transition: all var(--regularTransition) ease-out;
+  }
+}

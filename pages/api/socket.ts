@@ -11,6 +11,7 @@ import {
   handleUserAction,
 } from "@/helpers/userHandling"
 import {
+  ChatAction,
   GameAction,
   Games,
   UserAction,
@@ -24,6 +25,7 @@ import {
   saveUserToDatabase,
 } from "@/app/actions/databaseActions"
 import { handleMetaAction } from "@/helpers/metaHandling"
+import { ChatMessage } from "@/app/shared/GameChat"
 
 interface SocketServer extends HTTPServer {
   io?: IOServer | undefined
@@ -51,6 +53,7 @@ const SocketHandler = async (
     // Set variables
     let users: Users = {}
     let games: Games = {}
+    let chat: ChatMessage[] = []
 
     // On server start, fetch data from database
     games = await retrieveListOfGamesFromDatabase()
@@ -113,6 +116,9 @@ const SocketHandler = async (
 
           // Send game data to client
           socket.emit("gameDataUpdate", { ...games })
+
+          // Send chat data to client
+          socket.emit("chatDataUpdate", chat)
         }
       )
 
@@ -217,6 +223,23 @@ const SocketHandler = async (
               // Handle callback
               callback && callback(actionResponse)
             }
+          } else if (getActionCategory(action) == "CHAT") {
+            const { publicUuid, lobbyId, message } = action as ChatAction & {
+              lobbyId: string
+              publicUuid: string
+            }
+            const newChatMessage: ChatMessage = {
+              publicUuid,
+              lobbyId,
+              message,
+              time: new Date().getTime(),
+              messageUuid: v4(),
+            }
+            chat = [...chat, newChatMessage]
+            io.emit("chatDataUpdate", [newChatMessage])
+
+            // Handle callback
+            callback && callback({ valid: true })
           }
         }
       )
