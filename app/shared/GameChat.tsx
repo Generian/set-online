@@ -18,7 +18,7 @@ export interface ChatMessage {
   lobbyId?: string
   message: string
   time: number
-  messageUuid?: string
+  messageUuid: string
 }
 
 export default function GameChat() {

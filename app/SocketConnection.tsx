@@ -151,7 +151,21 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
 
     socket.on("chatDataUpdate", (newChatMessages: ChatMessage[]) => {
       console.log("receiving new chat message:", newChatMessages)
-      setChatData((chatData) => [...chatData, ...newChatMessages])
+      setChatData((chatData) => {
+        const newChatData = [...chatData]
+
+        for (let index = 0; index < newChatMessages.length; index++) {
+          const newChatMessage = newChatMessages[index]
+          if (
+            !newChatData.find(
+              (m) => m.messageUuid == newChatMessage.messageUuid
+            )
+          ) {
+            newChatData.push(newChatMessage)
+          }
+        }
+        return newChatData
+      })
     })
   }
 
