@@ -9,7 +9,7 @@ import {
 } from "@/helpers/socketHelpers"
 import { PublicUsers } from "@/helpers/userHandling"
 import { getPublicUuid, getUuid, handleNewUuid } from "@/helpers/uuidHandler"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import {
   Dispatch,
   SetStateAction,
