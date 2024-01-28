@@ -134,7 +134,7 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
         console.log("debug", {
           lobbyId,
           type: typeof lobbyId,
-          searchParams,
+          searchparams: searchParams?.getAll,
           localGameData,
         })
         if (!Object.keys(localGameData).length) {
