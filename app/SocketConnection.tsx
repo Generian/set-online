@@ -19,6 +19,7 @@ import {
 } from "react"
 import { io, Socket } from "socket.io-client"
 import { ChatMessage } from "./shared/GameChat"
+import router from "next/router"
 
 let socket: Socket<ServerToClientEvents, ClientToServerEvents>
 
@@ -62,8 +63,9 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
   >((a: GameAction, callback?: (obj: any) => void) => {})
 
   // const router = useRouter()
-  const searchParams = useSearchParams()
-  const lobbyId = searchParams?.get("lobbyId")
+  const { lobbyId } = router.query
+  // const searchParams = useSearchParams()
+  // const lobbyId = searchParams?.get("lobbyId")
 
   // Initialise socket when component mounts
   useEffect(() => {
@@ -134,7 +136,6 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
         console.log("debug", {
           lobbyId,
           type: typeof lobbyId,
-          searchparams: searchParams?.getAll,
           localGameData,
         })
         if (!Object.keys(localGameData).length) {

@@ -8,8 +8,6 @@ export const metadata = {
   description: "Web-based online version of the card game Set.",
 }
 
-export const dynamic = "force-dynamic"
-
 export default function RootLayout({
   children,
 }: {
