@@ -64,6 +64,7 @@ export type ActionType =
   | "SET_USERNAME"
   | "GET_GAME_DATA"
   | "NEW_CHAT_MESSAGE"
+  | "GET_HIGHSCORES"
 
 export const getActionCategory = (action: Action) => {
   const gameActions: ActionType[] = [
@@ -73,7 +74,7 @@ export const getActionCategory = (action: Action) => {
   ]
   const userActions: ActionType[] = ["SET_USERNAME"]
 
-  const metaActions: ActionType[] = ["GET_GAME_DATA"]
+  const metaActions: ActionType[] = ["GET_GAME_DATA", "GET_HIGHSCORES"]
 
   const chatActions: ActionType[] = ["NEW_CHAT_MESSAGE"]
 

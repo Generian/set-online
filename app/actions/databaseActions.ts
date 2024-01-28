@@ -180,30 +180,34 @@ export const saveHighscoreToDatabase = async (highscore: Highscore) => {
 export const retrieveListOfHighscoresFromDatabase = async (
   limit?: number
 ): Promise<Highscore[]> => {
-  const highscores = await prisma.highscore.findMany({
-    where: {
-      environment: process.env.NODE_ENV,
-    },
-    take: limit ? limit : 10,
-    orderBy: {
-      highscoreValue: "asc",
-    },
-  })
-  return highscores.map(
-    (h: {
-      id: number
-      createdAt: Date
-      environment: string
-      highscoreType: string
-      highscoreValue: number
-      highscoreData: string
-      publicUuid: string
-      lobbyId: string
-    }) => {
-      return {
-        ...JSON.parse(h.highscoreData),
-        createdAt: h.createdAt,
+  try {
+    const highscores = await prisma.highscore.findMany({
+      where: {
+        environment: process.env.NODE_ENV,
+      },
+      take: limit ? limit : 10,
+      orderBy: {
+        highscoreValue: "asc",
+      },
+    })
+    return highscores.map(
+      (h: {
+        id: number
+        createdAt: Date
+        environment: string
+        highscoreType: string
+        highscoreValue: number
+        highscoreData: string
+        publicUuid: string
+        lobbyId: string
+      }) => {
+        return {
+          ...JSON.parse(h.highscoreData),
+          createdAt: h.createdAt,
+        }
       }
-    }
-  )
+    )
+  } catch {
+    return []
+  }
 }

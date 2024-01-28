@@ -20,12 +20,14 @@ import {
 } from "@/helpers/gameHandling"
 import {
   retrieveListOfGamesFromDatabase,
+  retrieveListOfHighscoresFromDatabase,
   retrieveListOfUsersFromDatabase,
   saveGameToDatabase,
   saveUserToDatabase,
 } from "@/app/actions/databaseActions"
 import { handleMetaAction } from "@/helpers/metaHandling"
 import { ChatMessage } from "@/app/shared/GameChat"
+import { Highscore } from "@/app/game/Highscores"
 
 interface SocketServer extends HTTPServer {
   io?: IOServer | undefined
@@ -53,11 +55,13 @@ const SocketHandler = async (
     // Set variables
     let users: Users = {}
     let games: Games = {}
+    let highscores: Highscore[] = []
     let chat: ChatMessage[] = []
 
     // On server start, fetch data from database
     games = await retrieveListOfGamesFromDatabase()
     users = await retrieveListOfUsersFromDatabase()
+    highscores = await retrieveListOfHighscoresFromDatabase()
 
     // Logic starts here
     io.on("connection", (socket) => {
@@ -201,11 +205,13 @@ const SocketHandler = async (
               action,
               games,
               users,
+              highscores,
               privateUuid,
               socket.id
             )
 
-            const { newGamesData, newUsersData, error } = actionResponse
+            const { newGamesData, newUsersData, newHighscores, error } =
+              actionResponse
 
             if (error) {
               console.error(error)

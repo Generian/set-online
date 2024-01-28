@@ -131,6 +131,12 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
       console.log("receiving game data:", data)
       setGameData(data)
       setLocalGameData((localGameData) => {
+        console.log("debug", {
+          lobbyId,
+          type: typeof lobbyId,
+          searchParams,
+          localGameData,
+        })
         if (!Object.keys(localGameData).length) {
           console.log("Setting local game data from scratch.")
           return { ...data }
