@@ -22,6 +22,12 @@
   transform: rotate(90deg);
 }
 
+.container__cleanMode,
+.set.container__cleanMode {
+  transition: all var(--fastTransition) linear 0s, left 0.4s ease-in-out,
+    top 0.3s ease-in-out 0.1s, transform 0.4s ease-in-out 0s;
+}
+
 .set {
   transform: scale(0.2);
   box-sizing: border-box;

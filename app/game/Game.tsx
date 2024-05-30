@@ -16,7 +16,7 @@ import Timer from "./Timer"
 import { Game as GameProps } from "../../helpers/gameHandling"
 import AddCardsButton from "./AddCardsButton"
 import SetAnnouncer from "./SetAnnouncer"
-import HighscoreList from "./Highscores"
+import TimeAttackGameHighscoreComponent from "./Highscores"
 import SetsCounter from "./SetsCounter"
 import GameOverInfo from "./GameOverInfo"
 import ServerSyncIndicator from "./ServerSyncIndicator"
@@ -173,16 +173,17 @@ export const Game = () => {
       <Layout
         field={
           <Field>
-            {cards.map((c) => (
-              <Card
-                key={c.id}
-                {...c}
-                shapeVariants={shapeVariants}
-                column={c.column}
-                row={c.row}
-                customColors={colors}
-              />
-            ))}
+            {!game?.gameOver &&
+              cards.map((c) => (
+                <Card
+                  key={c.id}
+                  {...c}
+                  shapeVariants={shapeVariants}
+                  column={c.column}
+                  row={c.row}
+                  customColors={colors}
+                />
+              ))}
             <AddCardsButton />
             {game && <SetAnnouncer game={game} />}
             {!!game?.gameOver && <GameOverInfo game={game} />}
@@ -191,7 +192,8 @@ export const Game = () => {
         }
         infoContainer={
           <>
-            {game && <Timer game={game} />} {<HighscoreList />}
+            {game && <Timer game={game} />}{" "}
+            {<TimeAttackGameHighscoreComponent />}
           </>
         }
         setsContainer={<>{game && <SetsCounter game={game} />}</>}

@@ -20,7 +20,6 @@ import {
 } from "@/helpers/gameHandling"
 import {
   retrieveListOfGamesFromDatabase,
-  retrieveListOfHighscoresFromDatabase,
   retrieveListOfUsersFromDatabase,
   saveGameToDatabase,
   saveUserToDatabase,
@@ -59,9 +58,8 @@ const SocketHandler = async (
     let chat: ChatMessage[] = []
 
     // On server start, fetch data from database
-    games = await retrieveListOfGamesFromDatabase()
     users = await retrieveListOfUsersFromDatabase()
-    highscores = await retrieveListOfHighscoresFromDatabase()
+    games = await retrieveListOfGamesFromDatabase()
 
     // Logic starts here
     io.on("connection", (socket) => {
@@ -147,6 +145,7 @@ const SocketHandler = async (
             const actionResponse = handleGameAction(
               action,
               games,
+              highscores,
               privateUuid,
               socket.id,
               users

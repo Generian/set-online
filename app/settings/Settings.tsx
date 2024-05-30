@@ -1,5 +1,5 @@
 import styles from "@/styles/Settings.module.css"
-import { Button, TextField } from "@mui/material"
+import { Button, Switch, TextField } from "@mui/material"
 import { Card } from "../game/Card"
 import {
   BoxVariant,
@@ -33,6 +33,8 @@ const Settings = () => {
     setOvalVariant,
     colors,
     setColors,
+    cleanMode,
+    setCleanMode,
   } = useUserPreferences()
 
   // Event handlers
@@ -54,6 +56,12 @@ const Settings = () => {
 
   const handleResetColors = () => {
     setColors(defaultColors)
+  }
+
+  const handleCleanModeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setCleanMode(event.target.checked)
   }
 
   return (
@@ -157,6 +165,17 @@ const Settings = () => {
               ))}
           </div>
           <Button onClick={handleResetColors}>{"Reset"}</Button>
+        </div>
+        <div className={styles.settigsSection}>
+          <h2>Misc</h2>
+          <div>
+            <Switch
+              checked={cleanMode}
+              onChange={handleCleanModeChange}
+              inputProps={{ "aria-label": "controlled" }}
+            />
+            {"Clean Mode"}
+          </div>
         </div>
       </div>
     </div>

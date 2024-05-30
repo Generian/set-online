@@ -6,12 +6,13 @@ import { findSetInCards, validateCards } from "./setValidator"
 import { reorderCards } from "./reorderCards"
 import { getMaxColumn } from "./getMaxColumns"
 import { getPositions } from "./positions"
-import { saveHighscoreToDatabase } from "@/app/actions/databaseActions"
-import { formatTime, getTotalTimeAndPenalties } from "@/app/game/Timer"
+import { formatTime } from "@/app/game/Timer"
 import {
   informSlackAboutNewTimeattackHighscore,
   informSlackAboutTimeattackGameStarted,
 } from "./slackHelper"
+import { saveHighscore } from "./highscores"
+import { Highscore } from "@/app/game/Highscores"
 
 export type Game = TimeAttackGame | MultiplayerkGame
 
@@ -127,6 +128,7 @@ export const handleGameAction = (
     publicUuid: string
   },
   games: Games,
+  highscores: Highscore[],
   privateUuid?: string,
   socketId?: string,
   users?: Users,
@@ -216,6 +218,7 @@ export const handleGameAction = (
         return handleSubmitSet(
           action as Action_SubmitSet,
           game,
+          highscores,
           publicUuid,
           isLocalCheck,
           user as User
@@ -225,6 +228,7 @@ export const handleGameAction = (
         return handleRequestCards(
           action as Action_SubmitSet,
           game,
+          highscores,
           publicUuid,
           isLocalCheck,
           user as User
@@ -239,6 +243,7 @@ export const handleGameAction = (
 const handleSubmitSet = (
   action: Action_SubmitSet,
   game: Game,
+  highscores: Highscore[],
   publicUuid: string,
   isLocalCheck: boolean | undefined,
   user?: User
@@ -326,23 +331,13 @@ const handleSubmitSet = (
       if (gameOver) {
         newGameData.gameOver = new Date().getTime()
         !isLocalCheck &&
-          saveHighscore(newGameData, publicUuid, action.lobbyId as string)
-
-        // Inform slack about new highscore
-        if (game.gameType == "TIME_ATTACK") {
-          const {
-            lobbyId,
-            gameOver,
-            timeAttackAttributes: { startTime, userPenalties },
-          } = newGameData as TimeAttackGame
-          !isLocalCheck &&
-            informSlackAboutNewTimeattackHighscore(
-              user?.globalUsername ? user?.globalUsername : "unknown",
-              lobbyId,
-              formatTime(gameOver - startTime),
-              userPenalties[publicUuid]
-            )
-        }
+          saveHighscore(
+            highscores,
+            newGameData,
+            publicUuid,
+            action.lobbyId as string,
+            user
+          )
       }
 
       // Return new game data
@@ -379,6 +374,7 @@ const addCards = (cards: CardProps[], cardsToAdd: number) => {
 const handleRequestCards = (
   action: Action_SubmitSet,
   gameData: Game,
+  highscores: Highscore[],
   publicUuid: string,
   isLocalCheck: boolean | undefined,
   user?: User
@@ -432,17 +428,12 @@ const handleRequestCards = (
       if (gameOver) {
         newGameData.gameOver = new Date().getTime()
         !isLocalCheck &&
-          saveHighscore(newGameData, publicUuid, action.lobbyId as string)
-
-        // Inform slack about new highscore
-        !isLocalCheck &&
-          informSlackAboutNewTimeattackHighscore(
-            user?.globalUsername ? user?.globalUsername : "unknown",
-            newGameData.lobbyId,
-            formatTime(
-              newGameData.gameOver - newGameData.timeAttackAttributes.startTime
-            ),
-            newGameData.timeAttackAttributes.userPenalties[publicUuid]
+          saveHighscore(
+            highscores,
+            newGameData,
+            publicUuid,
+            action.lobbyId as string,
+            user
           )
       }
     }
@@ -458,22 +449,5 @@ export const sanitiseGameData = (game: Game) => {
   return {
     ...game,
     hasSet: null,
-  }
-}
-
-const saveHighscore = (gameData: Game, publicUuid: string, lobbyId: string) => {
-  if (gameData.gameType == "TIME_ATTACK") {
-    const { totalTime, penalties } = getTotalTimeAndPenalties(
-      gameData as TimeAttackGame,
-      publicUuid
-    )
-    saveHighscoreToDatabase({
-      publicUuid,
-      lobbyId: lobbyId as string,
-      totalTime,
-      penalties,
-    })
-  } else if (gameData.gameType == "MULTIPLAYER") {
-    // TODO handle multiplayer highscore submission
   }
 }

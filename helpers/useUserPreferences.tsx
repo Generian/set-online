@@ -16,6 +16,7 @@ export interface UserPreferences {
   username: string
   shapeVariants: ShapeVariants
   customColors: CustomColors
+  cleanMode: boolean
 }
 
 export default function useUserPreferences() {
@@ -23,6 +24,7 @@ export default function useUserPreferences() {
   const [boxVariant, setBoxVariant] = useState<BoxVariant>("RECTANGLE")
   const [ovalVariant, setOvalVariant] = useState<OvalVariant>("OVAL")
   const [colors, setColors] = useState<CustomColors>(defaultColors)
+  const [cleanMode, setCleanMode] = useState<boolean>(false)
 
   const { submitAction } = useContext(SocketContext)
 
@@ -33,17 +35,19 @@ export default function useUserPreferences() {
         username,
         shapeVariants: { box, oval },
         customColors,
+        cleanMode,
       } = JSON.parse(userPreferencesRaw) as UserPreferences
-      console.log("values:", username)
+      console.log("Loading user preferences for:", username)
       username && setUsername(username)
       box && setBoxVariant(box)
       oval && setOvalVariant(oval)
       customColors && setColors(customColors)
+      cleanMode && setCleanMode(cleanMode)
     }
   }, [])
 
   const setUserPreferenceCookie = debounce(
-    (username, boxVariant, ovalVariant, colors) => {
+    (username, boxVariant, ovalVariant, colors, cleanMode) => {
       if (boxVariant || ovalVariant || colors) {
         setCookie(
           "userPreferences",
@@ -54,6 +58,7 @@ export default function useUserPreferences() {
               oval: ovalVariant,
             },
             customColors: colors,
+            cleanMode,
           })
         )
       }
@@ -62,8 +67,14 @@ export default function useUserPreferences() {
   )
 
   useEffect(() => {
-    setUserPreferenceCookie(username, boxVariant, ovalVariant, colors)
-  }, [username, boxVariant, ovalVariant, colors])
+    setUserPreferenceCookie(
+      username,
+      boxVariant,
+      ovalVariant,
+      colors,
+      cleanMode
+    )
+  }, [username, boxVariant, ovalVariant, colors, cleanMode])
 
   // Save selected data also in database
   useEffect(() => {
@@ -83,5 +94,7 @@ export default function useUserPreferences() {
     setOvalVariant,
     colors,
     setColors,
+    cleanMode,
+    setCleanMode,
   }
 }

@@ -1,9 +1,11 @@
+"use client"
+
 import styles from "@/styles/Highscore.module.css"
 import { useState, useEffect, useContext } from "react"
 import { formatTime, getTotalTimeAndPenalties } from "./Timer"
 import { GameContext } from "./Game"
 import { getPublicUuid } from "@/helpers/uuidHandler"
-import { TimeAttackGame } from "@/helpers/gameHandling"
+import { Game, TimeAttackGame } from "@/helpers/gameHandling"
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
 import { SocketContext } from "../SocketConnection"
 import useViewportDimensions from "@/helpers/useViewportDimensions"
@@ -19,7 +21,7 @@ export interface Highscore {
   penalties: number
 }
 
-export default function HighscoreList() {
+export default function TimeAttackGameHighscoreComponent() {
   const [highscores, setHighscores] = useState<Highscore[]>([])
   const [time, setTime] = useState(0)
   const [highscoreIndexToHighlight, setHighscoreIndexToHighlight] = useState<
@@ -54,10 +56,12 @@ export default function HighscoreList() {
   // Set indicator
   useEffect(() => {
     let clock: NodeJS.Timer | undefined = undefined
-    clock = setInterval(() => {
-      const newTime = new Date().getTime()
-      setTime(newTime)
-    }, 1000)
+    if (game?.gameType == "TIME_ATTACK") {
+      clock = setInterval(() => {
+        const newTime = new Date().getTime()
+        setTime(newTime)
+      }, 1000)
+    }
 
     return () => {
       clearInterval(clock)
@@ -84,7 +88,7 @@ export default function HighscoreList() {
     }
   }, [game, time])
 
-  if (!game || game?.gameType !== "TIME_ATTACK") return <></>
+  // if (!game || game?.gameType !== "TIME_ATTACK") return <></>
 
   if (!isMobile) {
     return (
@@ -146,6 +150,55 @@ export default function HighscoreList() {
       </div>
     )
   }
+}
+
+export const TimeAttackGameHighscoreList = ({
+  game,
+  highscoreIndexToHighlight,
+}: {
+  game?: Game
+  highscoreIndexToHighlight?: number
+}) => {
+  const [highscores, setHighscores] = useState<Highscore[]>([])
+
+  const fetchHighscores = async () => {
+    const highscores = await retrieveListOfHighscoresFromDatabase()
+    highscores && setHighscores(highscores)
+  }
+
+  useEffect(() => {
+    let fetchTimer: NodeJS.Timer | undefined = undefined
+    fetchTimer = setInterval(() => {
+      fetchHighscores()
+    }, 30000)
+
+    return () => {
+      clearInterval(fetchTimer)
+    }
+  }, [])
+
+  return (
+    <div className={styles.highscoreListContainer}>
+      {highscores.map((h, i) => (
+        <Highscore
+          key={`highscore_${h.lobbyId}`}
+          rank={i + 1}
+          highscore={h}
+          highlight={i == highscoreIndexToHighlight}
+          thisGame={h.lobbyId == game?.lobbyId}
+          gameOver={!!game?.gameOver}
+        />
+      ))}
+      {!highscores.length && (
+        <div className={styles.retryText}>
+          <p>
+            Unable to load highscores. <br />{" "}
+            <a onClick={fetchHighscores}>Retry</a>
+          </p>
+        </div>
+      )}
+    </div>
+  )
 }
 
 const Highscore = ({

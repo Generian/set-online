@@ -103,10 +103,13 @@ export const saveUserToDatabase = async (user: User, uuid: string) => {
 
 export const retrieveSpecificUserFromDatabase = async (
   publicUuid: string
-): Promise<User | null> => {
+): Promise<(User & { highscores: Highscore[] }) | null> => {
   const user = await prisma.user.findUnique({
     where: {
       publicUuid: publicUuid,
+    },
+    include: {
+      highscores: true,
     },
   })
 
@@ -116,6 +119,7 @@ export const retrieveSpecificUserFromDatabase = async (
         publicUuid: user.publicUuid,
         globalUsername: user.userName,
         online: false,
+        highscores: user.highscores.map((h) => JSON.parse(h.highscoreData)),
       }
     : null
 }

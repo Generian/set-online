@@ -13,6 +13,7 @@ import {
 import { BaseCard } from "@/helpers/cardsInitialiser"
 import { getCoordinatesAndSize } from "@/helpers/positions"
 import useViewportDimensions from "@/helpers/useViewportDimensions"
+import useUserPreferences from "@/helpers/useUserPreferences"
 
 export interface CardProps extends BaseCard {
   column: number | null
@@ -55,6 +56,8 @@ export const Card = ({
   const [error, setError] = useState(false)
 
   const viewportDimensions = useViewportDimensions()
+
+  const { cleanMode } = useUserPreferences()
 
   const { game, selectedCards, setSelectedCards, errorCards, maxColumns } =
     useContext(GameContext)
@@ -148,7 +151,9 @@ export const Card = ({
     <div
       className={`${styles.container} ${
         hidden ? styles.container__horizontal : ""
-      } ${set ? styles.set : ""}`}
+      } ${set ? styles.set : ""} ${
+        cleanMode ? styles.container__cleanMode : ""
+      }`}
       style={style}
       onClick={
         hidden || game?.gameOver

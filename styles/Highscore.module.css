@@ -154,3 +154,11 @@
 .mobileHighscoresContainer {
   transition: max-height var(--slowTransition) ease-in-out;
 }
+
+/* Highscore list */
+
+.highscoreListContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

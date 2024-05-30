@@ -1,6 +1,7 @@
 import styles from "@/styles/Index.module.css"
 import { StartGameButton, TutorialButton } from "./index/StartGameButton"
 import GameChat from "./shared/GameChat"
+import { TimeAttackGameHighscoreList } from "./game/Highscores"
 
 export default function Home() {
   return (
@@ -12,6 +13,9 @@ export default function Home() {
       </div>
       <div className={styles.columnContainer}>
         <GameChat />
+      </div>
+      <div className={styles.columnContainer}>
+        <TimeAttackGameHighscoreList />
       </div>
     </div>
   )

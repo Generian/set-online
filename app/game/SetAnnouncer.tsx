@@ -1,4 +1,5 @@
 import { Game } from "@/helpers/gameHandling"
+import useUserPreferences from "@/helpers/useUserPreferences"
 import styles from "@/styles/SetAnnouncer.module.css"
 import { useEffect, useRef, useState } from "react"
 
@@ -10,6 +11,7 @@ const SetAnnouncer = ({ game }: SetAnnouncerProps) => {
   const [wonSets, setWonSets] = useState(0)
   const [showSetAnnouncer, setShowSetAnnouncer] = useState(false)
   const isFirstRender = useRef(true)
+  const { cleanMode } = useUserPreferences()
 
   const { setsWon } = game as Game
 
@@ -33,6 +35,8 @@ const SetAnnouncer = ({ game }: SetAnnouncerProps) => {
       clearTimeout(timeout)
     }
   }, [wonSets])
+
+  if (cleanMode) return <></>
 
   return (
     <div className={styles.container}>
