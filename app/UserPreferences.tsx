@@ -1,16 +1,23 @@
 "use client"
 
+import { getCookie, setCookie } from "@/helpers/cookies"
 import { debounce } from "@mui/material"
-import { useState, useEffect, useContext } from "react"
-import { getCookie, setCookie } from "./cookies"
+import {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import {
   BoxVariant,
-  CustomColors,
   OvalVariant,
-  ShapeVariants,
+  CustomColors,
   defaultColors,
-} from "@/app/game/Shape"
-import { SocketContext } from "@/app/SocketConnection"
+  ShapeVariants,
+} from "./game/Shape"
+import { SocketContext } from "./SocketConnection"
 
 export interface UserPreferences {
   username: string
@@ -19,7 +26,40 @@ export interface UserPreferences {
   cleanMode: boolean
 }
 
-export default function useUserPreferences() {
+interface UserPreferencesContextProps {
+  username: string
+  setUsername: Dispatch<SetStateAction<string>>
+  boxVariant: BoxVariant
+  setBoxVariant: Dispatch<SetStateAction<BoxVariant>>
+  ovalVariant: OvalVariant
+  setOvalVariant: Dispatch<SetStateAction<OvalVariant>>
+  colors: CustomColors
+  setColors: Dispatch<SetStateAction<CustomColors>>
+  cleanMode: boolean
+  setCleanMode: Dispatch<SetStateAction<boolean>>
+}
+
+export const UserPreferencesContext =
+  createContext<UserPreferencesContextProps>({
+    username: "",
+    setUsername: () => {},
+    boxVariant: "RECTANGLE",
+    setBoxVariant: () => {},
+    ovalVariant: "OVAL",
+    setOvalVariant: () => {},
+    colors: defaultColors,
+    setColors: () => {},
+    cleanMode: false,
+    setCleanMode: () => {},
+  })
+
+interface UserPreferencesContextComponentProps {
+  children?: JSX.Element
+}
+
+const UserPreferencesContextComponent = ({
+  children,
+}: UserPreferencesContextComponentProps) => {
   const [username, setUsername] = useState<string>("")
   const [boxVariant, setBoxVariant] = useState<BoxVariant>("RECTANGLE")
   const [ovalVariant, setOvalVariant] = useState<OvalVariant>("OVAL")
@@ -85,16 +125,24 @@ export default function useUserPreferences() {
       })
   }, [username])
 
-  return {
-    username,
-    setUsername,
-    boxVariant,
-    setBoxVariant,
-    ovalVariant,
-    setOvalVariant,
-    colors,
-    setColors,
-    cleanMode,
-    setCleanMode,
-  }
+  return (
+    <UserPreferencesContext.Provider
+      value={{
+        username,
+        setUsername,
+        boxVariant,
+        setBoxVariant,
+        ovalVariant,
+        setOvalVariant,
+        colors,
+        setColors,
+        cleanMode,
+        setCleanMode,
+      }}
+    >
+      {children}
+    </UserPreferencesContext.Provider>
+  )
 }
+
+export default UserPreferencesContextComponent

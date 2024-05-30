@@ -22,7 +22,7 @@ import GameOverInfo from "./GameOverInfo"
 import ServerSyncIndicator from "./ServerSyncIndicator"
 import { defaultColors, ShapeVariants } from "./Shape"
 import { getCookie } from "@/helpers/cookies"
-import { UserPreferences } from "@/helpers/useUserPreferences"
+import { UserPreferences } from "../UserPreferences"
 
 interface GameContextProps {
   game: GameProps | undefined

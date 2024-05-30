@@ -1,11 +1,11 @@
 "use client"
 
-import useUserPreferences from "@/helpers/useUserPreferences"
 import { getPublicUuid } from "@/helpers/uuidHandler"
 import styles from "@/styles/UserIcon.module.css"
 import Link from "next/link"
 import { useContext } from "react"
 import { SocketContext } from "../SocketConnection"
+import { UserPreferencesContext } from "../UserPreferences"
 
 const UserIcon = ({
   publicUuid,
@@ -26,7 +26,7 @@ const UserIcon = ({
 
   if (!publicUuid || localPublicUuid == publicUuid) {
     const { globalUsername } = userData[localPublicUuid] || {}
-    const { username } = useUserPreferences()
+    const { username } = useContext(UserPreferencesContext)
 
     usernameString = globalUsername
       ? globalUsername

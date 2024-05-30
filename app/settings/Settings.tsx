@@ -10,7 +10,8 @@ import {
   ShapeType,
   defaultColors,
 } from "../game/Shape"
-import useUserPreferences from "@/helpers/useUserPreferences"
+import { UserPreferencesContext } from "../UserPreferences"
+import { useContext } from "react"
 
 const exampleCard = {
   rank: 1,
@@ -35,7 +36,7 @@ const Settings = () => {
     setColors,
     cleanMode,
     setCleanMode,
-  } = useUserPreferences()
+  } = useContext(UserPreferencesContext)
 
   // Event handlers
   const handleUsernameChange = (newUsername: string) => {

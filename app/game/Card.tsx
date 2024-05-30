@@ -13,7 +13,7 @@ import {
 import { BaseCard } from "@/helpers/cardsInitialiser"
 import { getCoordinatesAndSize } from "@/helpers/positions"
 import useViewportDimensions from "@/helpers/useViewportDimensions"
-import useUserPreferences from "@/helpers/useUserPreferences"
+import { UserPreferencesContext } from "../UserPreferences"
 
 export interface CardProps extends BaseCard {
   column: number | null
@@ -57,7 +57,7 @@ export const Card = ({
 
   const viewportDimensions = useViewportDimensions()
 
-  const { cleanMode } = useUserPreferences()
+  const { cleanMode } = useContext(UserPreferencesContext)
 
   const { game, selectedCards, setSelectedCards, errorCards, maxColumns } =
     useContext(GameContext)
