@@ -128,7 +128,7 @@ export const handleGameAction = (
     publicUuid: string
   },
   games: Games,
-  highscores: Highscore[],
+  highscores?: Highscore[],
   privateUuid?: string,
   socketId?: string,
   users?: Users,
@@ -218,20 +218,20 @@ export const handleGameAction = (
         return handleSubmitSet(
           action as Action_SubmitSet,
           game,
-          highscores,
           publicUuid,
           isLocalCheck,
-          user as User
+          user as User,
+          highscores
         )
 
       case "REQUEST_CARDS":
         return handleRequestCards(
           action as Action_SubmitSet,
           game,
-          highscores,
           publicUuid,
           isLocalCheck,
-          user as User
+          user as User,
+          highscores
         )
 
       default:
@@ -243,10 +243,10 @@ export const handleGameAction = (
 const handleSubmitSet = (
   action: Action_SubmitSet,
   game: Game,
-  highscores: Highscore[],
   publicUuid: string,
   isLocalCheck: boolean | undefined,
-  user?: User
+  user?: User,
+  highscores?: Highscore[]
 ): {
   lobbyId?: string | undefined
   newGameData?: Game | undefined
@@ -331,6 +331,7 @@ const handleSubmitSet = (
       if (gameOver) {
         newGameData.gameOver = new Date().getTime()
         !isLocalCheck &&
+          highscores &&
           saveHighscore(
             highscores,
             newGameData,
@@ -374,10 +375,10 @@ const addCards = (cards: CardProps[], cardsToAdd: number) => {
 const handleRequestCards = (
   action: Action_SubmitSet,
   gameData: Game,
-  highscores: Highscore[],
   publicUuid: string,
   isLocalCheck: boolean | undefined,
-  user?: User
+  user?: User,
+  highscores?: Highscore[]
 ): {
   lobbyId?: string | undefined
   newGameData?: Game | undefined
@@ -428,6 +429,7 @@ const handleRequestCards = (
       if (gameOver) {
         newGameData.gameOver = new Date().getTime()
         !isLocalCheck &&
+          highscores &&
           saveHighscore(
             highscores,
             newGameData,
