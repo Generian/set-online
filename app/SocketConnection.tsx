@@ -68,7 +68,7 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
   // Initialise socket when component mounts
   useEffect(() => {
     socketInitializer()
-  }, [])
+  }, [lobbyId])
 
   useEffect(() => {
     const submitActionHandler = (
@@ -137,8 +137,18 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
         } else if (typeof lobbyId == "string" && !localGameData[lobbyId]) {
           console.log("Enriching local game data with data for this lobby.")
           return { ...data }
+        } else if (typeof lobbyId !== "string") {
+          console.log(
+            "Lobby ID is not string. Can't set local game data.",
+            lobbyId
+          )
+          return localGameData
         } else {
-          console.log("Local game data for lobby already set. Not updating.")
+          console.log(
+            "Local game data for lobby already set. Not updating.",
+            lobbyId,
+            localGameData
+          )
           return localGameData
         }
       })
