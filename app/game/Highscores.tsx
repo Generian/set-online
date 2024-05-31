@@ -12,6 +12,7 @@ import useViewportDimensions from "@/helpers/useViewportDimensions"
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded"
 import { formatTimeDifference } from "@/helpers/utils"
 import { retrieveListOfHighscoresFromDatabase } from "@/app/actions/databaseActions"
+import { CircularProgress } from "@mui/material"
 
 export interface Highscore {
   publicUuid: string
@@ -159,7 +160,7 @@ export const TimeAttackGameHighscoreList = ({
   game?: Game
   highscoreIndexToHighlight?: number
 }) => {
-  const [highscores, setHighscores] = useState<Highscore[]>([])
+  const [highscores, setHighscores] = useState<Highscore[] | null>(null)
 
   const fetchHighscores = async () => {
     const highscores = await retrieveListOfHighscoresFromDatabase()
@@ -167,6 +168,7 @@ export const TimeAttackGameHighscoreList = ({
   }
 
   useEffect(() => {
+    fetchHighscores()
     let fetchTimer: NodeJS.Timer | undefined = undefined
     fetchTimer = setInterval(() => {
       fetchHighscores()
@@ -179,22 +181,32 @@ export const TimeAttackGameHighscoreList = ({
 
   return (
     <div className={styles.highscoreListContainer}>
-      {highscores.map((h, i) => (
-        <Highscore
-          key={`highscore_${h.lobbyId}`}
-          rank={i + 1}
-          highscore={h}
-          highlight={i == highscoreIndexToHighlight}
-          thisGame={h.lobbyId == game?.lobbyId}
-          gameOver={!!game?.gameOver}
-        />
-      ))}
-      {!highscores.length && (
+      <div className={styles.highscoreListHeader}>
+        <span>Highscores</span>
+      </div>
+      {highscores &&
+        highscores.map((h, i) => (
+          <Highscore
+            key={`highscore_${h.lobbyId}`}
+            rank={i + 1}
+            highscore={h}
+            highlight={i == highscoreIndexToHighlight}
+            thisGame={h.lobbyId == game?.lobbyId}
+            gameOver={!!game?.gameOver}
+          />
+        ))}
+      {highscores && !highscores.length && (
         <div className={styles.retryText}>
           <p>
             Unable to load highscores. <br />{" "}
             <a onClick={fetchHighscores}>Retry</a>
           </p>
+        </div>
+      )}
+      {!highscores && (
+        <div className={styles.loadingContainer}>
+          <CircularProgress size={20} />
+          <span>Loading highscores</span>
         </div>
       )}
     </div>
