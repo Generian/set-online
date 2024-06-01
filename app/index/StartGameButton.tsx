@@ -8,9 +8,15 @@ import { GameType } from "@/helpers/gameHandling"
 
 interface StartGameButtonProps {
   gameType: GameType
+  size?: "small" | null
+  label?: string
 }
 
-export const StartGameButton = ({ gameType }: StartGameButtonProps) => {
+export const StartGameButton = ({
+  gameType,
+  size,
+  label,
+}: StartGameButtonProps) => {
   let { submitAction, userData } = useContext(SocketContext)
 
   const isOnline = Object.values(userData).length
@@ -35,12 +41,20 @@ export const StartGameButton = ({ gameType }: StartGameButtonProps) => {
 
   return (
     <div
-      className={`${styles.container} ${disabled ? styles.disabled : ""}`}
+      className={`${styles.container} ${
+        size == "small" ? styles.smallContainer : ""
+      } ${disabled ? styles.disabled : ""}`}
       onClick={() => {
         !disabled && handleClick()
       }}
     >
-      <h2>{gameType == "TIME_ATTACK" ? "Time attack!" : "Multiplayer"}</h2>
+      <h2>
+        {label
+          ? label
+          : gameType == "TIME_ATTACK"
+          ? "Time attack!"
+          : "Multiplayer"}
+      </h2>
     </div>
   )
 }

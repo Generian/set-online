@@ -163,7 +163,7 @@ export const handleGameAction = (
   const { publicUuid } = action
 
   // Handle action
-  if (!action?.lobbyId) {
+  if (!action?.lobbyId || action.type == "INITIALISE_GAME") {
     if (action.type == "INITIALISE_GAME") {
       const a = action as Action_InitialiseGame
       const cards = initialiseCards(12)
