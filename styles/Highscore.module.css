@@ -21,6 +21,11 @@
   justify-content: flex-start;
 }
 
+.innerContainer__row {
+  flex-direction: row;
+  align-items: center;
+}
+
 .highlight {
   position: absolute;
   right: -1.3rem;
@@ -91,6 +96,10 @@
   gap: 0.25rem;
 }
 
+.innerContainer__row .extraInfo {
+  font-size: 0.75rem;
+}
+
 .userName {
   font-weight: bold;
   max-width: 6rem;
@@ -98,6 +107,10 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.innerContainer__row .userName {
+  max-width: 10rem;
 }
 
 .retryText {

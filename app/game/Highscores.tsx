@@ -223,13 +223,14 @@ export const TimeAttackGameHighscoreList = ({
             thisGame={h.lobbyId == game?.lobbyId}
             gameOver={!!game?.gameOver}
             showCreationTime={true}
+            inline={true}
           />
         ))}
       {highscores && !highscores.length && (
         <div className={styles.retryText}>
           <p>
             Unable to load highscores. <br />{" "}
-            <a onClick={() => fetchHighscores()}>Retry</a>
+            <a onClick={() => fetchHighscores(filter)}>Retry</a>
           </p>
         </div>
       )}
@@ -250,6 +251,7 @@ const Highscore = ({
   thisGame,
   gameOver,
   showCreationTime,
+  inline,
 }: {
   rank: number
   highscore: Highscore
@@ -257,6 +259,7 @@ const Highscore = ({
   thisGame: boolean
   gameOver: boolean
   showCreationTime?: boolean
+  inline?: boolean
 }) => {
   const { userData } = useContext(SocketContext)
   const { totalTime, penalties, publicUuid } = highscore
@@ -272,7 +275,11 @@ const Highscore = ({
       } ${thisGame ? styles.thisGame : ""}`}
     >
       <div className={styles.rank}>{`${rank}.`}</div>
-      <div className={styles.innerContainer}>
+      <div
+        className={`${styles.innerContainer} ${
+          inline ? styles.innerContainer__row : ""
+        }`}
+      >
         <div className={styles.time}>{formatTime(totalTime)}</div>
         <div className={styles.extraInfo}>
           {"by "}
