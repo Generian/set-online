@@ -1,7 +1,6 @@
 import styles from "@/styles/GameOverInfo.module.css"
 import { Game, TimeAttackGame } from "@/helpers/gameHandling"
 import { formatTime } from "./Timer"
-import { Button } from "@mui/material"
 import { StartGameButton } from "../index/StartGameButton"
 
 const GameOverInfo = ({ game }: { game: Game }) => {

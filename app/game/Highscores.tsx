@@ -172,7 +172,6 @@ export const TimeAttackGameHighscoreList = ({
       filter
     )
     highscores && setHighscores(highscores)
-    console.log("Highscores:", highscores)
   }
 
   useEffect(() => {
