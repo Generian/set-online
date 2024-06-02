@@ -1,6 +1,6 @@
 "use server"
 
-import { Highscore } from "@/app/game/Highscores"
+import { FilterOption, Highscore } from "@/app/game/Highscores"
 import prisma from "../../prisma/prisma"
 import { Game, Games } from "@/helpers/gameHandling"
 import { User, Users } from "@/helpers/userHandling"
@@ -182,12 +182,25 @@ export const saveHighscoreToDatabase = async (highscore: Highscore) => {
 }
 
 export const retrieveListOfHighscoresFromDatabase = async (
-  limit?: number
+  limit?: number,
+  filter?: FilterOption
 ): Promise<Highscore[]> => {
   try {
     const highscores = await prisma.highscore.findMany({
       where: {
         environment: process.env.NODE_ENV,
+        createdAt: {
+          gte: new Date(
+            Date.now() -
+              (filter
+                ? filter == "24H"
+                  ? 24 * 3600 * 1000
+                  : filter == "7D"
+                  ? 7 * 24 * 3600 * 1000
+                  : Date.now()
+                : Date.now())
+          ),
+        },
       },
       take: limit ? limit : 10,
       orderBy: {

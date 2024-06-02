@@ -42,6 +42,17 @@ export const formatTimeDifference = (
   }
 }
 
+export const filterByTimestamp = (
+  previousDate: string,
+  daysToFilterBy: number,
+  currentDate: any = Date.now()
+) => {
+  const previous = +new Date(previousDate)
+  const elapsed = currentDate - previous
+
+  return elapsed < daysToFilterBy * 24 * 3600 * 1000
+}
+
 export const resolveUrlFromEnv = () => {
   const env = process.env.NODE_ENV
   if (env == "development") {

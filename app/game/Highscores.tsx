@@ -22,6 +22,8 @@ export interface Highscore {
   penalties: number
 }
 
+export type FilterOption = "ALL_TIME" | "7D" | "24H"
+
 export default function TimeAttackGameHighscoreComponent() {
   const [highscores, setHighscores] = useState<Highscore[]>([])
   const [time, setTime] = useState(0)
@@ -145,6 +147,7 @@ export default function TimeAttackGameHighscoreComponent() {
               highlight={i == highscoreIndexToHighlight}
               thisGame={h.lobbyId == game?.lobbyId}
               gameOver={!!game?.gameOver}
+              showCreationTime={true}
             />
           ))}
         </div>
@@ -161,28 +164,54 @@ export const TimeAttackGameHighscoreList = ({
   highscoreIndexToHighlight?: number
 }) => {
   const [highscores, setHighscores] = useState<Highscore[] | null>(null)
+  const [filter, setFilter] = useState<FilterOption>("7D")
 
-  const fetchHighscores = async () => {
-    const highscores = await retrieveListOfHighscoresFromDatabase()
+  const fetchHighscores = async (filter?: FilterOption) => {
+    const highscores = await retrieveListOfHighscoresFromDatabase(
+      undefined,
+      filter
+    )
     highscores && setHighscores(highscores)
+    console.log("Highscores:", highscores)
   }
 
   useEffect(() => {
-    fetchHighscores()
+    fetchHighscores(filter)
     let fetchTimer: NodeJS.Timer | undefined = undefined
     fetchTimer = setInterval(() => {
-      fetchHighscores()
+      fetchHighscores(filter)
     }, 30000)
 
     return () => {
       clearInterval(fetchTimer)
     }
-  }, [])
+  }, [filter])
 
   return (
     <div className={styles.highscoreListContainer}>
       <div className={styles.highscoreListHeader}>
         <span>Highscores</span>
+      </div>
+      <div className={styles.highscoreFilterContainer}>
+        {["ALL_TIME", "7D", "24H"].map((f) => (
+          <div
+            key={f}
+            className={`${styles.highscoreFilterItem} ${
+              f == filter ? styles.filterSelected : ""
+            }`}
+            onClick={() => setFilter(f as FilterOption)}
+          >
+            <span>
+              {
+                {
+                  ALL_TIME: "All time",
+                  "7D": "Last 7 days",
+                  "24H": "Last 24 hours",
+                }[f]
+              }
+            </span>
+          </div>
+        ))}
       </div>
       {highscores &&
         highscores.map((h, i) => (
@@ -193,13 +222,14 @@ export const TimeAttackGameHighscoreList = ({
             highlight={i == highscoreIndexToHighlight}
             thisGame={h.lobbyId == game?.lobbyId}
             gameOver={!!game?.gameOver}
+            showCreationTime={true}
           />
         ))}
       {highscores && !highscores.length && (
         <div className={styles.retryText}>
           <p>
             Unable to load highscores. <br />{" "}
-            <a onClick={fetchHighscores}>Retry</a>
+            <a onClick={() => fetchHighscores()}>Retry</a>
           </p>
         </div>
       )}
@@ -219,17 +249,17 @@ const Highscore = ({
   highlight,
   thisGame,
   gameOver,
+  showCreationTime,
 }: {
   rank: number
   highscore: Highscore
   highlight: boolean
   thisGame: boolean
   gameOver: boolean
+  showCreationTime?: boolean
 }) => {
   const { userData } = useContext(SocketContext)
   const { totalTime, penalties, publicUuid } = highscore
-
-  const { isMobile } = useViewportDimensions()
 
   const username = userData[publicUuid]?.globalUsername
     ? userData[publicUuid].globalUsername
@@ -247,7 +277,7 @@ const Highscore = ({
         <div className={styles.extraInfo}>
           {"by "}
           <span className={styles.userName}>{`${username} `}</span>
-          {highscore.createdAt && isMobile && (
+          {highscore.createdAt && showCreationTime && (
             <span>{formatTimeDifference(highscore.createdAt)}</span>
           )}
         </div>

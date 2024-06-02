@@ -12,4 +12,14 @@
   height: 100%;
   background-color: var(--lightgray);
   overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media only screen and (max-width: 800px) {
+  .bodyContainer {
+    display: unset;
+  }
 }

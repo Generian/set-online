@@ -32,7 +32,7 @@ export default function useViewportDimensions() {
     function handleResize() {
       const newViewportDimensions = getViewportDimensions()
       setViewportDimensions(newViewportDimensions)
-      setIsMobile(newViewportDimensions.width <= 600)
+      setIsMobile(newViewportDimensions.width <= 800)
     }
 
     handleResize()
