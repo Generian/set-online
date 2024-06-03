@@ -22,7 +22,9 @@ const GameOverInfo = ({ game }: { game: Game }) => {
           <div className={styles.detailsContainerRow}>
             <span className={styles.category}>Penalties</span>
             <span className={styles.value}>
-              {userPenalties[game.players[0]]}
+              {userPenalties[game.players[0]]
+                ? userPenalties[game.players[0]]
+                : 0}
             </span>
           </div>
           <div className={styles.detailsContainerRow}>
@@ -31,7 +33,9 @@ const GameOverInfo = ({ game }: { game: Game }) => {
               {formatTime(
                 gameOver -
                   startTime +
-                  userPenalties[game.players[0]] * 60 * 1000
+                  (userPenalties[game.players[0]]
+                    ? userPenalties[game.players[0]] * 60 * 1000
+                    : 0)
               )}
             </span>
           </div>
