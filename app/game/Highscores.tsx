@@ -93,52 +93,13 @@ export default function TimeAttackGameHighscoreComponent() {
 
   // if (!game || game?.gameType !== "TIME_ATTACK") return <></>
 
-  if (!isMobile) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.title}>
-          <span>Highscores</span>
-        </div>
-        {highscores.map((h, i) => (
-          <Highscore
-            key={`highscore_${h.lobbyId}`}
-            rank={i + 1}
-            highscore={h}
-            highlight={i == highscoreIndexToHighlight}
-            thisGame={h.lobbyId == game?.lobbyId}
-            gameOver={!!game?.gameOver}
-          />
-        ))}
-        {!highscores.length && (
-          <div className={styles.retryText}>
-            <p>
-              Unable to load highscores. <br />{" "}
-              <a onClick={fetchHighscores}>Retry</a>
-            </p>
+  if (highscores.length > 0) {
+    if (!isMobile) {
+      return (
+        <div className={styles.container}>
+          <div className={styles.title}>
+            <span>Highscores</span>
           </div>
-        )}
-      </div>
-    )
-  } else {
-    const handleMobileContainerToggle = () => {
-      setIsExpanded((e) => !e)
-    }
-    return (
-      <div className={styles.mobileContainer}>
-        <div
-          className={styles.mobileNextHighscoreContainer}
-          onClick={handleMobileContainerToggle}
-        >
-          <div
-            className={`${styles.arrow} ${isExpanded ? styles.closeArrow : ""}`}
-          >
-            <KeyboardArrowUpRoundedIcon />
-          </div>
-        </div>
-        <div
-          className={styles.mobileHighscoresContainer}
-          style={{ maxHeight: isExpanded ? "2000px" : "0px" }}
-        >
           {highscores.map((h, i) => (
             <Highscore
               key={`highscore_${h.lobbyId}`}
@@ -147,12 +108,47 @@ export default function TimeAttackGameHighscoreComponent() {
               highlight={i == highscoreIndexToHighlight}
               thisGame={h.lobbyId == game?.lobbyId}
               gameOver={!!game?.gameOver}
-              showCreationTime={true}
             />
           ))}
         </div>
-      </div>
-    )
+      )
+    } else {
+      const handleMobileContainerToggle = () => {
+        setIsExpanded((e) => !e)
+      }
+      return (
+        <div className={styles.mobileContainer}>
+          <div
+            className={styles.mobileNextHighscoreContainer}
+            onClick={handleMobileContainerToggle}
+          >
+            <div
+              className={`${styles.arrow} ${
+                isExpanded ? styles.closeArrow : ""
+              }`}
+            >
+              <KeyboardArrowUpRoundedIcon />
+            </div>
+          </div>
+          <div
+            className={styles.mobileHighscoresContainer}
+            style={{ maxHeight: isExpanded ? "2000px" : "0px" }}
+          >
+            {highscores.map((h, i) => (
+              <Highscore
+                key={`highscore_${h.lobbyId}`}
+                rank={i + 1}
+                highscore={h}
+                highlight={i == highscoreIndexToHighlight}
+                thisGame={h.lobbyId == game?.lobbyId}
+                gameOver={!!game?.gameOver}
+                showCreationTime={true}
+              />
+            ))}
+          </div>
+        </div>
+      )
+    }
   }
 }
 
@@ -229,7 +225,14 @@ export const TimeAttackGameHighscoreList = ({
         <div className={styles.retryText}>
           <p>
             Unable to load highscores. <br />{" "}
-            <a onClick={() => fetchHighscores(filter)}>Retry</a>
+            <a
+              onClick={() => {
+                setHighscores(null)
+                fetchHighscores(filter)
+              }}
+            >
+              Retry
+            </a>
           </p>
         </div>
       )}

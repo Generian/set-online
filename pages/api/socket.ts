@@ -57,6 +57,25 @@ const SocketHandler = async (
     let highscores: Highscore[] = []
     let chat: ChatMessage[] = []
 
+    // Define shared functions
+    const sendChatMessage = (
+      action: ChatAction & {
+        lobbyId: string
+        publicUuid: string
+      }
+    ) => {
+      const { publicUuid, lobbyId, message } = action
+      const newChatMessage: ChatMessage = {
+        publicUuid,
+        lobbyId,
+        message,
+        time: new Date().getTime(),
+        messageUuid: v4(),
+      }
+      chat = [...chat, newChatMessage]
+      io.emit("chatDataUpdate", [newChatMessage])
+    }
+
     // On server start, fetch data from database
     users = await retrieveListOfUsersFromDatabase()
     games = await retrieveListOfGamesFromDatabase()
@@ -229,19 +248,12 @@ const SocketHandler = async (
               callback && callback(actionResponse)
             }
           } else if (getActionCategory(action) == "CHAT") {
-            const { publicUuid, lobbyId, message } = action as ChatAction & {
-              lobbyId: string
-              publicUuid: string
-            }
-            const newChatMessage: ChatMessage = {
-              publicUuid,
-              lobbyId,
-              message,
-              time: new Date().getTime(),
-              messageUuid: v4(),
-            }
-            chat = [...chat, newChatMessage]
-            io.emit("chatDataUpdate", [newChatMessage])
+            sendChatMessage(
+              action as ChatAction & {
+                lobbyId: string
+                publicUuid: string
+              }
+            )
 
             // Handle callback
             callback && callback({ valid: true })

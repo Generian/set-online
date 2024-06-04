@@ -115,6 +115,10 @@
 
 .retryText {
   font-size: x-small;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
 }
 
 .retryText a {
