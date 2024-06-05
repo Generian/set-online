@@ -149,6 +149,8 @@ export default function TimeAttackGameHighscoreComponent() {
         </div>
       )
     }
+  } else {
+    return <></>
   }
 }
 
