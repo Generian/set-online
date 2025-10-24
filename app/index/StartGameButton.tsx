@@ -2,9 +2,10 @@
 
 import styles from "@/styles/StartGameButton.module.css"
 import { SocketContext } from "@/app/SocketConnection"
-import { useRouter } from "next/navigation"
-import { useContext } from "react"
+import { useRouter, usePathname } from "next/navigation"
+import { useContext, useState, useEffect } from "react"
 import { GameType } from "@/helpers/gameHandling"
+import { CircularProgress } from "@mui/material"
 
 interface StartGameButtonProps {
   gameType: GameType
@@ -17,17 +18,33 @@ export const StartGameButton = ({
   size,
   label,
 }: StartGameButtonProps) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [showsLoadingCircle, setShowsLoadingCircle] = useState(false)
   let { submitAction, userData } = useContext(SocketContext)
 
   const isOnline = Object.values(userData).length
 
   const router = useRouter()
+  const pathname = usePathname()
+
+  // Reset loading state when navigation completes
+  useEffect(() => {
+    if (isLoading && pathname && pathname.startsWith("/game")) {
+      setIsLoading(false)
+      setShowsLoadingCircle(false)
+    }
+  }, [pathname, isLoading])
 
   const navigateToGamePage = (obj: any) => {
     router.push(`/game?lobbyId=${obj.lobbyId}`, undefined)
+    // Don't set isLoading to false here - let the useEffect handle it
   }
 
   const handleClick = () => {
+    setIsLoading(true)
+    setTimeout(() => {
+      setShowsLoadingCircle(true)
+    }, 500)
     submitAction(
       {
         type: "INITIALISE_GAME",
@@ -43,11 +60,12 @@ export const StartGameButton = ({
     <div
       className={`${styles.container} ${
         size == "small" ? styles.smallContainer : ""
-      } ${disabled ? styles.disabled : ""}`}
+      } ${disabled ? styles.disabled : ""} ${isLoading ? styles.loading : ""}`}
       onClick={() => {
-        !disabled && handleClick()
+        !disabled && !isLoading && handleClick()
       }}
     >
+      {showsLoadingCircle && <CircularProgress size={24} />}
       <h2>
         {label
           ? label

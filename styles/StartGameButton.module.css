@@ -2,17 +2,24 @@
   width: 100%;
   padding: 2rem;
   display: flex;
+  flex-direction: row;
+  gap: 1rem;
   justify-content: center;
   align-items: center;
   box-shadow: var(--cardShadow);
   border-radius: var(--cardBorderRadius);
   cursor: pointer;
   transition: all var(--regularTransition) ease-in-out;
+  user-select: none;
 }
 
 .container:hover {
-  box-shadow: var(--cardShadowElevated);
-  background-color: var(--lightgray);
+  background-color: var(--gray);
+}
+
+.container:active {
+  box-shadow: var(--cardShadowPressed);
+  background-color: var(--gray);
 }
 
 .smallContainer {
@@ -23,6 +30,13 @@
 .disabled {
   pointer-events: none;
   opacity: 0.5;
+}
+
+.loading {
+  pointer-events: none;
+  box-shadow: var(--cardShadowPressed);
+  background-color: var(--gray);
+  opacity: 0.75;
 }
 
 @media only screen and (max-width: 600px) {
