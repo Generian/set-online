@@ -88,9 +88,31 @@
   text-align: right;
 }
 
+.ownMessage .time {
+  justify-content: end;
+}
+
 .text {
   /* display: block;
   word-wrap: break-word; */
+}
+
+.systemMessage {
+  color: var(--darkgray);
+  font-style: italic;
+}
+
+.time {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.timeText {
+  font-size: 0.6rem;
+  color: var(--mediumgray);
 }
 
 @media only screen and (max-width: 800px) {

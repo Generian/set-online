@@ -17,6 +17,7 @@
 
 .username {
   font-family: var(--font);
+  user-select: none;
 }
 
 .avatar {
@@ -31,6 +32,7 @@
   font-family: var(--font);
   font-weight: bold;
   color: var(--white);
+  user-select: none;
 }
 
 .small {

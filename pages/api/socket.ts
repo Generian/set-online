@@ -64,13 +64,14 @@ const SocketHandler = async (
         publicUuid: string
       }
     ) => {
-      const { publicUuid, lobbyId, message } = action
+      const { publicUuid, lobbyId, message, addGameLink } = action
       const newChatMessage: ChatMessage = {
         publicUuid,
         lobbyId,
         message,
         time: new Date().getTime(),
         messageUuid: v4(),
+        addGameLink,
       }
       chat = [...chat, newChatMessage]
       io.emit("chatDataUpdate", [newChatMessage])
@@ -170,7 +171,7 @@ const SocketHandler = async (
               users
             )
 
-            const { lobbyId, newGameData, error } = actionResponse
+            const { lobbyId, newGameData, error, chatAction } = actionResponse
 
             if (error || !lobbyId || !newGameData) {
               console.error(error)
@@ -188,6 +189,11 @@ const SocketHandler = async (
 
               // Save game to database
               saveGameToDatabase(games[lobbyId])
+
+              // Send chat message
+              if (chatAction) {
+                sendChatMessage(chatAction)
+              }
 
               // Return values
               io.emit("gameDataUpdate", { ...games })

@@ -53,7 +53,7 @@ const UserIcon = ({
   } else {
     return (
       <div className={`${styles.avatar} ${size ? styles[size] : ""}`}>
-        {initials}
+        <span title={usernameString}>{initials}</span>
       </div>
     )
   }

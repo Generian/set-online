@@ -12,6 +12,8 @@ import ActiveUserCount from "./ActiveUsersCount"
 import useViewportDimensions from "@/helpers/useViewportDimensions"
 import CloseIcon from "@mui/icons-material/Close"
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
+import { convertTimestampToHHMM } from "@/helpers/utils"
+import Link from "next/link"
 
 export interface ChatMessage {
   publicUuid: string
@@ -19,6 +21,7 @@ export interface ChatMessage {
   message: string
   time: number
   messageUuid: string
+  addGameLink?: boolean
 }
 
 export default function GameChat() {
@@ -70,8 +73,7 @@ export default function GameChat() {
         {chatData.map((message) => (
           <ChatMessage
             key={message.messageUuid}
-            publicUuid={message.publicUuid}
-            content={message.message}
+            chatMessage={message}
             ownMessage={publicUuid == message.publicUuid}
           />
         ))}
@@ -93,14 +95,13 @@ export default function GameChat() {
 }
 
 const ChatMessage = ({
-  publicUuid,
-  content,
+  chatMessage,
   ownMessage,
 }: {
-  publicUuid: string
-  content: string
+  chatMessage: ChatMessage
   ownMessage: boolean
 }) => {
+  const { publicUuid, message, time, addGameLink, lobbyId } = chatMessage
   return (
     <div
       className={`${styles.messageContainer} ${
@@ -109,7 +110,22 @@ const ChatMessage = ({
     >
       <UserIcon variant="avatar" size={"small"} publicUuid={publicUuid} />
       <div className={styles.textBox}>
-        <span className={styles.text}>{content}</span>
+        <span
+          className={`${styles.text} ${
+            addGameLink ? styles.systemMessage : ""
+          }`}
+        >
+          {message}
+          {addGameLink && (
+            <>
+              <span> </span>
+              <Link href={`/game?lobbyId=${lobbyId}`}>{`Watch here`}</Link>
+            </>
+          )}
+        </span>
+      </div>
+      <div className={styles.time}>
+        <span className={styles.timeText}>{convertTimestampToHHMM(time)}</span>
       </div>
     </div>
   )

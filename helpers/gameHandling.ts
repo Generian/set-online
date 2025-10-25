@@ -115,6 +115,8 @@ export interface Action_SetUsername extends Action {
 
 export interface Action_NewChatMessage extends Action {
   message: string
+  publicUuid?: string
+  addGameLink?: boolean
 }
 
 export interface SetWon {
@@ -139,6 +141,10 @@ export const handleGameAction = (
   error?: string | undefined
   isValidSet?: boolean
   isLocalCheck?: boolean
+  chatAction?: ChatAction & {
+    lobbyId: string
+    publicUuid: string
+  }
 } => {
   const user = users && privateUuid && users[privateUuid]
 
@@ -193,6 +199,15 @@ export const handleGameAction = (
       return {
         lobbyId: newGame.lobbyId,
         newGameData: newGame,
+        chatAction: {
+          message: `I have started a new ${
+            a.gameType == "TIME_ATTACK" ? "time attack" : "multiplayer"
+          } game.`,
+          type: "NEW_CHAT_MESSAGE",
+          lobbyId: newGame.lobbyId,
+          publicUuid,
+          addGameLink: true,
+        },
       }
     } else {
       return { error: "No lobbyId provided." }
