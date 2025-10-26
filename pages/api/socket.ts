@@ -65,6 +65,15 @@ const SocketHandler = async (
       }
     ) => {
       const { publicUuid, lobbyId, message, addGameLink } = action
+
+      // Message is user-entered message. Must be cleaned and sanitized
+      const cleanedMessage = message.replace(/<[^>]*>?/g, "").trim()
+
+      // Limit message length to 500 characters
+      if (cleanedMessage.length > 500) {
+        return // Reject message if too long
+      }
+
       const newChatMessage: ChatMessage = {
         publicUuid,
         lobbyId,

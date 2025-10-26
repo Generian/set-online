@@ -200,7 +200,7 @@ export const handleGameAction = (
         lobbyId: newGame.lobbyId,
         newGameData: newGame,
         chatAction: {
-          message: `I have started a new ${
+          message: `Has started a new ${
             a.gameType == "TIME_ATTACK" ? "time attack" : "multiplayer"
           } game.`,
           type: "NEW_CHAT_MESSAGE",

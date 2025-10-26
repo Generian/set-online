@@ -23,6 +23,9 @@ import ServerSyncIndicator from "./ServerSyncIndicator"
 import { defaultColors, ShapeVariants } from "./Shape"
 import { getCookie } from "@/helpers/cookies"
 import { UserPreferences } from "../UserPreferences"
+import useViewportDimensions from "@/helpers/useViewportDimensions"
+import ChatComponent from "../shared/GameChat"
+import { getPublicUuid } from "@/helpers/uuidHandler"
 
 interface GameContextProps {
   game: GameProps | undefined
@@ -54,6 +57,8 @@ export const Game = () => {
     useState<boolean>(false)
 
   const { gameData, localGameData, submitAction } = useContext(SocketContext)
+
+  const { isMobile } = useViewportDimensions()
 
   const lobbyId = useSearchParams()?.get("lobbyId")
 
@@ -193,7 +198,14 @@ export const Game = () => {
         infoContainer={
           <>
             {game && <Timer game={game} />}{" "}
-            {<TimeAttackGameHighscoreComponent />}
+            {!isMobile && <TimeAttackGameHighscoreComponent />}
+            {isMobile && (
+              <ChatComponent
+                activePlayerMode={
+                  game?.players?.includes(getPublicUuid()) ?? false
+                }
+              />
+            )}
           </>
         }
         setsContainer={<>{game && <SetsCounter game={game} />}</>}

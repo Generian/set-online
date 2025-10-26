@@ -1,7 +1,7 @@
 .container {
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 200;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -12,6 +12,10 @@
 
 .collapsed {
   height: 28px !important;
+}
+
+.fullyCollapsed {
+  height: 0 !important;
 }
 
 .headerContainer {
@@ -115,6 +119,47 @@
   color: var(--mediumgray);
 }
 
+.letterIconContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.newMessageIndicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(20%, -20%);
+  background-color: var(--red);
+  color: var(--white);
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+}
+
+.additionalChatInfo {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 0.5rem;
+  gap: 0.25rem;
+  font-size: x-small;
+  user-select: none;
+  border-left: 1px solid var(--mediumlightgray);
+}
+
+.additionalChatInfoInsideContainer {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding-right: 0.25rem;
+}
+
 @media only screen and (max-width: 800px) {
   .container {
     position: fixed;
@@ -130,5 +175,13 @@
     background-color: var(--gray);
     border-radius: 0.3rem 0.3rem 0 0;
     transition: all var(--regularTransition) ease-out;
+  }
+
+  .container.collapsed.activePlayerMode {
+    width: 2.5rem;
+  }
+
+  .collapsed.activePlayerMode .headerContainer {
+    justify-content: center;
   }
 }

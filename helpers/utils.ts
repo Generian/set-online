@@ -45,7 +45,12 @@ export const formatTimeDifference = (
 // Function to convert timestamp to HH:MM
 export const convertTimestampToHHMM = (timestamp: number) => {
   const date = new Date(timestamp)
-  return date.getHours() + ":" + date.getMinutes()
+  return (
+    date.getHours() +
+    ":" +
+    (date.getMinutes() < 10 ? "0" : "") +
+    date.getMinutes()
+  )
 }
 
 export const filterByTimestamp = (

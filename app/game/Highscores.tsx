@@ -112,7 +112,7 @@ export default function TimeAttackGameHighscoreComponent() {
           ))}
         </div>
       )
-    } else {
+    } else if (isMobile) {
       const handleMobileContainerToggle = () => {
         setIsExpanded((e) => !e)
       }
@@ -148,6 +148,8 @@ export default function TimeAttackGameHighscoreComponent() {
           </div>
         </div>
       )
+    } else {
+      return <></>
     }
   } else {
     return <></>
