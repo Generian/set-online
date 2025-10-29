@@ -5,7 +5,10 @@ import { PublicUsers } from "./userHandling"
 export interface ServerToClientEvents {
   gameDataUpdate: (data: Games) => void
   userDataUpdate: (data: PublicUsers) => void
-  chatDataUpdate: (newChatMessages: ChatMessage[]) => void
+  chatDataUpdate: (
+    newChatMessages: ChatMessage[],
+    removedChatMessageUuids?: string[]
+  ) => void
 }
 
 export interface ClientToServerEvents {

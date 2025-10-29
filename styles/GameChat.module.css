@@ -57,6 +57,7 @@
   border: none;
   padding: 0.1rem;
   border-bottom: 2px solid var(--gray);
+  font-size: 16px; /* Prevent iOS zoom on focus */
 }
 
 .input:focus {
@@ -85,6 +86,11 @@
   padding: 0.2rem 0.5rem 0.3rem 0.5rem;
   border-radius: 0.5rem;
   box-shadow: var(--cardShadow);
+  display: inline-block; /* shrink to content, not full width */
+  max-width: 80%; /* don't exceed container width */
+  width: auto;
+  word-break: break-word; /* break long words */
+  overflow-wrap: anywhere; /* allow breaking anywhere for long tokens */
 }
 
 .ownMessage .textBox {
@@ -99,6 +105,7 @@
 .text {
   /* display: block;
   word-wrap: break-word; */
+  white-space: pre-wrap; /* preserve user newlines while wrapping */
 }
 
 .systemMessage {

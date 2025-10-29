@@ -8,7 +8,7 @@ import { getPublicUuid } from "@/helpers/uuidHandler"
 import { ChatAction } from "@/helpers/gameHandling"
 import SendIcon from "@mui/icons-material/Send"
 import EmailIcon from "@mui/icons-material/Email"
-import { IconButton, Switch } from "@mui/material"
+import { ClickAwayListener, IconButton, Switch } from "@mui/material"
 import ActiveUserCount from "./ActiveUsersCount"
 import useViewportDimensions from "@/helpers/useViewportDimensions"
 import CloseIcon from "@mui/icons-material/Close"
@@ -137,101 +137,110 @@ export default function ChatComponent({
     setOnlyLobbyChat((onlyLobbyChat) => !onlyLobbyChat)
   }
 
+  const handleClickAway = () => {
+    !isCollapsed && setIsCollapsed(true)
+  }
+
   return (
-    <div
-      className={`${styles.container} ${
-        isMobile && isCollapsed ? styles.collapsed : ""
-      } ${activePlayerMode ? styles.activePlayerMode : ""} ${
-        !newUnreadMessages && isCollapsed && activePlayerMode
-          ? styles.fullyCollapsed
-          : ""
-      }`}
-    >
+    <ClickAwayListener onClickAway={handleClickAway}>
       <div
-        className={`${styles.headerContainer}`}
-        onClick={() =>
-          isCollapsed && isMobile && setIsCollapsed((collapsed) => !collapsed)
-        }
+        className={`${styles.container} ${
+          isMobile && isCollapsed ? styles.collapsed : ""
+        } ${activePlayerMode ? styles.activePlayerMode : ""} ${
+          !newUnreadMessages && isCollapsed && activePlayerMode
+            ? styles.fullyCollapsed
+            : ""
+        }`}
       >
-        {!(activePlayerMode && isCollapsed) && <ActiveUserCount />}
-        {!!newUnreadMessages &&
-          isCollapsed &&
-          !activePlayerMode &&
-          isMobile && (
-            <div className={styles.additionalChatInfo}>
-              <div className={styles.additionalChatInfoInsideContainer}>
-                <span>{`${newUnreadMessages} unread message${
-                  newUnreadMessages > 1 ? "s" : ""
-                }`}</span>
-                <div className={styles.newMessageIndicator}></div>
+        <div
+          className={`${styles.headerContainer}`}
+          onClick={() =>
+            isCollapsed && isMobile && setIsCollapsed((collapsed) => !collapsed)
+          }
+        >
+          {!(activePlayerMode && isCollapsed) && <ActiveUserCount />}
+          {!!newUnreadMessages &&
+            isCollapsed &&
+            !activePlayerMode &&
+            isMobile && (
+              <div className={styles.additionalChatInfo}>
+                <div className={styles.additionalChatInfoInsideContainer}>
+                  <span>{`${newUnreadMessages} unread message${
+                    newUnreadMessages > 1 ? "s" : ""
+                  }`}</span>
+                  <div className={styles.newMessageIndicator}></div>
+                </div>
               </div>
+            )}
+          {lobbyId && !isCollapsed && (
+            <div className={styles.additionalChatInfo}>
+              <span>Only lobby chat</span>
+              <Switch
+                size="small"
+                checked={!!onlyLobbyChat}
+                onChange={toggleOnlyLobbyChat}
+                inputProps={{ "aria-label": "Only lobby chat toggle" }}
+              />
             </div>
           )}
-        {lobbyId && !isCollapsed && (
-          <div className={styles.additionalChatInfo}>
-            <span>Only lobby chat</span>
-            <Switch
+          {isMobile && (
+            <IconButton
               size="small"
-              checked={!!onlyLobbyChat}
-              onChange={toggleOnlyLobbyChat}
-              inputProps={{ "aria-label": "Only lobby chat toggle" }}
-            />
-          </div>
-        )}
-        {isMobile && (
-          <IconButton
-            size="small"
-            onClick={() =>
-              !isCollapsed && setIsCollapsed((collapsed) => !collapsed)
-            }
-          >
-            {!isCollapsed && <CloseIcon fontSize="inherit" />}
-            {isCollapsed && !activePlayerMode && (
-              <KeyboardArrowUpIcon fontSize="inherit" />
-            )}
-            {isCollapsed && activePlayerMode && (
-              <div className={styles.letterIconContainer}>
-                <EmailIcon fontSize="inherit" />
-                <div className={styles.newMessageIndicator}></div>
-              </div>
-            )}
+              onClick={() =>
+                !isCollapsed && setIsCollapsed((collapsed) => !collapsed)
+              }
+            >
+              {!isCollapsed && <CloseIcon fontSize="inherit" />}
+              {isCollapsed && !activePlayerMode && (
+                <KeyboardArrowUpIcon fontSize="inherit" />
+              )}
+              {isCollapsed && activePlayerMode && (
+                <div className={styles.letterIconContainer}>
+                  <EmailIcon fontSize="inherit" />
+                  <div className={styles.newMessageIndicator}></div>
+                </div>
+              )}
+            </IconButton>
+          )}
+        </div>
+        <div className={styles.chatContainer} ref={chatContainerRef}>
+          {chatData
+            .filter((message) => {
+              let shouldShowMessage = true
+              if (onlyLobbyChat) {
+                shouldShowMessage = message.lobbyId === lobbyId
+              }
+              if (!lobbyId) {
+                shouldShowMessage = message.lobbyId ? false : true
+              }
+              if (message.addGameLink && message.publicUuid === publicUuid) {
+                shouldShowMessage = false
+              }
+              return shouldShowMessage
+            })
+            .map((message) => (
+              <ChatMessage
+                key={message.messageUuid}
+                chatMessage={message}
+                ownMessage={publicUuid == message.publicUuid}
+              />
+            ))}
+        </div>
+        <div className={styles.inputContainer}>
+          <input
+            type="text"
+            className={styles.input}
+            value={newMessage}
+            onChange={(event) => setNewMessage(event.target.value)}
+            onKeyDown={(e) => handleSubmit(e)}
+            maxLength={500}
+          />
+          <IconButton aria-label="send" size="small" onClick={submitMessage}>
+            <SendIcon fontSize="small" />
           </IconButton>
-        )}
+        </div>
       </div>
-      <div className={styles.chatContainer} ref={chatContainerRef}>
-        {chatData
-          .filter((message) => {
-            let shouldShowMessage = true
-            if (onlyLobbyChat) {
-              shouldShowMessage = message.lobbyId === lobbyId
-            }
-            if (message.addGameLink && message.publicUuid === publicUuid) {
-              shouldShowMessage = false
-            }
-            return shouldShowMessage
-          })
-          .map((message) => (
-            <ChatMessage
-              key={message.messageUuid}
-              chatMessage={message}
-              ownMessage={publicUuid == message.publicUuid}
-            />
-          ))}
-      </div>
-      <div className={styles.inputContainer}>
-        <input
-          type="text"
-          className={styles.input}
-          value={newMessage}
-          onChange={(event) => setNewMessage(event.target.value)}
-          onKeyDown={(e) => handleSubmit(e)}
-          maxLength={500}
-        />
-        <IconButton aria-label="send" size="small" onClick={submitMessage}>
-          <SendIcon fontSize="small" />
-        </IconButton>
-      </div>
-    </div>
+    </ClickAwayListener>
   )
 }
 
@@ -249,7 +258,12 @@ const ChatMessage = ({
         ownMessage ? styles.ownMessage : ""
       }`}
     >
-      <UserIcon variant="avatar" size={"small"} publicUuid={publicUuid} />
+      <UserIcon
+        variant="avatar"
+        size={"small"}
+        publicUuid={publicUuid}
+        showOnlineStatus={true}
+      />
       <div className={styles.textBox}>
         <span
           className={`${styles.text} ${

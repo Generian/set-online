@@ -11,10 +11,12 @@ const UserIcon = ({
   publicUuid,
   variant,
   size,
+  showOnlineStatus,
 }: {
   publicUuid?: string
   variant?: "full" | "avatar"
   size?: "small" | "medium" | "large"
+  showOnlineStatus?: boolean
 }) => {
   let usernameString
   let avatar
@@ -54,6 +56,13 @@ const UserIcon = ({
     return (
       <div className={`${styles.avatar} ${size ? styles[size] : ""}`}>
         <span title={usernameString}>{initials}</span>
+        {showOnlineStatus && (
+          <div
+            className={`${styles.onlineStatus} ${
+              user?.online ? "" : styles.offline
+            }`}
+          ></div>
+        )}
       </div>
     )
   }

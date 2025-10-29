@@ -22,6 +22,7 @@
 
 .avatar {
   display: flex;
+  position: relative;
   justify-content: center;
   align-items: center;
   width: 2.8rem;
@@ -36,10 +37,27 @@
 }
 
 .small {
-  width: 1.5rem;
+  min-width: 1.5rem;
+  max-width: 1.5rem;
   font-size: x-small;
 }
 
 .large {
-  width: 3.4rem;
+  min-width: 3.4rem;
+  max-width: 3.4rem;
+}
+
+.onlineStatus {
+  position: absolute;
+  bottom: -0.05rem;
+  right: -0.05rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  border: 0.05rem solid var(--white);
+  background-color: var(--green);
+}
+
+.offline {
+  background-color: var(--red);
 }

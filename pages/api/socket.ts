@@ -82,8 +82,28 @@ const SocketHandler = async (
         messageUuid: v4(),
         addGameLink,
       }
+
+      let removedChatMessageUuids: string[] = []
+
+      if (addGameLink) {
+        // Remove previous game start messages for same user
+        removedChatMessageUuids = chat
+          .filter(
+            (message) =>
+              message.publicUuid === publicUuid && message.addGameLink
+          )
+          .map((message) => message.messageUuid)
+
+        chat = chat.filter(
+          (message) => !removedChatMessageUuids.includes(message.messageUuid)
+        )
+      }
+
+      // Add new message to chat array
       chat = [...chat, newChatMessage]
-      io.emit("chatDataUpdate", [newChatMessage])
+
+      // Send chat data to clients
+      io.emit("chatDataUpdate", chat, removedChatMessageUuids)
     }
 
     // On server start, fetch data from database

@@ -93,7 +93,11 @@
 .extraInfo {
   font-size: 0.5rem;
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex: 1;
   gap: 0.25rem;
+  padding-right: 0.5rem;
 }
 
 .innerContainer__row .extraInfo {
@@ -107,6 +111,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  width: 100%;
 }
 
 .innerContainer__row .userName {

@@ -159,24 +159,32 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
       setUserData(data)
     })
 
-    socket.on("chatDataUpdate", (newChatMessages: ChatMessage[]) => {
-      console.log("receiving new chat message:", newChatMessages)
-      setChatData((chatData) => {
-        const newChatData = [...chatData]
+    socket.on(
+      "chatDataUpdate",
+      (newChatMessages: ChatMessage[], removedChatMessageUuids?: string[]) => {
+        console.log("receiving new chat message:", newChatMessages)
+        setChatData((chatData) => {
+          const newChatData = [
+            ...chatData.filter(
+              (message) =>
+                !(removedChatMessageUuids || []).includes(message.messageUuid)
+            ),
+          ]
 
-        for (let index = 0; index < newChatMessages.length; index++) {
-          const newChatMessage = newChatMessages[index]
-          if (
-            !newChatData.find(
-              (m) => m.messageUuid == newChatMessage.messageUuid
-            )
-          ) {
-            newChatData.push(newChatMessage)
+          for (let index = 0; index < newChatMessages.length; index++) {
+            const newChatMessage = newChatMessages[index]
+            if (
+              !newChatData.find(
+                (m) => m.messageUuid == newChatMessage.messageUuid
+              )
+            ) {
+              newChatData.push(newChatMessage)
+            }
           }
-        }
-        return newChatData
-      })
-    })
+          return newChatData
+        })
+      }
+    )
   }
 
   return (
