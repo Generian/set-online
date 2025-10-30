@@ -211,7 +211,11 @@ export default function ChatComponent({
                 shouldShowMessage = message.lobbyId === lobbyId
               }
               if (!lobbyId) {
-                shouldShowMessage = message.lobbyId ? false : true
+                shouldShowMessage = message.lobbyId
+                  ? message.addGameLink
+                    ? true
+                    : false
+                  : true
               }
               if (message.addGameLink && message.publicUuid === publicUuid) {
                 shouldShowMessage = false

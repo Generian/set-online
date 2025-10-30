@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useContext } from "react"
 import { SocketContext } from "../SocketConnection"
 import { UserPreferencesContext } from "../UserPreferences"
+import { Tooltip } from "@mui/material"
 
 const UserIcon = ({
   publicUuid,
@@ -54,16 +55,33 @@ const UserIcon = ({
     )
   } else {
     return (
-      <div className={`${styles.avatar} ${size ? styles[size] : ""}`}>
-        <span title={usernameString}>{initials}</span>
-        {showOnlineStatus && (
-          <div
-            className={`${styles.onlineStatus} ${
-              user?.online ? "" : styles.offline
-            }`}
-          ></div>
-        )}
-      </div>
+      <Tooltip
+        title={usernameString}
+        arrow
+        slotProps={{
+          popper: {
+            modifiers: [
+              {
+                name: "offset",
+                options: {
+                  offset: [0, -14],
+                },
+              },
+            ],
+          },
+        }}
+      >
+        <div className={`${styles.avatar} ${size ? styles[size] : ""}`}>
+          <span title={usernameString}>{initials}</span>
+          {showOnlineStatus && (
+            <div
+              className={`${styles.onlineStatus} ${
+                user?.online ? "" : styles.offline
+              }`}
+            ></div>
+          )}
+        </div>
+      </Tooltip>
     )
   }
 }
