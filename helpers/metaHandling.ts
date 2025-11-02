@@ -1,5 +1,5 @@
 import { retrieveSpecificGameFromDatabase } from "@/app/actions/databaseActions"
-import { Action, Games } from "./gameHandling"
+import { Action, Games } from "./types"
 import { Users } from "./userHandling"
 import { Highscore } from "@/app/game/Highscores"
 

@@ -60,6 +60,11 @@
   color: transparent;
 }
 
+.timeOutContainer .timeContainer {
+  background-color: var(--redBackground);
+  color: var(--red);
+}
+
 .time {
   position: absolute;
   right: 1rem;
@@ -69,6 +74,12 @@
   font-family: var(--font);
   color: black;
   transition: color 0.2s ease-out;
+}
+
+.timeOutTimer {
+  font-size: 3rem;
+  font-weight: bold;
+  font-family: var(--font);
 }
 
 .pulsate {

@@ -1,4 +1,4 @@
-import { Action_SetUsername, UserAction } from "./gameHandling"
+import { Action_SetUsername, UserAction } from "./types"
 
 export interface User {
   sockets: string[]

@@ -2,7 +2,7 @@
 
 import { FilterOption, Highscore } from "@/app/game/Highscores"
 import prisma from "../../prisma/prisma"
-import { Game, Games } from "@/helpers/gameHandling"
+import { Game, Games } from "@/helpers/types"
 import { User, Users } from "@/helpers/userHandling"
 
 // Games

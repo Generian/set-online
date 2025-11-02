@@ -1,4 +1,4 @@
-import { Game } from "@/helpers/gameHandling"
+import { Game } from "@/helpers/types"
 import styles from "@/styles/SetAnnouncer.module.css"
 import { useContext, useEffect, useRef, useState } from "react"
 import { UserPreferencesContext } from "../UserPreferences"

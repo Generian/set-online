@@ -16,6 +16,11 @@ model Game {
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
   environment         String
+  // Multiplayer lobby meta
+  status              String    @default("open") // "open" | "in_progress" | "finished"
+  name                String    @unique           // auto-generated 5-char code
+  maxPlayers          Int       @default(6)
+  players             String                         // JSON string of players with host flag
   gameData            String
   highscore           Highscore?
 }

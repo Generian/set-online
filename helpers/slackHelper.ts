@@ -1,3 +1,4 @@
+import { GameType } from "./types"
 import { resolveUrlFromEnv } from "./utils"
 
 const sendSlackMessage = async (message: string) => {
@@ -31,16 +32,18 @@ const sendSlackMessage = async (message: string) => {
     .catch((error) => console.log("error", error))
 }
 
-export const informSlackAboutTimeattackGameStarted = (
+export const informSlackAboutNewGameStarted = (
   player: string | undefined,
-  lobbyId: string
+  lobbyId: string,
+  gameType: GameType
 ) => {
+  const gameTypeText = gameType == "TIME_ATTACK" ? "time attack" : "multiplayer"
   const message = [
     {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `New game started by ${player || "unknown"}.`,
+        text: `New ${gameTypeText} game started by ${player || "unknown"}.`,
       },
       accessory: {
         type: "button",

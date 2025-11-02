@@ -1,7 +1,8 @@
 import styles from "@/styles/GameOverInfo.module.css"
-import { Game, TimeAttackGame } from "@/helpers/gameHandling"
+import { Game, MultiplayerGame, TimeAttackGame } from "@/helpers/types"
 import { formatTime } from "./Timer"
 import { StartGameButton } from "../index/StartGameButton"
+import SetsCounter from "./SetsCounter"
 
 const GameOverInfo = ({ game }: { game: Game }) => {
   if (game.gameType == "TIME_ATTACK") {
@@ -46,6 +47,18 @@ const GameOverInfo = ({ game }: { game: Game }) => {
               size="small"
             />
           </div>
+        </div>
+      </div>
+    )
+  } else if (game.gameType == "MULTIPLAYER") {
+    const { setsWon } = game as MultiplayerGame
+
+    return (
+      <div className={styles.container}>
+        <h2 className={styles.headline}>Finished!</h2>
+        <div className={styles.detailsContainer}>
+          <SetsCounter game={game} gameOverMode={true} />
+          <div className={styles.playAgainContainer}></div>
         </div>
       </div>
     )

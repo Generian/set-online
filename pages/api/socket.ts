@@ -13,11 +13,12 @@ import {
 import {
   ChatAction,
   GameAction,
+  LobbyAction,
   Games,
+  MultiplayerLobbies,
   UserAction,
   getActionCategory,
-  handleGameAction,
-} from "@/helpers/gameHandling"
+} from "@/helpers/types"
 import {
   retrieveListOfGamesFromDatabase,
   retrieveListOfUsersFromDatabase,
@@ -27,6 +28,8 @@ import {
 import { handleMetaAction } from "@/helpers/metaHandling"
 import { ChatMessage } from "@/app/shared/GameChat"
 import { Highscore } from "@/app/game/Highscores"
+import { handleGameAction } from "@/helpers/gameHandling"
+import { handleLobbyAction } from "@/helpers/lobbyHandling"
 
 interface SocketServer extends HTTPServer {
   io?: IOServer | undefined
@@ -55,6 +58,8 @@ const SocketHandler = async (
     let users: Users = {}
     let games: Games = {}
     let highscores: Highscore[] = []
+
+    let lobbies: MultiplayerLobbies = {}
     let chat: ChatMessage[] = []
 
     // Define shared functions
@@ -168,6 +173,9 @@ const SocketHandler = async (
           // Send game data to client
           socket.emit("gameDataUpdate", { ...games })
 
+          // Send multiplayer lobby data to client
+          socket.emit("multiplayerLobbyDataUpdate", { ...lobbies })
+
           // Send chat data to client
           socket.emit("chatDataUpdate", chat)
         }
@@ -178,29 +186,52 @@ const SocketHandler = async (
         "action",
         async (
           privateUuid: string,
-          action: (GameAction | UserAction) & {
+          action: (GameAction | LobbyAction | UserAction) & {
             lobbyId: string
             publicUuid: string
           },
           callback?: (obj: any) => void
         ) => {
-          // Log new action received by the server
-          console.log("action:", action)
-
           const publicUuid = users[privateUuid].publicUuid
 
-          if (getActionCategory(action) == "GAME") {
+          if (getActionCategory(action) == "LOBBY") {
+            // Handle action
+            const actionResponse = handleLobbyAction(
+              action,
+              lobbies,
+              privateUuid,
+              socket.id,
+              users
+            )
+
+            const { lobbyId, newLobbyData, error } = actionResponse
+
+            if (error || !lobbyId || !newLobbyData) {
+              console.error(error)
+            } else {
+              if (newLobbyData.players.length === 0) {
+                // Remove lobby when last player leaves
+                delete lobbies[lobbyId]
+              } else {
+                lobbies[lobbyId] = newLobbyData
+              }
+              io.emit("multiplayerLobbyDataUpdate", { ...lobbies })
+              callback && callback(actionResponse)
+            }
+          } else if (getActionCategory(action) == "GAME") {
             // Handle action
             const actionResponse = handleGameAction(
               action,
               games,
+              lobbies,
               highscores,
               privateUuid,
               socket.id,
               users
             )
 
-            const { lobbyId, newGameData, error, chatAction } = actionResponse
+            const { lobbyId, lobbyIdToDelete, newGameData, error, chatAction } =
+              actionResponse
 
             if (error || !lobbyId || !newGameData) {
               console.error(error)
@@ -218,6 +249,12 @@ const SocketHandler = async (
 
               // Save game to database
               saveGameToDatabase(games[lobbyId])
+
+              // In case a multiplayer game has been started, delete the lobby
+              if (lobbyIdToDelete) {
+                delete lobbies[lobbyIdToDelete]
+                io.emit("multiplayerLobbyDataUpdate", { ...lobbies })
+              }
 
               // Send chat message
               if (chatAction) {
@@ -303,6 +340,22 @@ const SocketHandler = async (
         if (uuid) {
           // Update user online status
           users[uuid].online = false
+
+          // Remove from any lobby and transfer host if needed
+          const publicUuid = users[uuid].publicUuid
+          Object.values(lobbies).forEach((l) => {
+            if (l.players.includes(publicUuid)) {
+              l.players = l.players.filter((p) => p !== publicUuid)
+              if (l.players.length === 0) {
+                delete lobbies[l.lobbyId]
+              } else if (l.host === publicUuid) {
+                l.host = l.players[0]
+              }
+            }
+          })
+
+          // Send multiplayer lobby data to client
+          io.emit("multiplayerLobbyDataUpdate", { ...lobbies })
 
           // Inform users
           io.emit("userDataUpdate", createPublicUserObject(users))

@@ -13,7 +13,7 @@ import { SocketContext } from "../SocketConnection"
 import { useSearchParams } from "next/navigation"
 import Layout from "./Layout"
 import Timer from "./Timer"
-import { Game as GameProps } from "../../helpers/gameHandling"
+import { Game as GameProps } from "../../helpers/types"
 import AddCardsButton from "./AddCardsButton"
 import SetAnnouncer from "./SetAnnouncer"
 import TimeAttackGameHighscoreComponent from "./Highscores"
@@ -198,7 +198,9 @@ export const Game = () => {
         infoContainer={
           <>
             {game && <Timer game={game} />}{" "}
-            {!isMobile && <TimeAttackGameHighscoreComponent />}
+            {!isMobile && game?.gameType === "TIME_ATTACK" && (
+              <TimeAttackGameHighscoreComponent />
+            )}
             {isMobile && (
               <ChatComponent
                 activePlayerMode={
@@ -208,7 +210,13 @@ export const Game = () => {
             )}
           </>
         }
-        setsContainer={<>{game && <SetsCounter game={game} />}</>}
+        setsContainer={
+          <>
+            {game && !(game.gameOver && game.gameType === "MULTIPLAYER") && (
+              <SetsCounter game={game} />
+            )}
+          </>
+        }
       ></Layout>
     </GameContext.Provider>
   )

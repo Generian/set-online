@@ -1,128 +1,30 @@
-import { CardProps } from "@/app/game/Card"
-import { initialiseCards } from "./cardsInitialiser"
-import { createLobbyId } from "./utils"
-import { User, Users } from "./userHandling"
-import { findSetInCards, validateCards } from "./setValidator"
-import { reorderCards } from "./reorderCards"
-import { getMaxColumn } from "./getMaxColumns"
-import { getPositions } from "./positions"
-import { formatTime } from "@/app/game/Timer"
-import {
-  informSlackAboutNewTimeattackHighscore,
-  informSlackAboutTimeattackGameStarted,
-} from "./slackHelper"
-import { saveHighscore } from "./highscores"
 import { Highscore } from "@/app/game/Highscores"
-
-export type Game = TimeAttackGame | MultiplayerkGame
-
-export interface BaseGame {
-  lobbyId: string
-  gameType: GameType
-  players: string[] // publicUuid's
-  cards: CardProps[]
-  maxColumns: number
-  hasSet: boolean | null
-  setsWon: SetWon[]
-  actions: (GameAction & { publicUuid: string })[]
-  gameOver: number
-}
-
-export interface TimeAttackGame extends BaseGame {
-  timeAttackAttributes: TimeAttackAttributesProps
-}
-
-export interface MultiplayerkGame extends BaseGame {
-  multiplayerAttributes: any
-}
-
-interface TimeAttackAttributesProps {
-  startTime: number
-  userPenalties: {
-    [key: string]: number
-  }
-}
-
-export interface Games {
-  [key: string]: Game
-}
-
-export type GameType = "TIME_ATTACK" | "MULTIPLAYER"
-
-export type GameAction =
-  | Action_InitialiseGame
-  | Action_SubmitSet
-  | Action_RequestCards
-
-export type UserAction = Action_SetUsername
-
-export type ChatAction = Action_NewChatMessage
-
-export type ActionType =
-  | "INITIALISE_GAME"
-  | "SUBMIT_SET"
-  | "REQUEST_CARDS"
-  | "SET_USERNAME"
-  | "GET_GAME_DATA"
-  | "NEW_CHAT_MESSAGE"
-  | "GET_HIGHSCORES"
-
-export const getActionCategory = (action: Action) => {
-  const gameActions: ActionType[] = [
-    "INITIALISE_GAME",
-    "REQUEST_CARDS",
-    "SUBMIT_SET",
-  ]
-  const userActions: ActionType[] = ["SET_USERNAME"]
-
-  const metaActions: ActionType[] = ["GET_GAME_DATA", "GET_HIGHSCORES"]
-
-  const chatActions: ActionType[] = ["NEW_CHAT_MESSAGE"]
-
-  if (userActions.includes(action.type)) {
-    return "USER"
-  } else if (gameActions.includes(action.type)) {
-    return "GAME"
-  } else if (metaActions.includes(action.type)) {
-    return "META"
-  } else if (chatActions.includes(action.type)) {
-    return "CHAT"
-  } else {
-    return "UNKNOWN"
-  }
-}
-
-export type ActionCategory = "USER" | "GAME"
-
-export interface Action {
-  type: ActionType
-  lobbyId?: string
-}
-
-export interface Action_InitialiseGame extends Action {
-  gameType: GameType
-}
-
-export interface Action_SubmitSet extends Action {
-  selectedCards: CardProps[]
-}
-
-export interface Action_RequestCards extends Action {}
-
-export interface Action_SetUsername extends Action {
-  username: string
-}
-
-export interface Action_NewChatMessage extends Action {
-  message: string
-  publicUuid?: string
-  addGameLink?: boolean
-}
-
-export interface SetWon {
-  publicUuid: string
-  set: CardProps[]
-}
+import { initialiseCards } from "./cardsInitialiser"
+import { getMaxColumn } from "./getMaxColumns"
+import { saveHighscore } from "./highscores"
+import { getPositions } from "./positions"
+import { reorderCards } from "./reorderCards"
+import { findSetInCards, validateCards } from "./setValidator"
+import { informSlackAboutNewGameStarted } from "./slackHelper"
+import {
+  GameAction,
+  Games,
+  Game,
+  ChatAction,
+  Action_InitialiseGame,
+  Action_SubmitSet,
+  TimeAttackGame,
+  TimeAttackAttributesProps,
+  ActionType,
+  MultiplayerLobbies,
+  MultiplayerLobby,
+  MultiplayerGame,
+  MultiplayerAttributesProps,
+  BaseGame,
+} from "./types"
+import { Users, User } from "./userHandling"
+import { createLobbyId } from "./utils"
+import { CardProps } from "@/app/game/Card"
 
 export const handleGameAction = (
   action: GameAction & {
@@ -130,6 +32,7 @@ export const handleGameAction = (
     publicUuid: string
   },
   games: Games,
+  lobbies: MultiplayerLobbies,
   highscores?: Highscore[],
   privateUuid?: string,
   socketId?: string,
@@ -137,6 +40,7 @@ export const handleGameAction = (
   isLocalCheck?: boolean
 ): {
   lobbyId?: string | undefined
+  lobbyIdToDelete?: string | undefined
   newGameData?: Game | undefined
   error?: string | undefined
   isValidSet?: boolean
@@ -171,44 +75,12 @@ export const handleGameAction = (
   // Handle action
   if (!action?.lobbyId || action.type == "INITIALISE_GAME") {
     if (action.type == "INITIALISE_GAME") {
-      const a = action as Action_InitialiseGame
-      const cards = initialiseCards(12)
-      const newGame: Game = {
-        lobbyId: createLobbyId(),
-        gameType: a.gameType,
-        players: [publicUuid],
-        cards: cards,
-        maxColumns: 4,
-        hasSet: !!findSetInCards(cards),
-        setsWon: [],
-        timeAttackAttributes: {
-          startTime: new Date().getTime(),
-          userPenalties: {},
-        },
-        actions: [],
-        gameOver: 0,
-      }
-
-      // Inform slack
-      informSlackAboutTimeattackGameStarted(
-        user ? user.globalUsername : "unknown",
-        newGame.lobbyId
+      return handleInitialiseGame(
+        action as Action_InitialiseGame,
+        publicUuid,
+        user as User,
+        lobbies
       )
-
-      // Return new game
-      return {
-        lobbyId: newGame.lobbyId,
-        newGameData: newGame,
-        chatAction: {
-          message: `Has started a new ${
-            a.gameType == "TIME_ATTACK" ? "time attack" : "multiplayer"
-          } game.`,
-          type: "NEW_CHAT_MESSAGE",
-          lobbyId: newGame.lobbyId,
-          publicUuid,
-          addGameLink: true,
-        },
-      }
     } else {
       return { error: "No lobbyId provided." }
     }
@@ -255,6 +127,93 @@ export const handleGameAction = (
   }
 }
 
+// ------------
+// Action handlers
+// ------------
+
+const handleInitialiseGame = (
+  action: Action_InitialiseGame,
+  publicUuid: string,
+  user: User,
+  lobbies: MultiplayerLobbies
+) => {
+  const { gameType, lobbyId } = action as Action_InitialiseGame
+
+  const isMultiplayer = gameType == "MULTIPLAYER"
+  let lobby: MultiplayerLobby | undefined
+
+  if (isMultiplayer) {
+    if (!lobbyId) {
+      return { error: "No lobbyId provided to start multiplayer game." }
+    }
+    lobby = lobbies[lobbyId]
+    if (!lobby?.lobbyId || !lobby?.host) {
+      return { error: "No lobby found to start multiplayer game." }
+    }
+  }
+
+  const cards = initialiseCards(12)
+  const baseGame: BaseGame = {
+    lobbyId: isMultiplayer && lobbyId ? lobbyId : createLobbyId(),
+    gameType,
+    players: isMultiplayer && lobby ? lobby.players : [publicUuid],
+    cards: cards,
+    maxColumns: 4,
+    hasSet: !!findSetInCards(cards),
+    setsWon: [],
+    actions: [],
+    gameOver: 0,
+  }
+
+  let newGame: Game
+  if (gameType == "TIME_ATTACK") {
+    newGame = {
+      ...baseGame,
+      timeAttackAttributes: {
+        startTime: new Date().getTime(),
+        userPenalties: {},
+      },
+    } as TimeAttackGame
+  } else if (gameType == "MULTIPLAYER") {
+    newGame = {
+      ...baseGame,
+      multiplayerAttributes: {
+        host: lobby!.host,
+        playersInTimeOut: {},
+      },
+    } as MultiplayerGame
+  } else {
+    return { error: "Unknown game type." }
+  }
+
+  // Inform slack
+  informSlackAboutNewGameStarted(
+    user ? user.globalUsername : "unknown",
+    newGame.lobbyId,
+    gameType
+  )
+
+  // Return new game
+  return {
+    lobbyId: newGame.lobbyId,
+    newGameData: newGame,
+    lobbyIdToDelete: isMultiplayer && lobbyId ? lobbyId : undefined,
+    chatAction: {
+      message: `Has started a new ${
+        gameType == "TIME_ATTACK"
+          ? "time attack"
+          : gameType == "MULTIPLAYER"
+          ? "multiplayer"
+          : "unknown"
+      } game.`,
+      type: "NEW_CHAT_MESSAGE" as ActionType,
+      lobbyId: newGame.lobbyId,
+      publicUuid,
+      addGameLink: true,
+    },
+  }
+}
+
 const handleSubmitSet = (
   action: Action_SubmitSet,
   game: Game,
@@ -271,6 +230,12 @@ const handleSubmitSet = (
   if (!(action.selectedCards.length == 3)) {
     return { error: "Not exactly three cards submitted" }
   } else {
+    // Check if player is in time out
+    if (isPlayerInTimeout(game as MultiplayerGame, publicUuid)) {
+      return { error: "Player is in time out." }
+    }
+
+    // Validate set
     const { valid, error } = validateCards(action.selectedCards, game.cards)
     if (!valid) {
       console.log("Set validation failed. Error:", error)
@@ -293,9 +258,24 @@ const handleSubmitSet = (
           },
         }
         return { lobbyId: action.lobbyId, newGameData, isValidSet: false }
+      } else if (game.gameType == "MULTIPLAYER") {
+        let newGameData = { ...game } as MultiplayerGame
+        const previousPlayersInTimeOut =
+          newGameData.multiplayerAttributes?.playersInTimeOut
+
+        newGameData = {
+          ...newGameData,
+          multiplayerAttributes: {
+            ...(newGameData.multiplayerAttributes as MultiplayerAttributesProps),
+            playersInTimeOut: {
+              ...previousPlayersInTimeOut,
+              [publicUuid]: new Date().getTime(),
+            },
+          },
+        }
+        return { lobbyId: action.lobbyId, newGameData, isValidSet: false }
       } else {
-        // TODO handle Multiplayer case
-        return { error: `Set validation error: ${error}` }
+        return { error: "Unknown game type." }
       }
     } else {
       console.log("Set validation success.")
@@ -322,7 +302,7 @@ const handleSubmitSet = (
       const reorderedCards: CardProps[] = reorderCards(newCards)
 
       // Create new game data
-      const newGameData: Game = {
+      let newGameData: Game = {
         ...game,
         cards: reorderedCards,
         maxColumns: getMaxColumn(reorderedCards),
@@ -336,6 +316,19 @@ const handleSubmitSet = (
         ],
       }
 
+      // Handle multiplayer case
+      if (game.gameType == "MULTIPLAYER") {
+        newGameData = newGameData as MultiplayerGame
+
+        newGameData = {
+          ...newGameData,
+          multiplayerAttributes: {
+            ...(newGameData.multiplayerAttributes as MultiplayerAttributesProps),
+            playersInTimeOut: {},
+          },
+        }
+      }
+
       // Check win condition
       const gameOver =
         !newGameData.hasSet &&
@@ -343,7 +336,7 @@ const handleSubmitSet = (
 
       gameOver && console.log("game over after set submission.")
       // Save highscore
-      if (gameOver) {
+      if (gameOver && game.gameType == "TIME_ATTACK") {
         newGameData.gameOver = new Date().getTime()
         !isLocalCheck &&
           highscores &&
@@ -399,13 +392,18 @@ const handleRequestCards = (
   newGameData?: Game | undefined
   error?: string | undefined
 } => {
-  if (gameData.gameType == "TIME_ATTACK") {
-    const game = gameData as TimeAttackGame
-    // const hasSet = findSetInCards(game.cards)
+  // Check if player is in time out
+  if (isPlayerInTimeout(gameData as MultiplayerGame, publicUuid)) {
+    return { error: "Player is in time out." }
+  }
 
-    let newGameData: TimeAttackGame
+  let game = gameData as Game
 
-    if (game.hasSet) {
+  let newGameData: Game
+
+  if (game.hasSet) {
+    if (game.gameType == "TIME_ATTACK") {
+      game = game as TimeAttackGame
       const previousPenalties =
         game.timeAttackAttributes?.userPenalties[publicUuid]
 
@@ -419,47 +417,74 @@ const handleRequestCards = (
           },
         },
       }
-    } else {
-      const { newCards, error } = addCards(game.cards, 3)
-
-      if (error) {
-        return { error: "Couldn't add more cards." }
-      }
+    } else if (game.gameType == "MULTIPLAYER") {
+      game = game as MultiplayerGame
+      const previousPlayersInTimeOut =
+        game.multiplayerAttributes?.playersInTimeOut
 
       newGameData = {
         ...game,
-        cards: newCards,
-        maxColumns: getMaxColumn(newCards),
-        hasSet: !!findSetInCards(newCards),
+        multiplayerAttributes: {
+          ...(game.multiplayerAttributes as MultiplayerAttributesProps),
+          playersInTimeOut: {
+            ...previousPlayersInTimeOut,
+            [publicUuid]: new Date().getTime(),
+          },
+        },
       }
-
-      // Check win condition
-      const gameOver =
-        !newGameData.hasSet &&
-        newCards.filter((c) => c.hidden && !c.set).length == 0
-
-      gameOver && console.log("game over after adding last card")
-
-      // Save highscore
-      if (gameOver) {
-        newGameData.gameOver = new Date().getTime()
-        !isLocalCheck &&
-          highscores &&
-          saveHighscore(
-            highscores,
-            newGameData,
-            publicUuid,
-            action.lobbyId as string,
-            user
-          )
+    } else {
+      return {
+        error: "No set found and game type is not TIME_ATTACK or MULTIPLAYER.",
       }
     }
-    return { lobbyId: action.lobbyId, newGameData }
-  } else if (gameData.gameType == "MULTIPLAYER") {
-    return { error: "Can't handle Multiplayer mode yet." }
   } else {
-    return { error: "Unknown game mode." }
+    const { newCards, error } = addCards(game.cards, 3)
+
+    if (error) {
+      return { error: "Couldn't add more cards." }
+    }
+
+    newGameData = {
+      ...game,
+      cards: newCards,
+      maxColumns: getMaxColumn(newCards),
+      hasSet: !!findSetInCards(newCards),
+    }
+
+    // Handle multiplayer case
+    if (game.gameType == "MULTIPLAYER") {
+      newGameData = newGameData as MultiplayerGame
+      newGameData = {
+        ...newGameData,
+        multiplayerAttributes: {
+          ...(newGameData.multiplayerAttributes as MultiplayerAttributesProps),
+          playersInTimeOut: {},
+        },
+      }
+    }
+
+    // Check win condition
+    const gameOver =
+      !newGameData.hasSet &&
+      newCards.filter((c) => c.hidden && !c.set).length == 0
+
+    gameOver && console.log("game over after adding last card")
+
+    // Save highscore
+    if (gameOver && game.gameType == "TIME_ATTACK") {
+      newGameData.gameOver = new Date().getTime()
+      !isLocalCheck &&
+        highscores &&
+        saveHighscore(
+          highscores,
+          newGameData,
+          publicUuid,
+          action.lobbyId as string,
+          user
+        )
+    }
   }
+  return { lobbyId: action.lobbyId, newGameData }
 }
 
 export const sanitiseGameData = (game: Game) => {
@@ -467,4 +492,22 @@ export const sanitiseGameData = (game: Game) => {
     ...game,
     hasSet: null,
   }
+}
+
+export const isPlayerInTimeout = (
+  game: MultiplayerGame,
+  publicUuid: string
+) => {
+  // Check latest time out timestamp for player
+  const latestTimeOutTimestamp =
+    game.multiplayerAttributes?.playersInTimeOut[publicUuid]
+  if (!latestTimeOutTimestamp) {
+    return false
+  }
+  // Check if player is in timeout
+  const timeSinceTimeout = new Date().getTime() - latestTimeOutTimestamp
+  if (timeSinceTimeout < 10000) {
+    return true
+  }
+  return false
 }

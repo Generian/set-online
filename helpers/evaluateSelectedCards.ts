@@ -1,6 +1,6 @@
 import { CardProps } from "@/app/game/Card"
 import { Dispatch, SetStateAction } from "react"
-import { GameAction } from "./gameHandling"
+import { GameAction } from "./types"
 
 export const evaluateSelectedCardsForSet = (
   selectedCards: CardProps[],

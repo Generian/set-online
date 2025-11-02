@@ -20,9 +20,9 @@ const UserIcon = ({
   showOnlineStatus?: boolean
 }) => {
   let usernameString
-  let avatar
 
   const localPublicUuid = getPublicUuid()
+  const isOtherPlayer = publicUuid && localPublicUuid != publicUuid
   const { userData } = useContext(SocketContext)
 
   const user = publicUuid ? userData[publicUuid] : undefined
@@ -50,7 +50,13 @@ const UserIcon = ({
     return (
       <Link href={"/settings"} className={styles.userContainer}>
         <div className={styles.username}>{usernameString}</div>
-        <div className={styles.avatar}>{initials}</div>
+        <div
+          className={`${styles.avatar} ${
+            isOtherPlayer ? styles.otherPlayerAvatar : ""
+          }`}
+        >
+          {initials}
+        </div>
       </Link>
     )
   } else {
@@ -71,7 +77,11 @@ const UserIcon = ({
           },
         }}
       >
-        <div className={`${styles.avatar} ${size ? styles[size] : ""}`}>
+        <div
+          className={`${styles.avatar} ${size ? styles[size] : ""} ${
+            isOtherPlayer ? styles.otherPlayerAvatar : ""
+          }`}
+        >
           <span title={usernameString}>{initials}</span>
           {showOnlineStatus && (
             <div

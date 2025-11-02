@@ -4,7 +4,7 @@ import styles from "@/styles/StartGameButton.module.css"
 import { SocketContext } from "@/app/SocketConnection"
 import { useRouter, usePathname } from "next/navigation"
 import { useContext, useState, useEffect } from "react"
-import { GameType } from "@/helpers/gameHandling"
+import { GameType } from "@/helpers/types"
 import { CircularProgress } from "@mui/material"
 
 interface StartGameButtonProps {
@@ -73,6 +73,32 @@ export const StartGameButton = ({
           ? "Time attack!"
           : "Multiplayer"}
       </h2>
+    </div>
+  )
+}
+
+export const MultiplayerButton = () => {
+  let { lobbiesData } = useContext(SocketContext)
+  const router = useRouter()
+  const navigateToMultiplayerPage = () => {
+    router.push(`/multiplayer`, undefined)
+  }
+
+  const openLobbies = Object.values(lobbiesData).length
+
+  return (
+    <div
+      className={`${styles.container}`}
+      onClick={() => {
+        navigateToMultiplayerPage()
+      }}
+    >
+      <h2>{"Multiplayer"}</h2>
+      {openLobbies > 0 && (
+        <span
+          className={styles.openLobbiesCount}
+        >{`${openLobbies} open lobbies`}</span>
+      )}
     </div>
   )
 }

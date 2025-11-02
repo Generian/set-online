@@ -1,9 +1,10 @@
 import { ChatMessage } from "@/app/shared/GameChat"
-import { Games } from "./gameHandling"
 import { PublicUsers } from "./userHandling"
+import { Games, MultiplayerLobbies } from "./types"
 
 export interface ServerToClientEvents {
   gameDataUpdate: (data: Games) => void
+  multiplayerLobbyDataUpdate: (data: MultiplayerLobbies) => void
   userDataUpdate: (data: PublicUsers) => void
   chatDataUpdate: (
     newChatMessages: ChatMessage[],

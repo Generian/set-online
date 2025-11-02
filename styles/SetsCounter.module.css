@@ -1,3 +1,9 @@
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  z-index: 300;
+}
+
 .container {
   display: flex;
   flex-direction: row;
@@ -9,7 +15,10 @@
   font-family: var(--font);
   box-shadow: var(--cardShadow);
   border-radius: var(--cardBorderRadius);
-  z-index: 300;
+}
+
+.gameOverMode .container {
+  justify-content: space-between;
 }
 
 .setsContainer {
@@ -28,6 +37,84 @@
   color: black;
   border-radius: 0.3rem;
   transition: all var(--slowTransition) ease-in-out;
+}
+
+.leadingPlayerSetsContainer {
+  background-color: var(--yellow) !important;
+}
+
+.otherPlayersContainerList {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+  gap: 1rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.otherPlayerContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: fit-content;
+  background-color: var(--white);
+  gap: 1rem;
+  padding-left: 1rem;
+  font-size: 0.9rem;
+  font-family: var(--font);
+  box-shadow: var(--cardShadow);
+  border-radius: var(--cardBorderRadius);
+}
+
+.timeOutMode {
+  background-color: var(--redBackground);
+  color: var(--red);
+}
+
+.gameOverMode .otherPlayerContainer {
+  width: 100%;
+}
+
+.otherPlayerSetsContainer {
+  height: 2.8rem;
+  min-width: 2.8rem;
+  padding: 0 0.5rem 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gray);
+  box-shadow: var(--cardShadow);
+  font-size: 1.8rem;
+  font-weight: bold;
+  font-family: var(--font);
+  color: black;
+  border-radius: 0.3rem;
+  transition: all var(--slowTransition) ease-in-out;
+}
+
+/* Mobile styles */
+
+.otherPlayerContainerMobile {
+  position: relative;
+  background-color: transparent;
+  box-shadow: none;
+  padding-left: 0;
+}
+.otherPlayerSetsContainerMobile {
+  position: absolute;
+  flex-direction: row;
+  gap: 0.5rem;
+  bottom: -0.25rem;
+  right: -0.65rem;
+  height: 1rem;
+  min-width: 1rem;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 0.75rem;
 }
 
 @media only screen and (max-width: 600px) {

@@ -1,5 +1,9 @@
 import styles from "@/styles/Index.module.css"
-import { StartGameButton, TutorialButton } from "./index/StartGameButton"
+import {
+  MultiplayerButton,
+  StartGameButton,
+  TutorialButton,
+} from "./index/StartGameButton"
 import ChatComponent from "./shared/GameChat"
 import { TimeAttackGameHighscoreList } from "./game/Highscores"
 
@@ -8,7 +12,7 @@ export default function Home() {
     <div className={styles.container}>
       <div className={styles.columnContainer}>
         <StartGameButton gameType={"TIME_ATTACK"} />
-        <StartGameButton gameType={"MULTIPLAYER"} />
+        <MultiplayerButton />
         <TutorialButton />
       </div>
       <div className={styles.columnContainer}>

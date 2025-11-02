@@ -1,5 +1,5 @@
 import { formatTime, getTotalTimeAndPenalties } from "@/app/game/Timer"
-import { Game, TimeAttackGame } from "./gameHandling"
+import { Game, TimeAttackGame } from "./types"
 import { saveHighscoreToDatabase } from "@/app/actions/databaseActions"
 import { informSlackAboutNewTimeattackHighscore } from "./slackHelper"
 import { User } from "./userHandling"

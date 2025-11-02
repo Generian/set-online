@@ -1,4 +1,4 @@
-import { Game, TimeAttackGame } from "@/helpers/gameHandling"
+import { Game, MultiplayerGame, TimeAttackGame } from "@/helpers/types"
 import { getPublicUuid } from "@/helpers/uuidHandler"
 import styles from "@/styles/Timer.module.css"
 import { useEffect, useRef, useState } from "react"
@@ -133,11 +133,47 @@ const TimeAttackTimer = ({ game }: TimerProps) => {
 
 // Multiplayer component
 const MultiplayerTimer = ({ game }: TimerProps) => {
-  const [time, setTime] = useState(0)
+  const [timeoutTimer, setTimeoutTimer] = useState<number>(0)
+
+  const {
+    multiplayerAttributes: { playersInTimeOut },
+  } = game as MultiplayerGame
+  const publicUuid = getPublicUuid()
+  const latestTimeOutTimestamp = playersInTimeOut[publicUuid]
+
+  useEffect(() => {
+    if (latestTimeOutTimestamp) {
+      const timeSinceTimeout = new Date().getTime() - latestTimeOutTimestamp
+      if (timeSinceTimeout < 10000) {
+        setTimeoutTimer(10000 - timeSinceTimeout)
+      } else {
+        setTimeoutTimer(0)
+      }
+    }
+  }, [latestTimeOutTimestamp])
+
+  // Countdown timer for timeout
+  useEffect(() => {
+    let timeoutClock: NodeJS.Timer | undefined = undefined
+    timeoutClock = setInterval(() => {
+      setTimeoutTimer((prev) => (prev - 50 > 0 ? prev - 50 : 0))
+    }, 50)
+    return () => clearInterval(timeoutClock)
+  }, [timeoutTimer])
+
+  if (timeoutTimer === 0) return <></>
 
   return (
-    <div className={styles.container}>
-      <span className={styles.time}>{formatTime(time)}</span>
+    <div className={`${styles.container} ${styles.timeOutContainer}`}>
+      <div className={styles.innerContainer}>
+        <div className={styles.timeContainer}>
+          {timeoutTimer > 0 && (
+            <span className={styles.timeOutTimer}>
+              {formatTimeoutTime(timeoutTimer)}
+            </span>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
@@ -181,6 +217,12 @@ export const formatTime = (c: number) => {
   } else {
     return "∞"
   }
+}
+
+export const formatTimeoutTime = (c: number) => {
+  return `${formatToTwoDigits(Math.floor(c / 1000))}:${formatToTwoDigits(
+    Math.floor((c % 1000) / 10)
+  )}`
 }
 
 export const getTotalTimeAndPenalties = (
