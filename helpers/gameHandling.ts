@@ -32,7 +32,7 @@ export const handleGameAction = (
     publicUuid: string
   },
   games: Games,
-  lobbies: MultiplayerLobbies,
+  lobbies?: MultiplayerLobbies,
   highscores?: Highscore[],
   privateUuid?: string,
   socketId?: string,
@@ -135,7 +135,7 @@ const handleInitialiseGame = (
   action: Action_InitialiseGame,
   publicUuid: string,
   user: User,
-  lobbies: MultiplayerLobbies
+  lobbies?: MultiplayerLobbies
 ) => {
   const { gameType, lobbyId } = action as Action_InitialiseGame
 
@@ -146,7 +146,7 @@ const handleInitialiseGame = (
     if (!lobbyId) {
       return { error: "No lobbyId provided to start multiplayer game." }
     }
-    lobby = lobbies[lobbyId]
+    lobby = lobbies && lobbies[lobbyId]
     if (!lobby?.lobbyId || !lobby?.host) {
       return { error: "No lobby found to start multiplayer game." }
     }
