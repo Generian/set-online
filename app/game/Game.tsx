@@ -151,6 +151,27 @@ export const Game = () => {
           "Case should not be possible. Server data for the game should always exist if local data exists."
         )
       }
+
+      // If game type is multiplayer, check if selected cards are still visible
+      if (game?.gameType === "MULTIPLAYER") {
+        console.log("Checking if selected cards are still visible.")
+        const newSelectedCards: CardProps[] = game.cards.filter((c) => {
+          if (c.id in selectedCards?.map((s: CardProps) => s.id) && !c.hidden) {
+            return true
+          } else {
+            c.id in selectedCards?.map((c: CardProps) => c.id) &&
+              console.log(
+                "Card not in selected cards or hidden:",
+                c.count,
+                c.color,
+                c.shape,
+                c.shading
+              )
+            return false
+          }
+        })
+        setSelectedCards(newSelectedCards)
+      }
     }
   }, [gameData, localGameData, lobbyId])
 

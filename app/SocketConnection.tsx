@@ -166,11 +166,18 @@ const SocketConnection = ({ children }: SocketConnectionProps) => {
           )
           return localGameData
         } else {
-          console.log(
-            "Local game data for lobby already set. Not updating.",
-            lobbyId,
-            localGameData
-          )
+          if (localGameData[lobbyId].gameType === "MULTIPLAYER") {
+            console.log(
+              "Updating local game data with server game data for multiplayer lobby."
+            )
+            return { ...data }
+          } else {
+            console.log(
+              "Local game data for lobby already set. Not updating.",
+              lobbyId,
+              localGameData
+            )
+          }
           return localGameData
         }
       })

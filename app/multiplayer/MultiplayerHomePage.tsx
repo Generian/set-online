@@ -138,11 +138,19 @@ const LobbyListItem = ({
   const isHost = lobby.host === getPublicUuid()
   const isPlayer = lobby.players.includes(getPublicUuid())
 
+  const isJoinable =
+    lobby.players.length < lobby.maxPlayers && !playerIsInAnyLobby
+
   return (
     <div
       className={`${styles.lobbyListItemContainer} ${
         isPlayer ? styles.playerLobby : ""
-      }`}
+      } ${isJoinable ? styles.joinableLobby : ""}`}
+      onClick={() =>
+        lobby.players.length < lobby.maxPlayers &&
+        !playerIsInAnyLobby &&
+        handleJoinLobby(lobby.lobbyId)
+      }
     >
       <span className={styles.lobbyTitle}>{`${
         host.globalUsername || "Unknown Player"
@@ -156,7 +164,7 @@ const LobbyListItem = ({
             size="small"
           />
         ))}
-        {lobby.players.length < lobby.maxPlayers && !playerIsInAnyLobby && (
+        {isJoinable && (
           <div
             className={styles.addPlayerIcon}
             onClick={() => handleJoinLobby(lobby.lobbyId)}

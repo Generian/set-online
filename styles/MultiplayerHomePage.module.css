@@ -57,6 +57,14 @@
   border-radius: var(--cardBorderRadius);
 }
 
+.joinableLobby {
+  cursor: pointer;
+}
+
+.joinableLobby:hover {
+  background-color: var(--gray);
+}
+
 .lobbyTitle {
   font-size: 1.2rem;
   font-weight: bold;

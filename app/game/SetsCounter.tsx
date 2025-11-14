@@ -20,6 +20,8 @@ const SetsCounter = ({ game, gameOverMode = false }: SetsCounterProps) => {
 
   const { setsWon, players } = game
 
+  const playerInGame = players.find((p) => p == publicUuid)
+
   let count
 
   if (players.find((p) => p == publicUuid)) {
@@ -52,38 +54,42 @@ const SetsCounter = ({ game, gameOverMode = false }: SetsCounterProps) => {
         gameOverMode ? styles.gameOverMode : ""
       }`}
     >
-      <div className={styles.container}>
-        <span>
-          {gameOverMode
-            ? userData[playerSetCounts[0].publicUuid]?.globalUsername
+      {(playerInGame || gameOverMode) && (
+        <div className={styles.container}>
+          <span>
+            {gameOverMode
               ? userData[playerSetCounts[0].publicUuid]?.globalUsername
-              : "Unknown Player"
-            : "Sets won:"}
-        </span>
-        <div
-          className={`${styles.setsContainer} ${
-            ((isLeadingPlayer && count > 0) || gameOverMode) &&
-            game.gameType === "MULTIPLAYER"
-              ? styles.leadingPlayerSetsContainer
-              : ""
-          }`}
-        >
-          {gameOverMode ? playerSetCounts[0].count : count}
+                ? userData[playerSetCounts[0].publicUuid]?.globalUsername
+                : "Unknown Player"
+              : "Sets won:"}
+          </span>
+          <div
+            className={`${styles.setsContainer} ${
+              ((isLeadingPlayer && count > 0) || gameOverMode) &&
+              game.gameType === "MULTIPLAYER"
+                ? styles.leadingPlayerSetsContainer
+                : ""
+            }`}
+          >
+            {gameOverMode ? playerSetCounts[0].count : count}
+          </div>
         </div>
-      </div>
+      )}
       <div className={styles.otherPlayersContainerList}>
-        {(gameOverMode
-          ? playerSetCounts.slice(1).map((p) => p.publicUuid)
-          : players.filter((p) => p != publicUuid)
-        ).map((p) => (
-          <OtherPlayerSetsCounter
-            gameOverMode={gameOverMode}
-            publicUuid={p}
-            setsWon={setsWon.filter((s) => s.publicUuid == p)}
-            isLeadingPlayer={leadingPlayerPublicUuids.includes(p)}
-            game={game}
-          />
-        ))}
+        {game.gameType === "MULTIPLAYER" &&
+          (gameOverMode
+            ? playerSetCounts.slice(1).map((p) => p.publicUuid)
+            : players.filter((p) => p != publicUuid)
+          ).map((p) => (
+            <OtherPlayerSetsCounter
+              key={p}
+              gameOverMode={gameOverMode}
+              publicUuid={p}
+              setsWon={setsWon.filter((s) => s.publicUuid == p)}
+              isLeadingPlayer={leadingPlayerPublicUuids.includes(p)}
+              game={game}
+            />
+          ))}
       </div>
     </div>
   )
@@ -128,7 +134,12 @@ const OtherPlayerSetsCounter = ({
         <span>{user?.globalUsername || "Unknown Player"}</span>
       )}
       {isMobile && !gameOverMode && (
-        <UserIcon publicUuid={publicUuid} size="small" variant="avatar" />
+        <UserIcon
+          publicUuid={publicUuid}
+          size="small"
+          variant="avatar"
+          isBlocked={isBlocked}
+        />
       )}
       <div
         className={`${styles.otherPlayerSetsContainer} ${

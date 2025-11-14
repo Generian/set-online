@@ -13,11 +13,13 @@ const UserIcon = ({
   variant,
   size,
   showOnlineStatus,
+  isBlocked = false,
 }: {
   publicUuid?: string
   variant?: "full" | "avatar"
   size?: "small" | "medium" | "large"
   showOnlineStatus?: boolean
+  isBlocked?: boolean
 }) => {
   let usernameString
 
@@ -80,7 +82,7 @@ const UserIcon = ({
         <div
           className={`${styles.avatar} ${size ? styles[size] : ""} ${
             isOtherPlayer ? styles.otherPlayerAvatar : ""
-          }`}
+          } ${isBlocked ? styles.blockedAvatar : ""}`}
         >
           <span title={usernameString}>{initials}</span>
           {showOnlineStatus && (

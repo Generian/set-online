@@ -164,7 +164,9 @@ const MultiplayerTimer = ({ game }: TimerProps) => {
   if (timeoutTimer === 0) return <></>
 
   return (
-    <div className={`${styles.container} ${styles.timeOutContainer}`}>
+    <div
+      className={`${styles.container} ${styles.timeOutContainer} ${styles.pulsate}`}
+    >
       <div className={styles.innerContainer}>
         <div className={styles.timeContainer}>
           {timeoutTimer > 0 && (
@@ -204,6 +206,13 @@ const formatToTwoDigits = (number: number) => {
   return numStr
 }
 
+const formatToOneDigit = (number: number) => {
+  // Convert the number to a string
+  let numStr = number.toString()
+
+  return numStr.slice(-1)
+}
+
 export const formatTime = (c: number) => {
   if (c < 36000000) {
     const hours = Math.floor(c / (1000.0 * 60 * 60))
@@ -220,7 +229,7 @@ export const formatTime = (c: number) => {
 }
 
 export const formatTimeoutTime = (c: number) => {
-  return `${formatToTwoDigits(Math.floor(c / 1000))}:${formatToTwoDigits(
+  return `${formatToTwoDigits(Math.floor(c / 1000))}:${formatToOneDigit(
     Math.floor((c % 1000) / 10)
   )}`
 }

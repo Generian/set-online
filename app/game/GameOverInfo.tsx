@@ -1,5 +1,5 @@
 import styles from "@/styles/GameOverInfo.module.css"
-import { Game, MultiplayerGame, TimeAttackGame } from "@/helpers/types"
+import { Game, TimeAttackGame } from "@/helpers/types"
 import { formatTime } from "./Timer"
 import { StartGameButton } from "../index/StartGameButton"
 import SetsCounter from "./SetsCounter"
@@ -51,12 +51,10 @@ const GameOverInfo = ({ game }: { game: Game }) => {
       </div>
     )
   } else if (game.gameType == "MULTIPLAYER") {
-    const { setsWon } = game as MultiplayerGame
-
     return (
       <div className={styles.container}>
         <h2 className={styles.headline}>Finished!</h2>
-        <div className={styles.detailsContainer}>
+        <div className={styles.detailsContainerMultiplayer}>
           <SetsCounter game={game} gameOverMode={true} />
           <div className={styles.playAgainContainer}></div>
         </div>

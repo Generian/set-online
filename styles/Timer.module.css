@@ -63,6 +63,7 @@
 .timeOutContainer .timeContainer {
   background-color: var(--redBackground);
   color: var(--red);
+  border-radius: var(--cardBorderRadius);
 }
 
 .time {
@@ -150,6 +151,10 @@
   .time {
     top: 0.2rem;
     right: unset;
+    font-size: 2rem;
+  }
+
+  .timeOutTimer {
     font-size: 2rem;
   }
 

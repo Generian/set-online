@@ -336,10 +336,11 @@ const handleSubmitSet = (
 
       gameOver && console.log("game over after set submission.")
       // Save highscore
-      if (gameOver && game.gameType == "TIME_ATTACK") {
+      if (gameOver) {
         newGameData.gameOver = new Date().getTime()
         !isLocalCheck &&
           highscores &&
+          game.gameType == "TIME_ATTACK" &&
           saveHighscore(
             highscores,
             newGameData,
@@ -471,10 +472,11 @@ const handleRequestCards = (
     gameOver && console.log("game over after adding last card")
 
     // Save highscore
-    if (gameOver && game.gameType == "TIME_ATTACK") {
+    if (gameOver) {
       newGameData.gameOver = new Date().getTime()
       !isLocalCheck &&
         highscores &&
+        game.gameType == "TIME_ATTACK" &&
         saveHighscore(
           highscores,
           newGameData,

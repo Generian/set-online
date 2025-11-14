@@ -29,6 +29,12 @@
   gap: 0.5rem;
 }
 
+.detailsContainerMultiplayer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .detailsContainerRow {
   width: 100%;
   display: flex;

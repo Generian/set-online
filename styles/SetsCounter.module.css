@@ -7,6 +7,7 @@
 .container {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   background-color: var(--white);
   margin: 1rem;
@@ -72,6 +73,18 @@
 .timeOutMode {
   background-color: var(--redBackground);
   color: var(--red);
+  animation: pulse 0.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .gameOverMode .otherPlayerContainer {
