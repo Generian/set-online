@@ -236,7 +236,10 @@ const handleSubmitSet = (
     }
 
     // Validate set
-    const { valid, error } = validateCards(action.selectedCards, game.cards)
+    const { valid, error, errorType } = validateCards(
+      action.selectedCards,
+      game.cards
+    )
     if (!valid) {
       console.log("Set validation failed. Error:", error)
 
@@ -259,21 +262,29 @@ const handleSubmitSet = (
         }
         return { lobbyId: action.lobbyId, newGameData, isValidSet: false }
       } else if (game.gameType == "MULTIPLAYER") {
-        let newGameData = { ...game } as MultiplayerGame
-        const previousPlayersInTimeOut =
-          newGameData.multiplayerAttributes?.playersInTimeOut
+        if (errorType == "visibility") {
+          console.log(
+            "Set validation failed because cards were no longer visible. Skipping timeout penalty due to concurrent set submission."
+          )
+          let newGameData = { ...game } as MultiplayerGame
+          return { lobbyId: action.lobbyId, newGameData, isValidSet: false }
+        } else {
+          let newGameData = { ...game } as MultiplayerGame
+          const previousPlayersInTimeOut =
+            newGameData.multiplayerAttributes?.playersInTimeOut
 
-        newGameData = {
-          ...newGameData,
-          multiplayerAttributes: {
-            ...(newGameData.multiplayerAttributes as MultiplayerAttributesProps),
-            playersInTimeOut: {
-              ...previousPlayersInTimeOut,
-              [publicUuid]: new Date().getTime(),
+          newGameData = {
+            ...newGameData,
+            multiplayerAttributes: {
+              ...(newGameData.multiplayerAttributes as MultiplayerAttributesProps),
+              playersInTimeOut: {
+                ...previousPlayersInTimeOut,
+                [publicUuid]: new Date().getTime(),
+              },
             },
-          },
+          }
+          return { lobbyId: action.lobbyId, newGameData, isValidSet: false }
         }
-        return { lobbyId: action.lobbyId, newGameData, isValidSet: false }
       } else {
         return { error: "Unknown game type." }
       }

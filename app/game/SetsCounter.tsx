@@ -54,7 +54,7 @@ const SetsCounter = ({ game, gameOverMode = false }: SetsCounterProps) => {
         gameOverMode ? styles.gameOverMode : ""
       }`}
     >
-      {(playerInGame || gameOverMode) && (
+      {(playerInGame || gameOverMode || game.gameType === "TIME_ATTACK") && (
         <div className={styles.container}>
           <span>
             {gameOverMode

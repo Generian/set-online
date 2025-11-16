@@ -20,7 +20,7 @@ const validateProperty = (
 export const validateCards = (
   cards: CardProps[],
   gameCards?: CardProps[]
-): { valid: boolean; error: string } => {
+): { valid: boolean; error: string; errorType?: string } => {
   // Check if three cards were provided
   if (cards.length !== 3) {
     return {
@@ -43,6 +43,7 @@ export const validateCards = (
       ) {
         return {
           valid: false,
+          errorType: "visibility",
           error: `Card submitted for set failed visibility check. Card is not visible and can't be selected for set: ${cardInDeck?.count} ${cardInDeck?.color} ${cardInDeck?.shape} ${cardInDeck?.shading}`,
         }
       }

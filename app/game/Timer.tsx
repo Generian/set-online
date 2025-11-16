@@ -156,10 +156,16 @@ const MultiplayerTimer = ({ game }: TimerProps) => {
   useEffect(() => {
     let timeoutClock: NodeJS.Timer | undefined = undefined
     timeoutClock = setInterval(() => {
-      setTimeoutTimer((prev) => (prev - 50 > 0 ? prev - 50 : 0))
-    }, 50)
+      const timeSinceTimeout = new Date().getTime() - latestTimeOutTimestamp
+      if (timeSinceTimeout < 10000) {
+        setTimeoutTimer(10000 - timeSinceTimeout)
+      } else {
+        setTimeoutTimer(0)
+        clearInterval(timeoutClock)
+      }
+    }, 35)
     return () => clearInterval(timeoutClock)
-  }, [timeoutTimer])
+  }, [timeoutTimer, latestTimeOutTimestamp])
 
   if (timeoutTimer === 0) return <></>
 
