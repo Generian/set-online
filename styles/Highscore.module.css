@@ -10,15 +10,17 @@
   align-items: center;
   background-color: var(--white);
   box-shadow: var(--cardShadow);
+  overflow: hidden;
   /* box-sizing: border-box; */
   /* border-bottom: 1px solid var(--gray); */
 }
 
 .innerContainer {
   display: flex;
-  width: 100%;
+  flex: 1;
   flex-direction: column;
   justify-content: flex-start;
+  overflow: hidden;
 }
 
 .innerContainer__row {
@@ -48,9 +50,28 @@
 
 .rank {
   font-family: var(--font);
-  width: 3.6rem;
+  width: 2.6rem;
   display: flex;
   justify-content: center;
+  font-size: 0.8rem;
+}
+
+.first .rank,
+.first .time {
+  color: #e1c140;
+  font-weight: bold;
+}
+
+.second .rank,
+.second .time {
+  color: silver;
+  font-weight: bold;
+}
+
+.third .rank,
+.third .time {
+  color: #cd7f32;
+  font-weight: bold;
 }
 
 .time {
@@ -94,7 +115,9 @@
   font-size: 0.5rem;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
   flex: 1;
   gap: 0.25rem;
   padding-right: 0.5rem;
@@ -105,17 +128,16 @@
 }
 
 .userName {
-  font-weight: bold;
-  max-width: 6rem;
   display: inline-block;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  width: 100%;
 }
 
-.innerContainer__row .userName {
-  max-width: 10rem;
+.creationTime {
+  font-size: 0.5rem;
+  text-align: right;
+  color: var(--mediumgray);
 }
 
 .retryText {
@@ -139,6 +161,11 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+  }
+
+  .rank {
+    width: 2rem;
+    font-size: 0.8rem;
   }
 }
 
@@ -244,4 +271,10 @@
 .filterSelected {
   background-color: var(--gray);
   box-shadow: var(--cardShadow);
+}
+
+@media only screen and (max-width: 400px) {
+  .highscoreFilterItem {
+    font-size: x-small;
+  }
 }

@@ -70,6 +70,10 @@ export const handleUserAction = (
 }
 
 const handleSetUsername = (action: Action_SetUsername, user: User) => {
+  if (!action.username) {
+    return { error: "Username is required." }
+  }
+
   const newUserData: User = { ...user, globalUsername: action.username }
   return { newUserData }
 }

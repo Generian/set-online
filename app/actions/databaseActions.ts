@@ -83,7 +83,7 @@ export const saveUserToDatabase = async (user: User, uuid: string) => {
       },
       update: {
         updatedAt: new Date().toISOString(),
-        userName: user.globalUsername ? user.globalUsername : "",
+        ...(user.globalUsername && { userName: user.globalUsername }),
         language: "DE",
       },
       create: {

@@ -278,9 +278,11 @@ const Highscore = ({
     <div
       className={`${styles.highscoreContainer} ${
         highlight ? styles.highlightBorder : ""
-      } ${thisGame ? styles.thisGame : ""}`}
+      } ${thisGame ? styles.thisGame : ""} ${rank == 1 ? styles.first : ""} ${
+        rank == 2 ? styles.second : ""
+      } ${rank == 3 ? styles.third : ""}`}
     >
-      <div className={styles.rank}>{`${rank}.`}</div>
+      <div className={styles.rank}>{`${rank}`}</div>
       <div
         className={`${styles.innerContainer} ${
           inline ? styles.innerContainer__row : ""
@@ -288,10 +290,14 @@ const Highscore = ({
       >
         <div className={styles.time}>{formatTime(totalTime)}</div>
         <div className={styles.extraInfo}>
-          {"by "}
-          <span className={styles.userName}>{`${username} `}</span>
+          <span className={styles.userName}>
+            {"by "}
+            <strong>{`${username} `}</strong>
+          </span>
           {highscore.createdAt && showCreationTime && (
-            <span>{formatTimeDifference(highscore.createdAt)}</span>
+            <span className={styles.creationTime}>
+              {formatTimeDifference(highscore.createdAt)}
+            </span>
           )}
         </div>
       </div>
